@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Clientes - Mariana</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍽️ Sistema Restaurante</div>
+            <nav>
+                <a href="index.html" class="nav-button">Home</a>
+                <a href="sistema.html" class="nav-button">Sistema</a>
+                <a href="clientes.html" class="nav-button">Clientes</a>
+                <a href="login.html" class="nav-button">Logout</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="back-button">
+                <a href="sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
+            </div>
+
+            <div class="welcome-section">
+                <h1>Gestão de Clientes</h1>
+                <p>Desenvolvido por: <strong>Mariana Borges</strong></p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Cadastro de Cliente</h3>
+                    <form id="clienteForm">
+                        <div class="form-group">
+                            <label for="nomeCliente">Nome Completo *</label>
+                            <input type="text" id="nomeCliente" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailCliente">E-mail *</label>
+                            <input type="email" id="emailCliente" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefoneCliente">Telefone *</label>
+                            <input type="text" id="telefoneCliente" class="form-control" data-format="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="senhaCliente">Senha *</label>
+                            <input type="password" id="senhaCliente" class="form-control" required>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn-success" onclick="ClienteModule.create()">Cadastrar</button>
+                            <button type="button" class="btn-secondary" onclick="clearForm('clienteForm')">Limpar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>Lista de Clientes</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="searchCliente" class="form-control" placeholder="Buscar cliente...">
+                        </div>
+                    </div>
+
+                    <table class="table" id="clientesTable">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Cadastro</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-id="1">
+                                <td>João da Silva</td>
+                                <td>joao.silva@email.com</td>
+                                <td>(48) 99999-1111</td>
+                                <td>10/01/2024</td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarCliente(1)">Editar</button>
+                                    <button class="btn-danger" onclick="ClienteModule.delete(1, 'João da Silva')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="2">
+                                <td>Maria Santos</td>
+                                <td>maria.santos@email.com</td>
+                                <td>(48) 99999-2222</td>
+                                <td>12/01/2024</td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarCliente(2)">Editar</button>
+                                    <button class="btn-danger" onclick="ClienteModule.delete(2, 'Maria Santos')">Excluir</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            filterTable('searchCliente', 'clientesTable');
+        });
+
+        function editarCliente(id) {
+            showAlert('Abrindo formulário de edição...', 'info');
+        }
+    </script>
+</body>
+</html>

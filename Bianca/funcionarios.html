@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Funcionários - Bianca</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍽️ Sistema Restaurante</div>
+            <nav>
+                <a href="index.html" class="nav-button">Home</a>
+                <a href="sistema.html" class="nav-button">Sistema</a>
+                <a href="funcionarios.html" class="nav-button">Funcionários</a>
+                <a href="login.html" class="nav-button">Logout</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="back-button">
+                <a href="sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
+            </div>
+
+            <div class="welcome-section">
+                <h1>Gestão de Funcionários</h1>
+                <p>Desenvolvido por: <strong>Bianca Sobierai</strong></p>
+            </div>
+
+            <div class="row">
+                <!-- Formulário de Cadastro -->
+                <div class="col-md-5">
+                    <h3>Cadastro de Funcionário</h3>
+                    <form id="funcionarioForm">
+                        <div class="form-group">
+                            <label for="nomeCompleto">Nome Completo *</label>
+                            <input type="text" id="nomeCompleto" name="nome" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cpf">CPF *</label>
+                            <input type="text" id="cpf" name="cpf" class="form-control" data-format="cpf" maxlength="14" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">E-mail *</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telefone">Telefone *</label>
+                            <input type="text" id="telefone" name="telefone" class="form-control" data-format="phone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="endereco">Endereço *</label>
+                            <textarea id="endereco" name="endereco" class="form-control" rows="2" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="login">Login *</label>
+                            <input type="text" id="login" name="login" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="senha">Senha *</label>
+                            <input type="password" id="senha" name="senha" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cargo">Cargo *</label>
+                            <select id="cargo" name="cargo" class="form-control" required>
+                                <option value="">Selecione o cargo</option>
+                                <option value="garcom">Garçom</option>
+                                <option value="cozinheiro">Cozinheiro</option>
+                                <option value="auxiliar_cozinha">Auxiliar de Cozinha</option>
+                                <option value="atendente">Atendente</option>
+                                <option value="gerente">Gerente</option>
+                            </select>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" class="btn-success" onclick="FuncionarioModule.create()">Cadastrar</button>
+                            <button type="button" class="btn-secondary" onclick="clearForm('funcionarioForm')">Limpar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Lista de Funcionários -->
+                <div class="col-md-7">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>Lista de Funcionários</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="searchFuncionario" class="form-control" placeholder="Buscar funcionário...">
+                        </div>
+                    </div>
+
+                    <table class="table" id="funcionariosTable">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>CPF</th>
+                                <th>Cargo</th>
+                                <th>Email</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-id="1">
+                                <td>João Silva Santos</td>
+                                <td>123.456.789-01</td>
+                                <td>Garçom</td>
+                                <td>joao@email.com</td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarFuncionario(1)">Editar</button>
+                                    <button class="btn-danger" onclick="FuncionarioModule.delete(1, 'João Silva Santos')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="2">
+                                <td>Maria Oliveira</td>
+                                <td>987.654.321-09</td>
+                                <td>Cozinheira</td>
+                                <td>maria@email.com</td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarFuncionario(2)">Editar</button>
+                                    <button class="btn-danger" onclick="FuncionarioModule.delete(2, 'Maria Oliveira')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="3">
+                                <td>Carlos Pereira</td>
+                                <td>456.789.123-45</td>
+                                <td>Gerente</td>
+                                <td>carlos@email.com</td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarFuncionario(3)">Editar</button>
+                                    <button class="btn-danger" onclick="FuncionarioModule.delete(3, 'Carlos Pereira')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="4">
+                                <td>Ana Costa</td>
+                                <td>789.123.456-78</td>
+                                <td>Atendente</td>
+                                <td>ana@email.com</td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarFuncionario(4)">Editar</button>
+                                    <button class="btn-danger" onclick="FuncionarioModule.delete(4, 'Ana Costa')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="5">
+                                <td>Pedro Souza</td>
+                                <td>321.654.987-32</td>
+                                <td>Auxiliar de Cozinha</td>
+                                <td>pedro@email.com</td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarFuncionario(5)">Editar</button>
+                                    <button class="btn-danger" onclick="FuncionarioModule.delete(5, 'Pedro Souza')">Excluir</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editModal')">&times;</span>
+            <h3>Editar Funcionário</h3>
+            <form id="editFuncionarioForm">
+                <div class="form-group">
+                    <label for="editNomeCompleto">Nome Completo *</label>
+                    <input type="text" id="editNomeCompleto" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editCpf">CPF *</label>
+                    <input type="text" id="editCpf" class="form-control" data-format="cpf" maxlength="14" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editEmail">E-mail *</label>
+                    <input type="email" id="editEmail" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editTelefone">Telefone *</label>
+                    <input type="text" id="editTelefone" class="form-control" data-format="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editEndereco">Endereço *</label>
+                    <textarea id="editEndereco" class="form-control" rows="2" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="editCargo">Cargo *</label>
+                    <select id="editCargo" class="form-control" required>
+                        <option value="">Selecione o cargo</option>
+                        <option value="garcom">Garçom</option>
+                        <option value="cozinheiro">Cozinheiro</option>
+                        <option value="auxiliar_cozinha">Auxiliar de Cozinha</option>
+                        <option value="atendente">Atendente</option>
+                        <option value="gerente">Gerente</option>
+                    </select>
+                </div>
+
+                <div class="text-center">
+                    <button type="button" class="btn-success" onclick="salvarEdicaoFuncionario()">Salvar</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal('editModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            filterTable('searchFuncionario', 'funcionariosTable');
+        });
+
+        function editarFuncionario(id) {
+            document.getElementById('editNomeCompleto').value = 'Funcionário ' + id;
+            document.getElementById('editCpf').value = '123.456.789-01';
+            document.getElementById('editEmail').value = 'funcionario' + id + '@email.com';
+            document.getElementById('editTelefone').value = '(48) 99999-9999';
+            document.getElementById('editEndereco').value = 'Rua Exemplo, 123';
+            document.getElementById('editCargo').value = 'garcom';
+            
+            openModal('editModal');
+        }
+
+        function salvarEdicaoFuncionario() {
+            if (validateForm('editFuncionarioForm')) {
+                if (simulateUpdate('funcionário')) {
+                    closeModal('editModal');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema Restaurante</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍽️ Restaurante Gourmet</div>
+            <nav>
+                <a href="index.html" class="nav-button">Home</a>
+                <a href="login.html" class="nav-button">Login</a>
+                <a href="cardapio.html" class="nav-button">Cardápio</a>
+                <a href="reservas.html" class="nav-button">Reservas</a>
+                <a href="sistema.html" class="nav-button">Sistema</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="back-button">
+                <a href="index.html" class="btn-secondary">← Voltar</a>
+            </div>
+
+            <div class="form-container">
+                <div class="text-center mb-4">
+                    <h2 style="color: #764ba2;">Login do Sistema</h2>
+                    <p>Acesse o sistema com suas credenciais</p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="usuario">Usuário/Email:</label>
+                        <input type="text" id="usuario" name="usuario" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="senha">Senha:</label>
+                        <input type="password" id="senha" name="senha" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="perfil">Perfil de Acesso:</label>
+                        <select id="perfil" name="perfil" class="form-control" required>
+                            <option value="">Selecione o perfil</option>
+                            <option value="gerente">Gerente Geral</option>
+                            <option value="administrativo">Administrativo</option>
+                            <option value="funcionario">Funcionário</option>
+                            <option value="cliente">Cliente</option>
+                        </select>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn-primary" onclick="realizarLogin()">Entrar</button>
+                        <button type="button" class="btn-secondary" onclick="clearForm('loginForm')">Limpar</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p><a href="#" onclick="showAlert('Funcionalidade de recuperação será implementada', 'info')">Esqueci minha senha</a></p>
+                    <p><a href="cadastro-cliente.html">Não possui conta? Cadastre-se</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function realizarLogin() {
+            const usuario = document.getElementById('usuario').value;
+            const senha = document.getElementById('senha').value;
+            const perfil = document.getElementById('perfil').value;
+
+            if (!usuario || !senha || !perfil) {
+                showAlert('Por favor, preencha todos os campos', 'danger');
+                return;
+            }
+
+            // Simular validação de login
+            setTimeout(() => {
+                if (perfil === 'cliente') {
+                    showAlert('Login realizado com sucesso! Redirecionando...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    showAlert('Login realizado com sucesso! Redirecionando para o sistema...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'sistema.html';
+                    }, 2000);
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

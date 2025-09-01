@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Insumos - Vinicius</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍽️ Sistema Restaurante</div>
+            <nav>
+                <a href="index.html" class="nav-button">Home</a>
+                <a href="sistema.html" class="nav-button">Sistema</a>
+                <a href="insumos.html" class="nav-button">Insumos</a>
+                <a href="login.html" class="nav-button">Logout</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="back-button">
+                <a href="sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
+            </div>
+
+            <div class="welcome-section">
+                <h1>Gestão de Insumos</h1>
+                <p>Desenvolvido por: <strong>Vinicius Fornazier</strong></p>
+            </div>
+
+            <div class="row">
+                <!-- Formulário de Cadastro -->
+                <div class="col-md-4">
+                    <h3>Cadastro de Insumo</h3>
+                    <form id="insumoForm">
+                        <div class="form-group">
+                            <label for="nomeInsumo">Nome do Insumo *</label>
+                            <input type="text" id="nomeInsumo" name="nome" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="unidadeMedida">Unidade de Medida *</label>
+                            <select id="unidadeMedida" name="unidade" class="form-control" required>
+                                <option value="">Selecione</option>
+                                <option value="kg">Quilograma (kg)</option>
+                                <option value="g">Grama (g)</option>
+                                <option value="l">Litro (l)</option>
+                                <option value="ml">Mililitro (ml)</option>
+                                <option value="un">Unidade (un)</option>
+                                <option value="pacote">Pacote</option>
+                                <option value="caixa">Caixa</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quantidadeEstoque">Quantidade em Estoque *</label>
+                            <input type="number" id="quantidadeEstoque" name="quantidade" class="form-control" min="0" step="0.01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="custoInsumo">Custo (R$) *</label>
+                            <input type="text" id="custoInsumo" name="custo" class="form-control" data-format="currency" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dataValidade">Data de Validade</label>
+                            <input type="date" id="dataValidade" name="validade" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="estoqueMinimo">Estoque Mínimo *</label>
+                            <input type="number" id="estoqueMinimo" name="minimo" class="form-control" min="0" step="0.01" required>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" class="btn-success" onclick="InsumoModule.create()">Cadastrar</button>
+                            <button type="button" class="btn-secondary" onclick="clearForm('insumoForm')">Limpar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Lista de Insumos -->
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>Lista de Insumos</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="searchInsumo" class="form-control" placeholder="Buscar insumo...">
+                        </div>
+                    </div>
+
+                    <table class="table" id="insumosTable">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Quantidade</th>
+                                <th>Unidade</th>
+                                <th>Custo</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-id="1">
+                                <td>Filé de Salmão</td>
+                                <td>5.5</td>
+                                <td>kg</td>
+                                <td>R$ 45,00/kg</td>
+                                <td><span style="color: green;">✓ Ok</span></td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarInsumo(5)">Editar</button>
+                                    <button class="btn-danger" onclick="InsumoModule.delete(5, 'Picanha')">Excluir</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Alertas de Estoque -->
+                    <div class="mt-3">
+                        <div class="alert alert-danger">
+                            <strong>Alertas de Estoque Baixo:</strong>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <li>Arroz Arbóreo: 0.8kg (mínimo: 2kg)</li>
+                                <li>Picanha: 0.5kg (mínimo: 2kg)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Movimentação de Estoque -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h4>Entrada de Estoque</h4>
+                        <form id="entradaForm">
+                            <div class="form-group">
+                                <label for="insumoEntrada">Insumo:</label>
+                                <select id="insumoEntrada" class="form-control" required>
+                                    <option value="">Selecione o insumo</option>
+                                    <option value="1">Filé de Salmão</option>
+                                    <option value="2">Arroz Arbóreo</option>
+                                    <option value="3">Camarão</option>
+                                    <option value="4">Vinho Branco</option>
+                                    <option value="5">Picanha</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="quantidadeEntrada">Quantidade:</label>
+                                <input type="number" id="quantidadeEntrada" class="form-control" min="0.01" step="0.01" required>
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn-success" onclick="registrarEntrada()">Registrar Entrada</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h4>Últimas Movimentações</h4>
+                        <ul>
+                            <li>15/01 - Entrada: Salmão +2kg</li>
+                            <li>14/01 - Saída: Arroz -1.5kg (Pedido #123)</li>
+                            <li>14/01 - Entrada: Camarão +5kg</li>
+                            <li>13/01 - Saída: Picanha -2kg (Pedido #122)</li>
+                            <li>13/01 - Entrada: Vinho +6un</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editModal')">&times;</span>
+            <h3>Editar Insumo</h3>
+            <form id="editInsumoForm">
+                <div class="form-group">
+                    <label for="editNomeInsumo">Nome do Insumo *</label>
+                    <input type="text" id="editNomeInsumo" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editUnidadeMedida">Unidade de Medida *</label>
+                    <select id="editUnidadeMedida" class="form-control" required>
+                        <option value="">Selecione</option>
+                        <option value="kg">Quilograma (kg)</option>
+                        <option value="g">Grama (g)</option>
+                        <option value="l">Litro (l)</option>
+                        <option value="ml">Mililitro (ml)</option>
+                        <option value="un">Unidade (un)</option>
+                        <option value="pacote">Pacote</option>
+                        <option value="caixa">Caixa</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editQuantidadeEstoque">Quantidade em Estoque *</label>
+                    <input type="number" id="editQuantidadeEstoque" class="form-control" min="0" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editCustoInsumo">Custo (R$) *</label>
+                    <input type="text" id="editCustoInsumo" class="form-control" data-format="currency" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editDataValidade">Data de Validade</label>
+                    <input type="date" id="editDataValidade" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="editEstoqueMinimo">Estoque Mínimo *</label>
+                    <input type="number" id="editEstoqueMinimo" class="form-control" min="0" step="0.01" required>
+                </div>
+
+                <div class="text-center">
+                    <button type="button" class="btn-success" onclick="salvarEdicaoInsumo()">Salvar</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal('editModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            filterTable('searchInsumo', 'insumosTable');
+        });
+
+        function editarInsumo(id) {
+            document.getElementById('editNomeInsumo').value = 'Insumo ' + id;
+            document.getElementById('editUnidadeMedida').value = 'kg';
+            document.getElementById('editQuantidadeEstoque').value = '5';
+            document.getElementById('editCustoInsumo').value = 'R$ 25,00';
+            document.getElementById('editDataValidade').value = '2024-12-31';
+            document.getElementById('editEstoqueMinimo').value = '2';
+            
+            openModal('editModal');
+        }
+
+        function salvarEdicaoInsumo() {
+            if (validateForm('editInsumoForm')) {
+                if (simulateUpdate('insumo')) {
+                    closeModal('editModal');
+                }
+            }
+        }
+
+        function registrarEntrada() {
+            const insumo = document.getElementById('insumoEntrada').value;
+            const quantidade = document.getElementById('quantidadeEntrada').value;
+
+            if (!insumo || !quantidade) {
+                showAlert('Por favor, preencha todos os campos', 'danger');
+                return;
+            }
+
+            showAlert(`Entrada de ${quantidade} unidades registrada com sucesso!`, 'success');
+            clearForm('entradaForm');
+            
+            // Simular atualização da tabela
+            setTimeout(() => {
+                showAlert('Estoque atualizado!', 'info');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>warning" onclick="editarInsumo(1)">Editar</button>
+                                    <button class="btn-danger" onclick="InsumoModule.delete(1, 'Filé de Salmão')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="2">
+                                <td>Arroz Arbóreo</td>
+                                <td>0.8</td>
+                                <td>kg</td>
+                                <td>R$ 12,50/kg</td>
+                                <td><span style="color: red;">⚠ Baixo</span></td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarInsumo(2)">Editar</button>
+                                    <button class="btn-danger" onclick="InsumoModule.delete(2, 'Arroz Arbóreo')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="3">
+                                <td>Camarão</td>
+                                <td>3.2</td>
+                                <td>kg</td>
+                                <td>R$ 38,90/kg</td>
+                                <td><span style="color: green;">✓ Ok</span></td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarInsumo(3)">Editar</button>
+                                    <button class="btn-danger" onclick="InsumoModule.delete(3, 'Camarão')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="4">
+                                <td>Vinho Branco</td>
+                                <td>2</td>
+                                <td>un</td>
+                                <td>R$ 35,00/un</td>
+                                <td><span style="color: green;">✓ Ok</span></td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarInsumo(4)">Editar</button>
+                                    <button class="btn-danger" onclick="InsumoModule.delete(4, 'Vinho Branco')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="5">
+                                <td>Picanha</td>
+                                <td>0.5</td>
+                                <td>kg</td>
+                                <td>R$ 55,00/kg</td>
+                                <td><span style="color: red;">⚠ Crítico</span></td>
+                                <td>
+                                    <button class="btn-

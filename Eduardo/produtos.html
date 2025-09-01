@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Produtos - Eduardo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍽️ Sistema Restaurante</div>
+            <nav>
+                <a href="index.html" class="nav-button">Home</a>
+                <a href="sistema.html" class="nav-button">Sistema</a>
+                <a href="produtos.html" class="nav-button">Produtos</a>
+                <a href="login.html" class="nav-button">Logout</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="back-button">
+                <a href="sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
+            </div>
+
+            <div class="welcome-section">
+                <h1>Gestão de Produtos</h1>
+                <p>Desenvolvido por: <strong>Eduardo Dall Rosa</strong></p>
+            </div>
+
+            <div class="row">
+                <!-- Formulário de Cadastro -->
+                <div class="col-md-4">
+                    <h3>Cadastro de Produto</h3>
+                    <form id="produtoForm">
+                        <div class="form-group">
+                            <label for="nomeProduto">Nome do Produto *</label>
+                            <input type="text" id="nomeProduto" name="nome" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="valorProduto">Valor (R$) *</label>
+                            <input type="text" id="valorProduto" name="valor" class="form-control" data-format="currency" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ingredientesProduto">Ingredientes *</label>
+                            <textarea id="ingredientesProduto" name="ingredientes" class="form-control" rows="3" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="promocaoProduto">Em Promoção?</label>
+                            <select id="promocaoProduto" name="promocao" class="form-control">
+                                <option value="nao">Não</option>
+                                <option value="sim">Sim</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fotoProduto">Foto (JPG/PNG)</label>
+                            <input type="file" id="fotoProduto" name="foto" class="form-control" accept=".jpg,.jpeg,.png">
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" class="btn-success" onclick="ProdutoModule.create()">Cadastrar</button>
+                            <button type="button" class="btn-secondary" onclick="clearForm('produtoForm')">Limpar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Lista de Produtos -->
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>Lista de Produtos</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="searchProduto" class="form-control" placeholder="Buscar produto...">
+                        </div>
+                    </div>
+
+                    <table class="table" id="produtosTable">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Valor</th>
+                                <th>Promoção</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-id="1">
+                                <td>Salmão Grelhado</td>
+                                <td>R$ 45,90</td>
+                                <td><span style="color: red;">✓ Sim</span></td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarProduto(1)">Editar</button>
+                                    <button class="btn-danger" onclick="ProdutoModule.delete(1, 'Salmão Grelhado')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="2">
+                                <td>Risotto de Camarão</td>
+                                <td>R$ 38,50</td>
+                                <td>Não</td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarProduto(2)">Editar</button>
+                                    <button class="btn-danger" onclick="ProdutoModule.delete(2, 'Risotto de Camarão')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="3">
+                                <td>Picanha Argentina</td>
+                                <td>R$ 52,00</td>
+                                <td>Não</td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarProduto(3)">Editar</button>
+                                    <button class="btn-danger" onclick="ProdutoModule.delete(3, 'Picanha Argentina')">Excluir</button>
+                                </td>
+                            </tr>
+                            <tr data-id="4">
+                                <td>Sobremesa da Casa</td>
+                                <td>R$ 15,90</td>
+                                <td><span style="color: red;">✓ Sim</span></td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarProduto(4)">Editar</button>
+                                    <button class="btn-danger" onclick="ProdutoModule.delete(4, 'Sobremesa da Casa')">Excluir</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editModal')">&times;</span>
+            <h3>Editar Produto</h3>
+            <form id="editProdutoForm">
+                <div class="form-group">
+                    <label for="editNomeProduto">Nome do Produto *</label>
+                    <input type="text" id="editNomeProduto" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editValorProduto">Valor (R$) *</label>
+                    <input type="text" id="editValorProduto" class="form-control" data-format="currency" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editIngredientesProduto">Ingredientes *</label>
+                    <textarea id="editIngredientesProduto" class="form-control" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="editPromocaoProduto">Em Promoção?</label>
+                    <select id="editPromocaoProduto" class="form-control">
+                        <option value="nao">Não</option>
+                        <option value="sim">Sim</option>
+                    </select>
+                </div>
+
+                <div class="text-center">
+                    <button type="button" class="btn-success" onclick="salvarEdicao()">Salvar</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal('editModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Configurar filtro da tabela
+        document.addEventListener('DOMContentLoaded', function() {
+            filterTable('searchProduto', 'produtosTable');
+        });
+
+        function editarProduto(id) {
+            // Simular carregamento dos dados do produto
+            document.getElementById('editNomeProduto').value = 'Produto ' + id;
+            document.getElementById('editValorProduto').value = 'R$ 45,90';
+            document.getElementById('editIngredientesProduto').value = 'Ingredientes do produto ' + id;
+            document.getElementById('editPromocaoProduto').value = 'nao';
+            
+            openModal('editModal');
+        }
+
+        function salvarEdicao() {
+            if (validateForm('editProdutoForm')) {
+                if (simulateUpdate('produto')) {
+                    closeModal('editModal');
+                    // Aqui atualizaria a tabela com os novos dados
+                }
+            }
+        }
+    </script>
+</body>
+</html>

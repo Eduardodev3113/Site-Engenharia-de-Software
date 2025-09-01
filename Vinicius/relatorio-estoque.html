@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Estoque - Vinicius</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍽️ Sistema Restaurante</div>
+            <nav>
+                <a href="index.html" class="nav-button">Home</a>
+                <a href="sistema.html" class="nav-button">Sistema</a>
+                <a href="insumos.html" class="nav-button">Insumos</a>
+                <a href="login.html" class="nav-button">Logout</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="back-button">
+                <a href="sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
+            </div>
+
+            <div class="welcome-section">
+                <h1>Relatório de Estoque</h1>
+                <p>Desenvolvido por: <strong>Vinicius Fornazier</strong></p>
+            </div>
+
+            <!-- Filtros -->
+            <div class="form-container mb-4">
+                <h3>Filtros de Consulta</h3>
+                <form id="filtroEstoqueForm">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="categoriaFiltro">Categoria:</label>
+                                <select id="categoriaFiltro" class="form-control">
+                                    <option value="">Todas</option>
+                                    <option value="carnes">Carnes</option>
+                                    <option value="frutos_mar">Frutos do Mar</option>
+                                    <option value="graos">Grãos e Cereais</option>
+                                    <option value="bebidas">Bebidas</option>
+                                    <option value="temperos">Temperos</option>
+                                    <option value="laticinios">Laticínios</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="statusEstoque">Status:</label>
+                                <select id="statusEstoque" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="ok">Estoque OK</option>
+                                    <option value="baixo">Estoque Baixo</option>
+                                    <option value="critico">Estoque Crítico</option>
+                                    <option value="vencimento">Próximo ao Vencimento</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="ordenarPor">Ordenar por:</label>
+                                <select id="ordenarPor" class="form-control">
+                                    <option value="nome">Nome</option>
+                                    <option value="quantidade">Quantidade</option>
+                                    <option value="valor">Valor</option>
+                                    <option value="validade">Data de Validade</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="tipoRelatorio">Tipo de Relatório:</label>
+                                <select id="tipoRelatorio" class="form-control">
+                                    <option value="semanal">Semanal</option>
+                                    <option value="mensal">Mensal</option>
+                                    <option value="customizado">Período Customizado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn-primary" onclick="filtrarEstoque()">Filtrar</button>
+                        <button type="button" class="btn-success" onclick="exportarEstoque()">Exportar PDF</button>
+                        <button type="button" class="btn-secondary" onclick="limparFiltrosEstoque()">Limpar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Resumo do Estoque -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Total de Insumos</h4>
+                        <h2 style="color: white;">127</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Valor Total</h4>
+                        <h2 style="color: white;">R$ 12.450,80</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Itens em Falta</h4>
+                        <h2 style="color: white;">8</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Próximos ao Vencimento</h4>
+                        <h2 style="color: white;">5</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalhamento do Estoque -->
+            <div class="row">
+                <div class="col-12">
+                    <h3>Relatório Detalhado - Semana Atual</h3>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <input type="text" id="searchEstoque" class="form-control" placeholder="Buscar insumo...">
+                        </div>
+                    </div>
+
+                    <table class="table" id="estoqueTable">
+                        <thead>
+                            <tr>
+                                <th>Nome do Insumo</th>
+                                <th>Quantidade Disponível</th>
+                                <th>Unidade</th>
+                                <th>Preço de Compra</th>
+                                <th>Preço de Venda</th>
+                                <th>Validade</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Filé de Salmão</td>
+                                <td>5.5</td>
+                                <td>kg</td>
+                                <td>R$ 45,00/kg</td>
+                                <td>R$ 80,00/kg</td>
+                                <td>20/02/2024</td>
+                                <td><span style="color: green;">✓ OK</span></td>
+                            </tr>
+                            <tr style="background-color: #ffeeee;">
+                                <td>Arroz Arbóreo</td>
+                                <td>0.8</td>
+                                <td>kg</td>
+                                <td>R$ 12,50/kg</td>
+                                <td>R$ 25,00/kg</td>
+                                <td>30/06/2024</td>
+                                <td><span style="color: red;">⚠ Baixo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Camarão Grande</td>
+                                <td>3.2</td>
+                                <td>kg</td>
+                                <td>R$ 38,90/kg</td>
+                                <td>R$ 75,00/kg</td>
+                                <td>25/01/2024</td>
+                                <td><span style="color: green;">✓ OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>Vinho Branco Seco</td>
+                                <td>12</td>
+                                <td>un</td>
+                                <td>R$ 35,00/un</td>
+                                <td>R$ 85,00/un</td>
+                                <td>15/12/2025</td>
+                                <td><span style="color: green;">✓ OK</span></td>
+                            </tr>
+                            <tr style="background-color: #ffcccc;">
+                                <td>Picanha Argentina</td>
+                                <td>0.5</td>
+                                <td>kg</td>
+                                <td>R$ 55,00/kg</td>
+                                <td>R$ 120,00/kg</td>
+                                <td>18/01/2024</td>
+                                <td><span style="color: darkred;">🚨 Crítico</span></td>
+                            </tr>
+                            <tr>
+                                <td>Azeite Extra Virgem</td>
+                                <td>2.5</td>
+                                <td>l</td>
+                                <td>R$ 25,00/l</td>
+                                <td>R$ 8,00/dose</td>
+                                <td>10/08/2024</td>
+                                <td><span style="color: green;">✓ OK</span></td>
+                            </tr>
+                            <tr style="background-color: #fff3cd;">
+                                <td>Queijo Parmesão</td>
+                                <td>1.8</td>
+                                <td>kg</td>
+                                <td>R$ 42,00/kg</td>
+                                <td>R$ 15,00/porção</td>
+                                <td>25/01/2024</td>
+                                <td><span style="color: orange;">⏰ Vence em 10 dias</span></td>
+                            </tr>
+                            <tr>
+                                <td>Limão Tahiti</td>
+                                <td>8.0</td>
+                                <td>kg</td>
+                                <td>R$ 3,50/kg</td>
+                                <td>R$ 2,00/un</td>
+                                <td>30/01/2024</td>
+                                <td><span style="color: green;">✓ OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>Manjericão Fresco</td>
+                                <td>0.3</td>
+                                <td>kg</td>
+                                <td>R$ 18,00/kg</td>
+                                <td>R$ 3,00/porção</td>
+                                <td>20/01/2024</td>
+                                <td><span style="color: green;">✓ OK</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Análises e Gráficos -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h4>Categorias com Maior Valor</h4>
+                        <ul>
+                            <li>Carnes: R$ 4.850,00 (38.9%)</li>
+                            <li>Frutos do Mar: R$ 2.967,50 (23.8%)</li>
+                            <li>Bebidas: R$ 1.890,30 (15.2%)</li>
+                            <li>Laticínios: R$ 1.456,00 (11.7%)</li>
+                            <li>Grãos: R$ 987,00 (7.9%)</li>
+                            <li>Temperos: R$ 300,00 (2.4%)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h4>Itens com Maior Rotatividade</h4>
+                        <ul>
+                            <li>Filé de Salmão - 15 saídas/semana</li>
+                            <li>Picanha - 12 saídas/semana</li>
+                            <li>Camarão - 10 saídas/semana</li>
+                            <li>Arroz Arbóreo - 8 saídas/semana</li>
+                            <li>Azeite - 6 saídas/semana</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alertas de Estoque -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="alert alert-danger">
+                        <h4>🚨 Alertas Críticos</h4>
+                        <ul>
+                            <li><strong>Picanha Argentina:</strong> Apenas 0.5kg em estoque (mínimo: 2kg)</li>
+                            <li><strong>Arroz Arbóreo:</strong> Apenas 0.8kg em estoque (mínimo: 2kg)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h4>⏰ Próximos ao Vencimento (próximos 15 dias)</h4>
+                        <ul>
+                            <li><strong>Queijo Parmesão:</strong> Vence em 10 dias (25/01/2024)</li>
+                            <li><strong>Manjericão Fresco:</strong> Vence em 5 dias (20/01/2024)</li>
+                            <li><strong>Picanha Argentina:</strong> Vence em 3 dias (18/01/2024)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            filterTable('searchEstoque', 'estoqueTable');
+        });
+
+        function filtrarEstoque() {
+            const categoria = document.getElementById('categoriaFiltro').value;
+            const status = document.getElementById('statusEstoque').value;
+            const ordenar = document.getElementById('ordenarPor').value;
+            const tipo = document.getElementById('tipoRelatorio').value;
+
+            showAlert(`Filtrando relatório de estoque...`, 'info');
+            
+            setTimeout(() => {
+                showAlert('Relatório de estoque filtrado com sucesso!', 'success');
+            }, 1500);
+        }
+
+        function exportarEstoque() {
+            showAlert('Gerando PDF do relatório de estoque...', 'info');
+            setTimeout(() => {
+                showAlert('Relatório de estoque exportado com sucesso!', 'success');
+            }, 2000);
+        }
+
+        function limparFiltrosEstoque() {
+            document.getElementById('filtroEstoqueForm').reset();
+            showAlert('Filtros limpos!', 'info');
+        }
+    </script>
+</body>
+</html>

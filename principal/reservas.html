@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Reservas - Restaurante Gourmet</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍽️ Restaurante Gourmet</div>
+            <nav>
+                <a href="index.html" class="nav-button">Home</a>
+                <a href="cardapio.html" class="nav-button">Cardápio</a>
+                <a href="reservas.html" class="nav-button">Reservas</a>
+                <a href="login.html" class="nav-button">Login</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="back-button">
+                <a href="index.html" class="btn-secondary">← Voltar</a>
+            </div>
+
+            <div class="welcome-section">
+                <h1>Sistema de Reservas</h1>
+                <p>Reserve sua mesa conosco e garanta uma experiência gastronômica inesquecível</p>
+            </div>
+
+            <div class="row">
+                <!-- Formulário de Reserva -->
+                <div class="col-md-6">
+                    <div class="form-container">
+                        <h3>Fazer Reserva</h3>
+                        <form id="reservaForm">
+                            <div class="form-group">
+                                <label for="nomeReserva">Nome Completo *</label>
+                                <input type="text" id="nomeReserva" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telefoneReserva">Telefone *</label>
+                                <input type="text" id="telefoneReserva" class="form-control" data-format="phone" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="emailReserva">E-mail *</label>
+                                <input type="email" id="emailReserva" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dataReserva">Data *</label>
+                                <input type="date" id="dataReserva" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="horarioReserva">Horário *</label>
+                                <select id="horarioReserva" class="form-control" required>
+                                    <option value="">Selecione o horário</option>
+                                    <option value="11:30">11:30</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="12:30">12:30</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="13:30">13:30</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="19:30">19:30</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="20:30">20:30</option>
+                                    <option value="21:00">21:00</option>
+                                    <option value="21:30">21:30</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="numeroPessoas">Número de Pessoas *</label>
+                                <select id="numeroPessoas" class="form-control" required>
+                                    <option value="">Selecione</option>
+                                    <option value="1">1 pessoa</option>
+                                    <option value="2">2 pessoas</option>
+                                    <option value="3">3 pessoas</option>
+                                    <option value="4">4 pessoas</option>
+                                    <option value="5">5 pessoas</option>
+                                    <option value="6">6 pessoas</option>
+                                    <option value="7">7 pessoas</option>
+                                    <option value="8">8 pessoas</option>
+                                    <option value="mais">Mais de 8 pessoas</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="observacoesReserva">Observações</label>
+                                <textarea id="observacoesReserva" class="form-control" rows="3" placeholder="Ex: Aniversário, mesa próxima à janela, restrições alimentares..."></textarea>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="button" class="btn-success" onclick="realizarReserva()">Confirmar Reserva</button>
+                                <button type="button" class="btn-secondary" onclick="clearForm('reservaForm')">Limpar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Informações sobre Reservas -->
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h3>📋 Diretrizes de Reserva</h3>
+                        <ul>
+                            <li>Reservas podem ser feitas com até 30 dias de antecedência</li>
+                            <li>Tolerância de 15 minutos após o horário reservado</li>
+                            <li>Para grupos acima de 8 pessoas, entre em contato conosco</li>
+                            <li>Reservas podem ser canceladas até 2 horas antes</li>
+                            <li>Confirmação será enviada por e-mail e SMS</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card mt-3">
+                        <h3>📞 Como Cancelar</h3>
+                        <ul>
+                            <li>Responda o e-mail de confirmação</li>
+                            <li>Ligue para (48) 3333-4444</li>
+                            <li>WhatsApp: (48) 99999-9999</li>
+                            <li>Até 2 horas antes do horário reservado</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card mt-3">
+                        <h3>🕐 Horários Disponíveis</h3>
+                        <p><strong>Almoço:</strong> 11:30 às 15:00</p>
+                        <p><strong>Jantar:</strong> 19:00 às 23:00</p>
+                        <p><strong>Fechado:</strong> Segundas-feiras</p>
+                        <p><em>*Horários podem variar em feriados</em></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disponibilidade de Mesas -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h3>🪑 Disponibilidade de Mesas - Hoje</h3>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h4>Almoço (11:30 - 15:00)</h4>
+                            <p>✅ Mesas de 2 pessoas: <strong>Disponível</strong></p>
+                            <p>✅ Mesas de 4 pessoas: <strong>Disponível</strong></p>
+                            <p>⚠️ Mesas de 6 pessoas: <strong>Limitada</strong></p>
+                            <p>❌ Mesas de 8+ pessoas: <strong>Lotado</strong></p>
+                        </div>
+
+                        <div class="feature-card">
+                            <h4>Jantar (19:00 - 23:00)</h4>
+                            <p>⚠️ Mesas de 2 pessoas: <strong>Limitada</strong></p>

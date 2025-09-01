@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio Digital - Restaurante Gourmet</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍽️ Restaurante Gourmet</div>
+            <nav>
+                <a href="index.html" class="nav-button">Home</a>
+                <a href="cardapio.html" class="nav-button">Cardápio</a>
+                <a href="reservas.html" class="nav-button">Reservas</a>
+                <a href="login.html" class="nav-button">Login</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="back-button">
+                <a href="index.html" class="btn-secondary">← Voltar</a>
+            </div>
+
+            <div class="welcome-section">
+                <h1>Cardápio Digital</h1>
+                <p>Descubra nossos pratos especiais preparados com ingredientes frescos e selecionados</p>
+            </div>
+
+            <!-- Filtros do Cardápio -->
+            <div class="text-center mb-4">
+                <button class="btn-primary" onclick="filtrarCategoria('todos')">Todos</button>
+                <button class="btn-secondary" onclick="filtrarCategoria('entradas')">Entradas</button>
+                <button class="btn-secondary" onclick="filtrarCategoria('principais')">Pratos Principais</button>
+                <button class="btn-secondary" onclick="filtrarCategoria('sobremesas')">Sobremesas</button>
+                <button class="btn-secondary" onclick="filtrarCategoria('bebidas')">Bebidas</button>
+            </div>
+
+            <!-- Pratos do Cardápio -->
+            <div class="features-grid">
+                <div class="feature-card categoria-principais">
+                    <h3>🐟 Salmão Grelhado</h3>
+                    <p><strong>R$ 45,90</strong></p>
+                    <p>Filé de salmão grelhado com molho de maracujá, acompanha arroz de jasmim e legumes refogados</p>
+                    <p><em>Ingredientes: Salmão, maracujá, arroz jasmim, brócolis, cenoura</em></p>
+                    <span style="background: red; color: white; padding: 2px 8px; border-radius: 15px; font-size: 12px;">🔥 PROMOÇÃO</span>
+                </div>
+
+                <div class="feature-card categoria-principais">
+                    <h3>🥩 Picanha Argentina</h3>
+                    <p><strong>R$ 52,00</strong></p>
+                    <p>Picanha argentina na brasa, acompanha farofa especial, vinagrete e batata rústica</p>
+                    <p><em>Ingredientes: Picanha, farofa, tomate, cebola, batata</em></p>
+                </div>
+
+                <div class="feature-card categoria-principais">
+                    <h3>🦐 Risotto de Camarão</h3>
+                    <p><strong>R$ 38,50</strong></p>
+                    <p>Risotto cremoso com camarões grandes, vinho branco e ervas finas</p>
+                    <p><em>Ingredientes: Arroz arbóreo, camarão, vinho branco, manjericão</em></p>
+                </div>
+
+                <div class="feature-card categoria-entradas">
+                    <h3>🧄 Bruschetta Especial</h3>
+                    <p><strong>R$ 18,90</strong></p>
+                    <p>Pão italiano tostado com tomate, manjericão fresco e queijo burrata</p>
+                    <p><em>Ingredientes: Pão italiano, tomate, manjericão, burrata</em></p>
+                </div>
+
+                <div class="feature-card categoria-sobremesas">
+                    <h3>🍰 Sobremesa da Casa</h3>
+                    <p><strong>R$ 15,90</strong></p>
+                    <p>Petit gâteau de chocolate com sorvete de baunilha e calda de frutas vermelhas</p>
+                    <p><em>Ingredientes: Chocolate, ovos, sorvete, frutas vermelhas</em></p>
+                    <span style="background: red; color: white; padding: 2px 8px; border-radius: 15px; font-size: 12px;">🔥 PROMOÇÃO</span>
+                </div>
+
+                <div class="feature-card categoria-bebidas">
+                    <h3>🍷 Vinho da Casa</h3>
+                    <p><strong>R$ 85,00</strong> (garrafa)</p>
+                    <p>Vinho tinto selecionado, harmoniza perfeitamente com carnes vermelhas</p>
+                    <p><em>Origem: Serra Gaúcha, Safra 2021</em></p>
+                </div>
+
+                <div class="feature-card categoria-bebidas">
+                    <h3>🥤 Suco Natural</h3>
+                    <p><strong>R$ 12,00</strong></p>
+                    <p>Sucos naturais de frutas da estação: laranja, acerola, maracujá</p>
+                    <p><em>100% natural, sem conservantes</em></p>
+                </div>
+
+                <div class="feature-card categoria-principais">
+                    <h3>🍝 Pasta Carbonara</h3>
+                    <p><strong>R$ 32,90</strong></p>
+                    <p>Massa artesanal com molho carbonara tradicional, bacon e queijo parmesão</p>
+                    <p><em>Ingredientes: Massa, ovos, bacon, parmesão, pimenta</em></p>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <p><strong>🔄 Cardápio atualizado em: 15/01/2024</strong></p>
+                <p>💳 Aceitamos: Dinheiro, PIX, Cartão de Débito e Crédito</p>
+                <p>📱 Para fazer seu pedido, chame o garçom ou use o QR Code da mesa</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function filtrarCategoria(categoria) {
+            const cards = document.querySelectorAll('.feature-card');
+            const botoes = document.querySelectorAll('.text-center button');
+            
+            // Reset botões
+            botoes.forEach(btn => {
+                btn.className = 'btn-secondary';
+            });
+            
+            // Destacar botão ativo
+            event.target.className = 'btn-primary';
+            
+            cards.forEach(card => {
+                if (categoria === 'todos' || card.classList.contains(`categoria-${categoria}`)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            showAlert(`Exibindo ${categoria === 'todos' ? 'todos os pratos' : categoria}`, 'info');
+        }
+    </script>
+</body>
+</html>

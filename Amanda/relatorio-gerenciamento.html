@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Gerenciamento - Amanda</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍽️ Sistema Restaurante</div>
+            <nav>
+                <a href="index.html" class="nav-button">Home</a>
+                <a href="sistema.html" class="nav-button">Sistema</a>
+                <a href="mesas.html" class="nav-button">Mesas</a>
+                <a href="login.html" class="nav-button">Logout</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="back-button">
+                <a href="sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
+            </div>
+
+            <div class="welcome-section">
+                <h1>Relatório de Gerenciamento</h1>
+                <p>Desenvolvido por: <strong>Amanda Rech</strong></p>
+            </div>
+
+            <!-- Filtros -->
+            <div class="form-container mb-4">
+                <h3>Filtros de Consulta</h3>
+                <form id="filtroGerenciamentoForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="mesAnoGerencia">Mês/Ano:</label>
+                                <input type="month" id="mesAnoGerencia" class="form-control" value="2024-01">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="tipoAnalise">Tipo de Análise:</label>
+                                <select id="tipoAnalise" class="form-control">
+                                    <option value="geral">Análise Geral</option>
+                                    <option value="ocupacao">Ocupação</option>
+                                    <option value="pratos">Pratos Populares</option>
+                                    <option value="horarios">Horários de Pico</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="formatoRelatorio">Formato:</label>
+                                <select id="formatoRelatorio" class="form-control">
+                                    <option value="detalhado">Detalhado</option>
+                                    <option value="resumido">Resumido</option>
+                                    <option value="executivo">Executivo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn-primary" onclick="gerarRelatorioGerenciamento()">Gerar Relatório</button>
+                        <button type="button" class="btn-success" onclick="exportarGerenciamento()">Exportar PDF</button>
+                        <button type="button" class="btn-secondary" onclick="limparFiltrosGerenciamento()">Limpar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- KPIs Principais -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Ocupação Média</h4>
+                        <h2 style="color: white;">74%</h2>
+                        <p style="color: white;">↑ 12% vs mês anterior</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Frequência Reservas</h4>
+                        <h2 style="color: white;">156</h2>
+                        <p style="color: white;">↑ 8% vs mês anterior</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Ticket Médio</h4>
+                        <h2 style="color: white;">R$ 84,50</h2>
+                        <p style="color: white;">↑ 15% vs mês anterior</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Satisfação Cliente</h4>
+                        <h2 style="color: white;">4.6★</h2>
+                        <p style="color: white;">↑ 0.3 vs mês anterior</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos e Análises -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="main-content" style="padding: 20px;">
+                        <h4>Ocupação por Dia da Semana</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Dia</th>
+                                    <th>Ocupação Média</th>
+                                    <th>Pico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Segunda-feira</td>
+                                    <td>45%</td>
+                                    <td>19:30</td>
+                                </tr>
+                                <tr>
+                                    <td>Terça-feira</td>
+                                    <td>52%</td>
+                                    <td>20:00</td>
+                                </tr>
+                                <tr>
+                                    <td>Quarta-feira</td>
+                                    <td>58%</td>
+                                    <td>19:45</td>
+                                </tr>
+                                <tr>
+                                    <td>Quinta-feira</td>
+                                    <td>67%</td>
+                                    <td>20:15</td>
+                                </tr>
+                                <tr>
+                                    <td>Sexta-feira</td>
+                                    <td>89%</td>
+                                    <td>21:00</td>
+                                </tr>
+                                <tr>
+                                    <td>Sábado</td>
+                                    <td>95%</td>
+                                    <td>20:30</td>
+                                </tr>
+                                <tr>
+                                    <td>Domingo</td>
+                                    <td>78%</td>
+                                    <td>13:30</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="main-content" style="padding: 20px;">
+                        <h4>Pratos Mais Populares</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Prato</th>
+                                    <th>Pedidos</th>
+                                    <th>% do Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Salmão Grelhado</td>
+                                    <td>87</td>
+                                    <td>18.5%</td>
+                                </tr>
+                                <tr>
+                                    <td>Picanha Argentina</td>
+                                    <td>73</td>
+                                    <td>15.6%</td>
+                                </tr>
+                                <tr>
+                                    <td>Risotto de Camarão</td>
+                                    <td>65</td>
+                                    <td>13.8%</td>
+                                </tr>
+                                <tr>
+                                    <td>Pasta Carbonara</td>
+                                    <td>52</td>
+                                    <td>11.1%</td>
+                                </tr>
+                                <tr>
+                                    <td>Frango à Parmegiana</td>
+                                    <td>48</td>
+                                    <td>10.2%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insumos Mais Utilizados -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h4>Insumos Mais Utilizados</h4>
+                        <ul>
+                            <li>Salmão: 45.5kg (23% do total)</li>
+                            <li>Picanha: 38.2kg (19% do total)</li>
+                            <li>Camarão: 28.7kg (15% do total)</li>
+                            <li>Arroz Arbóreo: 22.1kg (11% do total)</li>
+                            <li>Azeite: 18.5L (9% do total)</li>
+                            <li>Vinho Branco: 15 garrafas (8% do total)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h4>Horários de Pico</h4>
+                        <ul>
+                            <li>20:00 - 21:00: 92% ocupação média</li>
+                            <li>19:30 - 20:30: 87% ocupação média</li>
+                            <li>13:00 - 14:00: 78% ocupação média</li>
+                            <li>21:00 - 22:00: 76% ocupação média</li>
+                            <li>12:30 - 13:30: 65% ocupação média</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Análise de Performance -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="main-content" style="padding: 20px;">
+                        <h4>Análise de Performance - Janeiro 2024</h4>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>Receita Total</h5>
+                                <p><strong>R$ 78.450,00</strong></p>
+                                <p>Meta: R$ 75.000,00 <span style="color: green;">(104.6%)</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>Clientes Atendidos</h5>
+                                <p><strong>1.247 clientes</strong></p>
+                                <p>Meta: 1.200 clientes <span style="color: green;">(103.9%)</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>Tempo Médio de Atendimento</h5>
+                                <p><strong>42 minutos</strong></p>
+                                <p>Meta: 45 minutos <span style="color: green;">(93.3%)</span></p>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-success mt-3">
+                            <h5>📈 Destaques Positivos</h5>
+                            <ul>
+                                <li>Aumento de 15% na receita comparado ao mês anterior</li>
+                                <li>Melhoria na satisfação do cliente (4.6 estrelas)</li>
+                                <li>Redução no tempo de atendimento em 6.7%</li>
+                                <li>Aumento de 12% na ocupação média</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <h5>🎯 Oportunidades de Melhoria</h5>
+                            <ul>
+                                <li>Aumentar ocupação nos dias de semana (segunda a quarta)</li>
+                                <li>Diversificar cardápio para reduzir dependência dos pratos principais</li>
+                                <li>Otimizar gestão de estoque para evitar faltas</li>
+                                <li>Implementar promoções para horários de menor movimento</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projeções e Recomendações -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="feature-card">
+                        <h4>📊 Projeções para Próximo Mês</h4>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <p><strong>Receita Projetada:</strong></p>
+                                <p>R$ 82.000,00 (+4.5%)</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p><strong>Ocupação Projetada:</strong></p>
+                                <p>78% (+4%)</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p><strong>Clientes Esperados:</strong></p>
+                                <p>1.300 (+4.2%)</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p><strong>Meta Satisfação:</strong></p>
+                                <p>4.7★ (+0.1)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function gerarRelatorioGerenciamento() {
+            const mesAno = document.getElementById('mesAnoGerencia').value;
+            const tipo = document.getElementById('tipoAnalise').value;
+            const formato = document.getElementById('formatoRelatorio').value;
+
+            showAlert(`Gerando relatório ${formato} de ${tipo} para ${mesAno}...`, 'info');
+            
+            setTimeout(() => {
+                showAlert('Relatório de gerenciamento gerado com sucesso!', 'success');
+            }, 2000);
+        }
+
+        function exportarGerenciamento() {
+            showAlert('Exportando relatório de gerenciamento...', 'info');
+            setTimeout(() => {
+                showAlert('Relatório exportado com sucesso!', 'success');
+            }, 2000);
+        }
+
+        function limparFiltrosGerenciamento() {
+            document.getElementById('filtroGerenciamentoForm').reset();
+            showAlert('Filtros limpos!', 'info');
+        }
+    </script>
+</body>
+</html>

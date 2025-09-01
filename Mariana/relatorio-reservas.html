@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Reservas - Mariana</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🍽️ Sistema Restaurante</div>
+            <nav>
+                <a href="index.html" class="nav-button">Home</a>
+                <a href="sistema.html" class="nav-button">Sistema</a>
+                <a href="clientes.html" class="nav-button">Clientes</a>
+                <a href="login.html" class="nav-button">Logout</a>
+            </nav>
+        </header>
+
+        <div class="main-content">
+            <div class="back-button">
+                <a href="sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
+            </div>
+
+            <div class="welcome-section">
+                <h1>Relatório de Reservas</h1>
+                <p>Desenvolvido por: <strong>Mariana Borges</strong></p>
+            </div>
+
+            <!-- Filtros -->
+            <div class="form-container mb-4">
+                <h3>Filtros de Consulta</h3>
+                <form id="filtroReservasForm">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="dataInicioReserva">Data Início:</label>
+                                <input type="date" id="dataInicioReserva" class="form-control" value="2024-01-01">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="dataFimReserva">Data Fim:</label>
+                                <input type="date" id="dataFimReserva" class="form-control" value="2024-01-31">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="statusReserva">Status:</label>
+                                <select id="statusReserva" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="confirmada">Confirmada</option>
+                                    <option value="cancelada">Cancelada</option>
+                                    <option value="finalizada">Finalizada</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="horarioReserva">Horário:</label>
+                                <select id="horarioReserva" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="almoco">Almoço (11h-15h)</option>
+                                    <option value="jantar">Jantar (18h-22h)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn-primary" onclick="filtrarReservas()">Filtrar</button>
+                        <button type="button" class="btn-success" onclick="exportarReservas()">Exportar PDF</button>
+                        <button type="button" class="btn-secondary" onclick="limparFiltrosReservas()">Limpar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Resumo -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Total de Reservas</h4>
+                        <h2 style="color: white;">156</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Confirmadas</h4>
+                        <h2 style="color: white;">142</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Canceladas</h4>
+                        <h2 style="color: white;">14</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <h4>Taxa de Ocupação</h4>
+                        <h2 style="color: white;">87%</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalhamento das Reservas -->
+            <div class="row">
+                <div class="col-12">
+                    <h3>Detalhamento das Reservas - Janeiro 2024</h3>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <input type="text" id="searchReserva" class="form-control" placeholder="Buscar reserva...">
+                        </div>
+                    </div>
+
+                    <table class="table" id="reservasTable">
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Cliente</th>
+                                <th>Mesa</th>
+                                <th>Pessoas</th>
+                                <th>Status</th>
+                                <th>Observações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>15/01/2024 19:30</td>
+                                <td>João Silva</td>
+                                <td>Mesa 5</td>
+                                <td>2</td>
+                                <td><span style="color: green;">Confirmada</span></td>
+                                <td>Aniversário</td>
+                            </tr>
+                            <tr>
+                                <td>15/01/2024 20:00</td>
+                                <td>Maria Santos</td>
+                                <td>Mesa 8</td>
+                                <td>4</td>
+                                <td><span style="color: green;">Confirmada</span></td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>15/01/2024 20:30</td>
+                                <td>Carlos Pereira</td>
+                                <td>Mesa 12</td>
+                                <td>6</td>
+                                <td><span style="color: red;">Cancelada</span></td>
+                                <td>Cliente cancelou</td>
+                            </tr>
+                            <tr>
+                                <td>16/01/2024 12:30</td>
+                                <td>Ana Costa</td>
+                                <td>Mesa 3</td>
+                                <td>3</td>
+                                <td><span style="color: blue;">Finalizada</span></td>
+                                <td>Almoço executivo</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Análises -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h4>Horários Mais Reservados</h4>
+                        <ul>
+                            <li>20:00 - 20:30: 35 reservas</li>
+                            <li>19:30 - 20:00: 28 reservas</li>
+                            <li>12:00 - 12:30: 22 reservas</li>
+                            <li>21:00 - 21:30: 18 reservas</li>
+                            <li>19:00 - 19:30: 15 reservas</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h4>Dias da Semana</h4>
+                        <ul>
+                            <li>Sábado: 28 reservas</li>
+                            <li>Sexta: 25 reservas</li>
+                            <li>Domingo: 22 reservas</li>
+                            <li>Quinta: 18 reservas</li>
+                            <li>Quarta: 15 reservas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            filterTable('searchReserva', 'reservasTable');
+        });
+
+        function filtrarReservas() {
+            showAlert('Filtrando relatório de reservas...', 'info');
+            setTimeout(() => {
+                showAlert('Relatório filtrado com sucesso!', 'success');
+            }, 1500);
+        }
+
+        function exportarReservas() {
+            showAlert('Exportando relatório de reservas...', 'info');
+            setTimeout(() => {
+                showAlert('Relatório exportado com sucesso!', 'success');
+            }, 2000);
+        }
+
+        function limparFiltrosReservas() {
+            document.getElementById('filtroReservasForm').reset();
+            showAlert('Filtros limpos!', 'info');
+        }
+    </script>
+</body>
+</html>
