@@ -3,132 +3,738 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardápio Digital - Restaurante Gourmet</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Cardápio Digital - Covil Restaurante</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            border-bottom: 3px solid #d4af37;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), transparent);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .logo {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .logo i {
+            filter: drop-shadow(0 0 10px #d4af37);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #ccc;
+        }
+
+        .stats-banner {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .stats-banner h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats-value {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-categories {
+            display: grid;
+            gap: 3rem;
+        }
+
+        .category {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .category:hover {
+            border-color: #d4af37;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .category h2 {
+            color: #d4af37;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .category h2 i {
+            font-size: 2rem;
+        }
+
+        .menu-items {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #d4af37;
+            transform: translateX(10px);
+        }
+
+        .item-info {
+            flex-grow: 1;
+        }
+
+        .item-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-description {
+            color: #ccc;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .item-stats {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .item-stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .item-pricing {
+            text-align: right;
+            min-width: 200px;
+        }
+
+        .item-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-sales {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 0.3rem;
+        }
+
+        .item-revenue {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .popular {
+            position: relative;
+            border-color: #ffd700 !important;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(212, 175, 55, 0.1));
+        }
+
+        .popular::before {
+            content: '🔥 MAIS VENDIDO';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+            padding: 1rem;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 1.5rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .qr-info {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 10px;
+            border: 1px dashed #d4af37;
+        }
+
+        .qr-info p {
+            color: #d4af37;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .menu-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .item-pricing {
+                min-width: auto;
+            }
+            
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.8rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <a href="index.html" class="back-button" title="Voltar">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
     <div class="container">
-        <header>
-            <div class="logo">🍽️ Restaurante Gourmet</div>
-            <nav>
-                <a href="index.html" class="nav-button">Home</a>
-                <a href="cardapio.html" class="nav-button">Cardápio</a>
-                <a href="reservas.html" class="nav-button">Reservas</a>
-                <a href="login.html" class="nav-button">Login</a>
-            </nav>
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-crown"></i>
+                Covil Restaurante
+            </div>
+            <h1>Cardápio Digital</h1>
+            <p>Os sabores que conquistam o reino</p>
         </header>
 
-        <div class="main-content">
-            <div class="back-button">
-                <a href="index.html" class="btn-secondary">← Voltar</a>
-            </div>
+        <div class="qr-info">
+            <p><i class="fas fa-qrcode"></i> Cardápio acessado via QR Code - Mesa Digital</p>
+        </div>
 
-            <div class="welcome-section">
-                <h1>Cardápio Digital</h1>
-                <p>Descubra nossos pratos especiais preparados com ingredientes frescos e selecionados</p>
-            </div>
+        <div class="stats-banner">
+            <h2>Expectativa de Vendas na Semana</h2>
+            <div class="stats-value">R$ 53.093,50</div>
+            <p>Meta de faturamento baseada na demanda histórica</p>
+        </div>
 
-            <!-- Filtros do Cardápio -->
-            <div class="text-center mb-4">
-                <button class="btn-primary" onclick="filtrarCategoria('todos')">Todos</button>
-                <button class="btn-secondary" onclick="filtrarCategoria('entradas')">Entradas</button>
-                <button class="btn-secondary" onclick="filtrarCategoria('principais')">Pratos Principais</button>
-                <button class="btn-secondary" onclick="filtrarCategoria('sobremesas')">Sobremesas</button>
-                <button class="btn-secondary" onclick="filtrarCategoria('bebidas')">Bebidas</button>
-            </div>
+        <div class="menu-categories">
+            <!-- Hambúrguers -->
+            <section class="category">
+                <h2><i class="fas fa-hamburger"></i> Hambúrguers Reais</h2>
+                <div class="menu-items">
+                    <div class="menu-item popular">
+                        <div class="item-info">
+                            <div class="item-name">X-Carne Real</div>
+                            <div class="item-description">
+                                Nosso hambúrguer premium com blend especial da casa, queijo aged cheddar, alface americana, tomate e molho secreto do reino.
+                            </div>
+                            <div class="item-stats">
+                                <span><i class="fas fa-fire"></i> Mais vendido</span>
+                                <span><i class="fas fa-clock"></i> 15-20min</span>
+                                <span><i class="fas fa-users"></i> Para 1-2 pessoas</span>
+                            </div>
+                        </div>
+                        <div class="item-pricing">
+                            <div class="item-price">R$ 50,00</div>
+                            <div class="item-sales">300x vendidos/semana</div>
+                            <div class="item-revenue">R$ 15.000,00</div>
+                        </div>
+                    </div>
 
-            <!-- Pratos do Cardápio -->
-            <div class="features-grid">
-                <div class="feature-card categoria-principais">
-                    <h3>🐟 Salmão Grelhado</h3>
-                    <p><strong>R$ 45,90</strong></p>
-                    <p>Filé de salmão grelhado com molho de maracujá, acompanha arroz de jasmim e legumes refogados</p>
-                    <p><em>Ingredientes: Salmão, maracujá, arroz jasmim, brócolis, cenoura</em></p>
-                    <span style="background: red; color: white; padding: 2px 8px; border-radius: 15px; font-size: 12px;">🔥 PROMOÇÃO</span>
+                    <div class="menu-item">
+                        <div class="item-info">
+                            <div class="item-name">Hambúrguer Padrão</div>
+                            <div class="item-description">
+                                O clássico que nunca sai de moda. Carne bovina, queijo, alface, tomate e maionese especial.
+                            </div>
+                            <div class="item-stats">
+                                <span><i class="fas fa-star"></i> Clássico</span>
+                                <span><i class="fas fa-clock"></i> 10-15min</span>
+                                <span><i class="fas fa-heart"></i> Tradicional</span>
+                            </div>
+                        </div>
+                        <div class="item-pricing">
+                            <div class="item-price">R$ 25,00</div>
+                            <div class="item-sales">104x vendidos/semana</div>
+                            <div class="item-revenue">R$ 2.600,00</div>
+                        </div>
+                    </div>
+
+                    <div class="menu-item">
+                        <div class="item-info">
+                            <div class="item-name">X-Bacon Nobre</div>
+                            <div class="item-description">
+                                Bacon artesanal defumado, carne premium, cebola caramelizada, queijo derretido e molho barbecue especial.
+                            </div>
+                            <div class="item-stats">
+                                <span><i class="fas fa-bacon"></i> Bacon artesanal</span>
+                                <span><i class="fas fa-clock"></i> 20min</span>
+                                <span><i class="fas fa-award"></i> Premiado</span>
+                            </div>
+                        </div>
+                        <div class="item-pricing">
+                            <div class="item-price">R$ 45,00</div>
+                            <div class="item-sales">198x vendidos/semana</div>
+                            <div class="item-revenue">R$ 8.910,00</div>
+                        </div>
+                    </div>
+
+                    <div class="menu-item">
+                        <div class="item-info">
+                            <div class="item-name">X-Triplo Império</div>
+                            <div class="item-description">
+                                Três carnes selecionadas, três tipos de queijo, bacon, cebola roxa, rúcula e molho especial da casa. Uma experiência épica!
+                            </div>
+                            <div class="item-stats">
+                                <span><i class="fas fa-crown"></i> Premium</span>
+                                <span><i class="fas fa-clock"></i> 25min</span>
+                                <span><i class="fas fa-gem"></i> Exclusivo</span>
+                            </div>
+                        </div>
+                        <div class="item-pricing">
+                            <div class="item-price">R$ 60,00</div>
+                            <div class="item-sales">213x vendidos/semana</div>
+                            <div class="item-revenue">R$ 12.780,00</div>
+                        </div>
+                    </div>
                 </div>
+            </section>
 
-                <div class="feature-card categoria-principais">
-                    <h3>🥩 Picanha Argentina</h3>
-                    <p><strong>R$ 52,00</strong></p>
-                    <p>Picanha argentina na brasa, acompanha farofa especial, vinagrete e batata rústica</p>
-                    <p><em>Ingredientes: Picanha, farofa, tomate, cebola, batata</em></p>
+            <!-- Acompanhamentos -->
+            <section class="category">
+                <h2><i class="fas fa-french-fries"></i> Acompanhamentos Nobres</h2>
+                <div class="menu-items">
+                    <div class="menu-item popular">
+                        <div class="item-info">
+                            <div class="item-name">Batatas Fritas do Reino</div>
+                            <div class="item-description">
+                                Batatas rústicas cortadas na casa, temperadas com sal especial e ervas finas. Crocantes por fora, macias por dentro.
+                            </div>
+                            <div class="item-stats">
+                                <span><i class="fas fa-fire"></i> Mais pedido</span>
+                                <span><i class="fas fa-clock"></i> 8-10min</span>
+                                <span><i class="fas fa-share-alt"></i> Para compartilhar</span>
+                            </div>
+                        </div>
+                        <div class="item-pricing">
+                            <div class="item-price">R$ 15,00</div>
+                            <div class="item-sales">310x vendidas/semana</div>
+                            <div class="item-revenue">R$ 4.650,00</div>
+                        </div>
+                    </div>
                 </div>
+            </section>
 
-                <div class="feature-card categoria-principais">
-                    <h3>🦐 Risotto de Camarão</h3>
-                    <p><strong>R$ 38,50</strong></p>
-                    <p>Risotto cremoso com camarões grandes, vinho branco e ervas finas</p>
-                    <p><em>Ingredientes: Arroz arbóreo, camarão, vinho branco, manjericão</em></p>
+            <!-- Bebidas -->
+            <section class="category">
+                <h2><i class="fas fa-glass-cheers"></i> Bebidas do Reino</h2>
+                <div class="menu-items">
+                    <div class="menu-item popular">
+                        <div class="item-info">
+                            <div class="item-name">Heineken</div>
+                            <div class="item-description">
+                                Cerveja premium gelada, perfeita para acompanhar nossos hambúrguers. Qualidade internacional.
+                            </div>
+                            <div class="item-stats">
+                                <span><i class="fas fa-beer"></i> Premium</span>
+                                <span><i class="fas fa-thermometer-quarter"></i> Gelada</span>
+                                <span><i class="fas fa-globe"></i> Internacional</span>
+                            </div>
+                        </div>
+                        <div class="item-pricing">
+                            <div class="item-price">R$ 6,00</div>
+                            <div class="item-sales">295x vendidas/semana</div>
+                            <div class="item-revenue">R$ 2.370,00</div>
+                        </div>
+                    </div>
+
+                    <div class="menu-item">
+                        <div class="item-info">
+                            <div class="item-name">Budweiser</div>
+                            <div class="item-description">
+                                Cerveja americana clássica, refrescante e saborosa. Ideal para momentos especiais.
+                            </div>
+                            <div class="item-stats">
+                                <span><i class="fas fa-beer"></i> Clássica</span>
+                                <span><i class="fas fa-flag-usa"></i> Americana</span>
+                                <span><i class="fas fa-star"></i> Tradicional</span>
+                            </div>
+                        </div>
+                        <div class="item-pricing">
+                            <div class="item-price">R$ 5,50</div>
+                            <div class="item-sales">95x vendidas/semana</div>
+                            <div class="item-revenue">R$ 1.622,50</div>
+                        </div>
+                    </div>
+
+                    <div class="menu-item">
+                        <div class="item-info">
+                            <div class="item-name">Chopp Artesanal</div>
+                            <div class="item-description">
+                                Chopp artesanal da casa, produzido localmente com ingredientes selecionados. Sabor único e autêntico.
+                            </div>
+                            <div class="item-stats">
+                                <span><i class="fas fa-glass-whiskey"></i> Artesanal</span>
+                                <span><i class="fas fa-home"></i> Da casa</span>
+                                <span><i class="fas fa-leaf"></i> Natural</span>
+                            </div>
+                        </div>
+                        <div class="item-pricing">
+                            <div class="item-price">R$ 20,00</div>
+                            <div class="item-sales">395x vendidos/semana</div>
+                            <div class="item-revenue">R$ 3.920,00</div>
+                        </div>
+                    </div>
+
+                    <div class="menu-item">
+                        <div class="item-info">
+                            <div class="item-name">Refrigerante Premium</div>
+                            <div class="item-description">
+                                Coca-Cola, Guaraná Antarctica ou Fanta. Bebidas geladas em lata para refrescar seu dia.
+                            </div>
+                            <div class="item-stats">
+                                <span><i class="fas fa-tint"></i> Refrescante</span>
+                                <span><i class="fas fa-snowflake"></i> Gelado</span>
+                                <span><i class="fas fa-list"></i> Várias opções</span>
+                            </div>
+                        </div>
+                        <div class="item-pricing">
+                            <div class="item-price">R$ 6,50</div>
+                            <div class="item-sales">100x vendidos/semana</div>
+                            <div class="item-revenue">R$ 650,00</div>
+                        </div>
+                    </div>
+
+                    <div class="menu-item">
+                        <div class="item-info">
+                            <div class="item-name">Refrigerante Natural</div>
+                            <div class="item-description">
+                                Sucos naturais e refrigerantes artesanais da casa. Sabores únicos e refrescantes.
+                            </div>
+                            <div class="item-stats">
+                                <span><i class="fas fa-leaf"></i> Natural</span>
+                                <span><i class="fas fa-home"></i> Artesanal</span>
+                                <span><i class="fas fa-apple-alt"></i> Saudável</span>
+                            </div>
+                        </div>
+                        <div class="item-pricing">
+                            <div class="item-price">R$ 6,50</div>
+                            <div class="item-sales">91x vendidos/semana</div>
+                            <div class="item-revenue">R$ 591,50</div>
+                        </div>
+                    </div>
                 </div>
+            </section>
+        </div>
 
-                <div class="feature-card categoria-entradas">
-                    <h3>🧄 Bruschetta Especial</h3>
-                    <p><strong>R$ 18,90</strong></p>
-                    <p>Pão italiano tostado com tomate, manjericão fresco e queijo burrata</p>
-                    <p><em>Ingredientes: Pão italiano, tomate, manjericão, burrata</em></p>
+        <!-- Informações Adicionais -->
+        <div style="margin-top: 4rem; padding: 2rem; background: rgba(212, 175, 55, 0.1); border-radius: 20px; text-align: center;">
+            <h3 style="color: #d4af37; margin-bottom: 1rem; font-size: 1.8rem;">
+                <i class="fas fa-info-circle"></i> Informações Importantes
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                <div>
+                    <h4 style="color: #d4af37; margin-bottom: 0.5rem;">
+                        <i class="fas fa-clock"></i> Tempo de Preparo
+                    </h4>
+                    <p style="color: #ccc;">Hambúrguers: 15-25 minutos<br>Acompanhamentos: 8-12 minutos</p>
                 </div>
-
-                <div class="feature-card categoria-sobremesas">
-                    <h3>🍰 Sobremesa da Casa</h3>
-                    <p><strong>R$ 15,90</strong></p>
-                    <p>Petit gâteau de chocolate com sorvete de baunilha e calda de frutas vermelhas</p>
-                    <p><em>Ingredientes: Chocolate, ovos, sorvete, frutas vermelhas</em></p>
-                    <span style="background: red; color: white; padding: 2px 8px; border-radius: 15px; font-size: 12px;">🔥 PROMOÇÃO</span>
+                <div>
+                    <h4 style="color: #d4af37; margin-bottom: 0.5rem;">
+                        <i class="fas fa-credit-card"></i> Formas de Pagamento
+                    </h4>
+                    <p style="color: #ccc;">PIX, Cartão, Dinheiro<br>Conta pode ser dividida</p>
                 </div>
-
-                <div class="feature-card categoria-bebidas">
-                    <h3>🍷 Vinho da Casa</h3>
-                    <p><strong>R$ 85,00</strong> (garrafa)</p>
-                    <p>Vinho tinto selecionado, harmoniza perfeitamente com carnes vermelhas</p>
-                    <p><em>Origem: Serra Gaúcha, Safra 2021</em></p>
+                <div>
+                    <h4 style="color: #d4af37; margin-bottom: 0.5rem;">
+                        <i class="fas fa-utensils"></i> Ingredientes
+                    </h4>
+                    <p style="color: #ccc;">Frescos e selecionados<br>Origem local quando possível</p>
                 </div>
-
-                <div class="feature-card categoria-bebidas">
-                    <h3>🥤 Suco Natural</h3>
-                    <p><strong>R$ 12,00</strong></p>
-                    <p>Sucos naturais de frutas da estação: laranja, acerola, maracujá</p>
-                    <p><em>100% natural, sem conservantes</em></p>
+                <div>
+                    <h4 style="color: #d4af37; margin-bottom: 0.5rem;">
+                        <i class="fas fa-star"></i> Avaliação
+                    </h4>
+                    <p style="color: #ccc;">Avalie após o pagamento<br>Sua opinião é importante</p>
                 </div>
-
-                <div class="feature-card categoria-principais">
-                    <h3>🍝 Pasta Carbonara</h3>
-                    <p><strong>R$ 32,90</strong></p>
-                    <p>Massa artesanal com molho carbonara tradicional, bacon e queijo parmesão</p>
-                    <p><em>Ingredientes: Massa, ovos, bacon, parmesão, pimenta</em></p>
-                </div>
-            </div>
-
-            <div class="text-center mt-4">
-                <p><strong>🔄 Cardápio atualizado em: 15/01/2024</strong></p>
-                <p>💳 Aceitamos: Dinheiro, PIX, Cartão de Débito e Crédito</p>
-                <p>📱 Para fazer seu pedido, chame o garçom ou use o QR Code da mesa</p>
             </div>
         </div>
+
+        <!-- Call to Action -->
+        <div style="margin-top: 3rem; text-align: center; padding: 3rem; background: linear-gradient(135deg, #d4af37, #ffd700); border-radius: 20px; color: #000;">
+            <h3 style="font-size: 2rem; margin-bottom: 1rem;">
+                <i class="fas fa-crown"></i> Pronto para Pedir?
+            </h3>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                Chame nosso garçom e faça seu pedido diretamente na mesa!
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <button onclick="callWaiter()" style="background: #000; color: #d4af37; border: 2px solid #000; padding: 1rem 2rem; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fas fa-hand-paper"></i> Chamar Garçom
+                </button>
+                <a href="index.html#reservas" style="background: transparent; color: #000; border: 2px solid #000; padding: 1rem 2rem; border-radius: 50px; font-size: 1.1rem; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease;">
+                    <i class="fas fa-calendar-alt"></i> Fazer Reserva
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer do Cardápio -->
+        <footer style="margin-top: 4rem; text-align: center; padding: 2rem; border-top: 2px solid #d4af37; background: rgba(0,0,0,0.5); border-radius: 20px;">
+            <div style="color: #d4af37; font-size: 1.5rem; margin-bottom: 1rem;">
+                <i class="fas fa-crown"></i> Covil Restaurante
+            </div>
+            <p style="color: #ccc; margin-bottom: 1rem;">
+                O reino dos sabores onde cada refeição é uma experiência real
+            </p>
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; color: #999;">
+                <span><i class="fas fa-clock"></i> Ter-Sex: 18h-23h | Sáb-Dom: 17h-23h30</span>
+                <span><i class="fas fa-phone"></i> (48) 3333-4444</span>
+                <span><i class="fas fa-map-marker-alt"></i> Centro - Tubarão, SC</span>
+            </div>
+            <div style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                <p>Preços e disponibilidade sujeitos a alteração | Desenvolvido por: Amanda, Bianca, Eduardo, Mariana e Vinicius</p>
+            </div>
+        </footer>
     </div>
 
-    <script src="script.js"></script>
     <script>
-        function filtrarCategoria(categoria) {
-            const cards = document.querySelectorAll('.feature-card');
-            const botoes = document.querySelectorAll('.text-center button');
+        // Função para chamar garçom
+        function callWaiter() {
+            // Simular chamada do garçom
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 2000;
+                backdrop-filter: blur(5px);
+            `;
             
-            // Reset botões
-            botoes.forEach(btn => {
-                btn.className = 'btn-secondary';
+            modal.innerHTML = `
+                <div style="background: linear-gradient(135deg, #1a1a1a, #2a2a2a); padding: 3rem; border-radius: 20px; text-align: center; border: 2px solid #d4af37; max-width: 400px; width: 90%;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🔔</div>
+                    <h3 style="color: #d4af37; font-size: 2rem; margin-bottom: 1rem;">Garçom Chamado!</h3>
+                    <p style="color: #ccc; font-size: 1.2rem; margin-bottom: 2rem;">
+                        Nosso garçom estará em sua mesa em instantes para anotar seu pedido.
+                    </p>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: linear-gradient(135deg, #d4af37, #ffd700); color: #000; border: none; padding: 1rem 2rem; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
+                        <i class="fas fa-check"></i> Entendido
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Auto remover após 5 segundos
+            setTimeout(() => {
+                if (modal.parentElement) {
+                    modal.remove();
+                }
+            }, 5000);
+        }
+
+        // Animações ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animação de fade-in para os itens do menu
+            const menuItems = document.querySelectorAll('.menu-item');
+            const categories = document.querySelectorAll('.category');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '0';
+                        entry.target.style.transform = 'translateY(30px)';
+                        entry.target.style.transition = 'all 0.6s ease';
+                        
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, 100);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            menuItems.forEach(item => observer.observe(item));
+            categories.forEach(category => observer.observe(category));
+            
+            // Contador animado para a receita
+            const statsValue = document.querySelector('.stats-value');
+            if (statsValue) {
+                let currentValue = 0;
+                const targetValue = 53093.50;
+                const increment = targetValue / 100;
+                
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= targetValue) {
+                        currentValue = targetValue;
+                        clearInterval(timer);
+                    }
+                    statsValue.textContent = `R$ ${currentValue.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                }, 50);
+            }
+        });
+
+        // Efeito hover para os itens do menu
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(10px) scale(1.02)';
             });
             
-            // Destacar botão ativo
-            event.target.className = 'btn-primary';
-            
-            cards.forEach(card => {
-                if (categoria === 'todos' || card.classList.contains(`categoria-${categoria}`)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0) scale(1)';
+            });
+        });
+
+        // Smooth scroll para links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
+        });
+
+        // Sistema de busca simples (para futuras implementações)
+        function searchMenu(query) {
+            const items = document.querySelectorAll('.menu-item');
+            const searchTerm = query.toLowerCase();
             
-            showAlert(`Exibindo ${categoria === 'todos' ? 'todos os pratos' : categoria}`, 'info');
+            items.forEach(item => {
+                const name = item.querySelector('.item-name').textContent.toLowerCase();
+                const description = item.querySelector('.item-description').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || description.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = searchTerm === '' ? 'flex' : 'none';
+                }
+            });
+        }
+
+        // PWA: Verificar se é possível instalar
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            deferredPrompt = e;
+            // Mostrar botão de instalação se desejar
+        });
+
+        // Feedback tátil para dispositivos móveis
+        if ('vibrate' in navigator) {
+            document.querySelectorAll('.menu-item, button').forEach(element => {
+                element.addEventListener('click', () => {
+                    navigator.vibrate(50); // Vibração curta
+                });
+            });
+        }
+
+        // Lazy loading para futuras imagens
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+            
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
         }
     </script>
 </body>

@@ -3,92 +3,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Restaurante - Home</title>
+    <title>Covil Restaurante - O melhor hambúrguer da região</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">🍽️ Restaurante Gourmet</div>
-            <nav>
-                <a href="index.html" class="nav-button">Home</a>
-                <a href="login.html" class="nav-button">Login</a>
-                <a href="cardapio.html" class="nav-button">Cardápio</a>
-                <a href="reservas.html" class="nav-button">Reservas</a>
-                <a href="sistema.html" class="nav-button">Sistema</a>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <i class="fas fa-crown"></i>
+                Covil Restaurante
+            </a>
+            <nav class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#destaques">Destaques</a></li>
+                <li><a href="#reservas">Reservas</a></li>
+                <li><a href="#contato">Contato</a></li>
             </nav>
-        </header>
-
-        <div class="main-content">
-            <div class="welcome-section">
-                <h1>Bem-vindos ao Restaurante Gourmet</h1>
-                <p>Desfrute de uma experiência gastronômica única com nossos pratos especiais e ambiente acolhedor. 
-                Nosso sistema moderno oferece facilidade para reservas, pedidos e gestão completa do restaurante.</p>
+            <div class="auth-buttons">
+                <button class="btn-login" onclick="showLoginModal()">
+                    <i class="fas fa-user"></i> Login
+                </button>
+                <button class="btn-register" onclick="showRegisterModal()">
+                    <i class="fas fa-user-plus"></i> Cadastro
+                </button>
             </div>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <h3>🏠 Informações do Restaurante</h3>
-                    <ul>
-                        <li>História e tradição desde 1995</li>
-                        <li>Horário: Segunda a Domingo, 11h às 23h</li>
-                        <li>Endereço: Rua das Flores, 123 - Centro</li>
-                        <li>Telefone: (48) 3333-4444</li>
-                        <li>Email: contato@restaurantegourmet.com</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card">
-                    <h3>🍳 Destaques do Cardápio</h3>
-                    <ul>
-                        <li>Salmão grelhado com molho de maracujá</li>
-                        <li>Risotto de camarão ao vinho branco</li>
-                        <li>Picanha argentina na brasa</li>
-                        <li>Sobremesas artesanais</li>
-                        <li>Carta de vinhos selecionados</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card">
-                    <h3>🎯 Promoções Especiais</h3>
-                    <ul>
-                        <li>Terça-feira: Pratos executivos 20% OFF</li>
-                        <li>Quinta-feira: Noite dos vinhos</li>
-                        <li>Weekend: Brunch especial</li>
-                        <li>Aniversariantes: Sobremesa grátis</li>
-                        <li>Grupos acima de 8: Desconto 15%</li>
-                    </ul>
-                </div>
-
-                <div class="feature-card">
-                    <h3>🔧 Sistema de Gestão</h3>
-                    <ul>
-                        <li>Controle completo de estoque</li>
-                        <li>Gestão de funcionários e ponto</li>
-                        <li>Relatórios financeiros detalhados</li>
-                        <li>Sistema de reservas online</li>
-                        <li>Controle de qualidade e avaliações</li>
-                    </ul>
-                </div>
+            <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
+        </div>
+    </header>
 
-            <div class="text-center mt-4">
-                <h2 style="color: #764ba2; margin-bottom: 20px;">Acesso Rápido ao Sistema</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4>Para Clientes</h4>
-                        <p>Faça suas reservas e consulte nosso cardápio digital</p>
-                        <a href="cardapio-digital.html" class="btn-primary">Ver Cardápio</a>
-                        <a href="reservas.html" class="btn-secondary">Fazer Reserva</a>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="crown">👑</span>
+                O Reino dos Sabores
+            </h1>
+            <p class="hero-subtitle">
+                Hambúrgueres artesanais que conquistam paladares e criam memórias inesquecíveis
+            </p>
+            <div class="hero-buttons">
+                <a href="cardapio-digital.html" class="btn-primary">
+                    <i class="fas fa-utensils"></i>
+                    Ver Cardápio
+                </a>
+                <button class="btn-secondary" onclick="scrollToSection('reservas')">
+                    <i class="fas fa-calendar-alt"></i>
+                    Fazer Reserva
+                </button>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Sobre Section -->
+    <section class="sobre" id="sobre">
+        <div class="container">
+            <div class="section-header">
+                <h2>Nossa História</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="sobre-content">
+                <div class="sobre-text">
+                    <h3>O Chef e sua Paixão</h3>
+                    <p>
+                        No Covil Restaurante, cada hambúrguer é uma obra-prima criada com ingredientes selecionados 
+                        e técnicas aperfeiçoadas ao longo de anos. Nossa missão é simples: criar o melhor 
+                        cheeseburger da região e proporcionar uma experiência gastronômica única.
+                    </p>
+                    <p>
+                        Fundado em 2020, o Covil nasceu do sonho de transformar um simples hambúrguer em uma 
+                        experiência real e memorável. Cada receita foi desenvolvida com cuidado, cada ingrediente 
+                        escolhido com critério, e cada prato servido com paixão.
+                    </p>
+                    <div class="chef-signature">
+                        <span class="chef-name">Chef Eduardo Dall Rosa</span>
+                        <span class="chef-title">Fundador & Chef Executivo</span>
                     </div>
-                    <div class="col-md-6">
-                        <h4>Para Funcionários</h4>
-                        <p>Acesse o sistema administrativo do restaurante</p>
-                        <a href="login.html" class="btn-primary">Fazer Login</a>
-                        <a href="sistema.html" class="btn-secondary">Sistema</a>
+                </div>
+                <div class="sobre-image">
+                    <div class="image-placeholder">
+                        <i class="fas fa-chef-hat"></i>
+                        <span>Chef Eduardo</span>
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Destaques Section -->
+    <section class="destaques" id="destaques">
+        <div class="container">
+            <div class="section-header">
+                <h2>Destaques do Cardápio</h2>
+                <div class="section-divider"></div>
+                <p>Os pratos que fazem do Covil um reino gastronômico</p>
+            </div>
+            <div class="destaques-grid">
+                <div class="destaque-card" data-aos="fade-up">
+                    <div class="card-image">
+                        <div class="image-placeholder">
+                            <i class="fas fa-hamburger"></i>
+                        </div>
+                        <div class="price-tag">R$ 50,00</div>
+                    </div>
+                    <div class="card-content">
+                        <h3>X-Carne Real</h3>
+                        <p>Nosso hambúrguer premium com blend especial da casa, queijo aged cheddar e molho secreto.</p>
+                        <div class="ingredients">
+                            <span>Carne Premium</span>
+                            <span>Queijo Especial</span>
+                            <span>Molho Secreto</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destaque-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-image">
+                        <div class="image-placeholder">
+                            <i class="fas fa-bacon"></i>
+                        </div>
+                        <div class="price-tag">R$ 45,00</div>
+                    </div>
+                    <div class="card-content">
+                        <h3>X-Bacon Nobre</h3>
+                        <p>Bacon artesanal defumado, cebola caramelizada e queijo derretido na medida certa.</p>
+                        <div class="ingredients">
+                            <span>Bacon Artesanal</span>
+                            <span>Cebola Caramelizada</span>
+                            <span>Queijo Derretido</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destaque-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-image">
+                        <div class="image-placeholder">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <div class="price-tag">R$ 60,00</div>
+                    </div>
+                    <div class="card-content">
+                        <h3>X-Triplo Império</h3>
+                        <p>Três carnes selecionadas, queijos especiais e ingredientes premium em perfeita harmonia.</p>
+                        <div class="ingredients">
+                            <span>Tripla Carne</span>
+                            <span>Queijos Especiais</span>
+                            <span>Premium</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cta-cardapio">
+                <a href="cardapio-digital.html" class="btn-primary">
+                    <i class="fas fa-crown"></i>
+                    Ver Cardápio Completo
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Informações Section -->
+    <section class="info-section">
+        <div class="container">
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Horários de Funcionamento</h3>
+                    <div class="horarios">
+                        <p><strong>Terça a Sexta:</strong> 18:00 - 23:00</p>
+                        <p><strong>Sábado e Domingo:</strong> 17:00 - 23:30</p>
+                        <p><strong>Segunda-feira:</strong> <span class="fechado">Fechado</span></p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Localização</h3>
+                    <p>Rua dos Sabores, 123<br>
+                       Centro - Tubarão, SC<br>
+                       CEP: 88701-000</p>
+                    <button class="btn-maps">
+                        <i class="fas fa-directions"></i>
+                        Como Chegar
+                    </button>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3>Contato</h3>
+                    <div class="contatos">
+                        <p><i class="fas fa-phone"></i> (48) 3333-4444</p>
+                        <p><i class="fab fa-whatsapp"></i> (48) 99999-8888</p>
+                        <p><i class="fas fa-envelope"></i> contato@covilrestaurante.com.br</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservas Section -->
+    <section class="reservas" id="reservas">
+        <div class="container">
+            <div class="section-header">
+                <h2>Faça sua Reserva</h2>
+                <div class="section-divider"></div>
+                <p>Garante seu lugar em nosso reino gastronômico</p>
+            </div>
+            
+            <div class="reserva-content">
+                <div class="reserva-info">
+                    <h3>Diretrizes da Reserva</h3>
+                    <ul class="reserva-rules">
+                        <li><i class="fas fa-check"></i> Reservas com até 30 dias de antecedência</li>
+                        <li><i class="fas fa-check"></i> Confirmação por email automática</li>
+                        <li><i class="fas fa-check"></i> Cancelamento respondendo o email</li>
+                        <li><i class="fas fa-check"></i> Grupos acima de 8 pessoas têm 15% de desconto</li>
+                        <li><i class="fas fa-check"></i> Tolerância de 15 minutos de atraso</li>
+                    </ul>
+                </div>
+
+                <form class="reserva-form" id="reservationForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date">Data da Reserva</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="time">Horário</label>
+                            <select id="time" name="time" required>
+                                <option value="">Selecione primeiro a data</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="guests">Número de Pessoas</label>
+                            <select id="guests" name="guests" required>
+                                <option value="">Selecione</option>
+                                <option value="1">1 pessoa</option>
+                                <option value="2">2 pessoas</option>
+                                <option value="3">3 pessoas</option>
+                                <option value="4">4 pessoas</option>
+                                <option value="5">5 pessoas</option>
+                                <option value="6">6 pessoas</option>
+                                <option value="7">7 pessoas</option>
+                                <option value="8">8 pessoas (15% desconto)</option>
+                                <option value="9">9 pessoas (15% desconto)</option>
+                                <option value="10">10 pessoas (15% desconto)</option>
+                                <option value="11">11 pessoas (15% desconto)</option>
+                                <option value="12">12 pessoas (15% desconto)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Nome Completo</label>
+                        <input type="text" id="name" name="name" required placeholder="Digite seu nome completo">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Telefone</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="(48) 99999-9999">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-reserva">
+                        <i class="fas fa-crown"></i>
+                        Confirmar Reserva
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <a href="#home" class="footer-logo">
+                        <i class="fas fa-crown"></i>
+                        Covil Restaurante
+                    </a>
+                    <p>O reino dos sabores onde cada refeição é uma experiência real.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Links Rápidos</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#sobre">Nossa História</a></li>
+                        <li><a href="cardapio-digital.html">Cardápio</a></li>
+                        <li><a href="#reservas">Reservas</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-map-marker-alt"></i> Rua dos Sabores, 123 - Tubarão, SC</p>
+                        <p><i class="fas fa-phone"></i> (48) 3333-4444</p>
+                        <p><i class="fas fa-envelope"></i> contato@covilrestaurante.com.br</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Covil Restaurante. Todos os direitos reservados.</p>
+                <p>Desenvolvido por: Amanda Rech, Bianca Sobierai, Eduardo Dall Rosa, Mariana Borges e Vinicius Fornazier</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-crown"></i> Login</h2>
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            </div>
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" required placeholder="Digite sua senha">
+                </div>
+                <button type="submit" class="btn-auth">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Entrar
+                </button>
+                <p class="auth-switch">
+                    Não tem conta? <a href="#" onclick="switchModal('loginModal', 'registerModal')">Cadastre-se</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-plus"></i> Cadastro</h2>
+                <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            </div>
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Nome Completo</label>
+                    <input type="text" id="registerName" required placeholder="Digite seu nome completo">
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Telefone</label>
+                    <input type="tel" id="registerPhone" required placeholder="(48) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Senha</label>
+                    <input type="password" id="registerPassword" required placeholder="Digite sua senha">
+                </div>
+                <button type="submit" class="btn-auth">
+                    <i class="fas fa-user-plus"></i>
+                    Cadastrar
+                </button>
+                <p class="auth-switch">
+                    Já tem conta? <a href="#" onclick="switchModal('registerModal', 'loginModal')">Faça login</a>
+                </p>
+            </form>
         </div>
     </div>
 
