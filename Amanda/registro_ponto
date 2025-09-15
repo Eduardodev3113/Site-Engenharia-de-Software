@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistema de Registro de Ponto</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Registro de Ponto</h1>
+
+    <div class="buttons">
+      <button onclick="registrar('entrada')">Registrar Entrada</button>
+      <button onclick="registrar('saida')">Registrar Saída</button>
+      <button class="limpar" onclick="limparRegistros()">Limpar Registros</button>
+    </div>
+
+    <h2>Registros</h2>
+    <ul id="lista-registros">
+      <!-- Registros serão inseridos aqui -->
+    </ul>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
