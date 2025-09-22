@@ -1,98 +1,41 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en" >
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sistema Restaurante</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Netflix Login Page</title>
+  <link rel="stylesheet" href="./estilo.css">
+
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">🍽️ Restaurante Gourmet</div>
-            <nav>
-                <a href="index.html" class="nav-button">Home</a>
-                <a href="login.html" class="nav-button">Login</a>
-                <a href="cardapio.html" class="nav-button">Cardápio</a>
-                <a href="reservas.html" class="nav-button">Reservas</a>
-                <a href="sistema.html" class="nav-button">Sistema</a>
-            </nav>
-        </header>
-
-        <div class="main-content">
-            <div class="back-button">
-                <a href="index.html" class="btn-secondary">← Voltar</a>
-            </div>
-
-            <div class="form-container">
-                <div class="text-center mb-4">
-                    <h2 style="color: #764ba2;">Login do Sistema</h2>
-                    <p>Acesse o sistema com suas credenciais</p>
-                </div>
-
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="usuario">Usuário/Email:</label>
-                        <input type="text" id="usuario" name="usuario" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="senha">Senha:</label>
-                        <input type="password" id="senha" name="senha" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="perfil">Perfil de Acesso:</label>
-                        <select id="perfil" name="perfil" class="form-control" required>
-                            <option value="">Selecione o perfil</option>
-                            <option value="gerente">Gerente Geral</option>
-                            <option value="administrativo">Administrativo</option>
-                            <option value="funcionario">Funcionário</option>
-                            <option value="cliente">Cliente</option>
-                        </select>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <button type="button" class="btn-primary" onclick="realizarLogin()">Entrar</button>
-                        <button type="button" class="btn-secondary" onclick="clearForm('loginForm')">Limpar</button>
-                    </div>
-                </form>
-
-                <div class="text-center mt-4">
-                    <p><a href="#" onclick="showAlert('Funcionalidade de recuperação será implementada', 'info')">Esqueci minha senha</a></p>
-                    <p><a href="cadastro-cliente.html">Não possui conta? Cadastre-se</a></p>
-                </div>
-            </div>
-        </div>
+<nav>
+  <a href="#"><img src="http://codingstella.com/wp-content/uploads/2024/01/580b57fcd9996e24bc43c529.png" alt="logo"></a>
+</nav>
+<div class="form-wrapper">
+  <h2>Sign In</h2>
+  <form action="#">
+    <div class="form-control">
+      <input type="text" required>
+      <label>Email or phone number</label>
     </div>
-
-    <script src="script.js"></script>
-    <script>
-        function realizarLogin() {
-            const usuario = document.getElementById('usuario').value;
-            const senha = document.getElementById('senha').value;
-            const perfil = document.getElementById('perfil').value;
-
-            if (!usuario || !senha || !perfil) {
-                showAlert('Por favor, preencha todos os campos', 'danger');
-                return;
-            }
-
-            // Simular validação de login
-            setTimeout(() => {
-                if (perfil === 'cliente') {
-                    showAlert('Login realizado com sucesso! Redirecionando...', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 2000);
-                } else {
-                    showAlert('Login realizado com sucesso! Redirecionando para o sistema...', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'sistema.html';
-                    }, 2000);
-                }
-            }, 1000);
-        }
-    </script>
+    <div class="form-control">
+      <input type="password" required>
+      <label>Password</label>
+    </div>
+    <button type="submit">Sign In</button>
+    <div class="form-help">
+      <div class="remember-me">
+        <input type="checkbox" id="remember-me">
+        <label for="remember-me">Remember me</label>
+      </div>
+      <a href="#">Need help?</a>
+    </div>
+  </form>
+  <p>New to Netflix? <a href="#">Sign up now</a></p>
+  <small>
+    This page is protected by Google reCAPTCHA to ensure you're not a bot.
+    <a href="#">Learn more.</a>
+  </small>
+</div>
+  
 </body>
 </html>
