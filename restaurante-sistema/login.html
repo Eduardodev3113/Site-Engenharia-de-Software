@@ -1,41 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Netflix Login Page</title>
-  <link rel="stylesheet" href="./estilo.css">
-
+  <title>Login</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<nav>
-  <a href="#"><img src="http://codingstella.com/wp-content/uploads/2024/01/580b57fcd9996e24bc43c529.png" alt="logo"></a>
-</nav>
-<div class="form-wrapper">
-  <h2>Sign In</h2>
-  <form action="#">
-    <div class="form-control">
-      <input type="text" required>
-      <label>Email or phone number</label>
-    </div>
-    <div class="form-control">
-      <input type="password" required>
-      <label>Password</label>
-    </div>
-    <button type="submit">Sign In</button>
-    <div class="form-help">
-      <div class="remember-me">
-        <input type="checkbox" id="remember-me">
-        <label for="remember-me">Remember me</label>
+  <div class="container">
+    <!-- Login como seção central -->
+    <div class="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">Bem-vindo de volta!</h1>
+        <p class="hero-subtitle">Entre na sua conta para continuar</p>
+
+        <div class="auth-form">
+          <form action="#">
+            <div class="form-group">
+              <label for="email">Email ou telefone</label>
+              <input type="text" id="email" placeholder="Digite seu email" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Senha</label>
+              <input type="password" id="password" placeholder="Digite sua senha" required>
+            </div>
+
+            <button type="submit" class="btn-auth">Entrar</button>
+            <div class="auth-switch">
+              <input type="checkbox" id="remember-me">
+              <label for="remember-me">Lembrar-me</label> | 
+              <a href="#">Precisa de ajuda?</a>
+            </div>
+          </form>
+
+          <p class="auth-switch">Não possui cadastro? <a href="#">Cadastre-se agora</a></p>
+        </div>
       </div>
-      <a href="#">Need help?</a>
     </div>
-  </form>
-  <p>New to Netflix? <a href="#">Sign up now</a></p>
-  <small>
-    This page is protected by Google reCAPTCHA to ensure you're not a bot.
-    <a href="#">Learn more.</a>
-  </small>
-</div>
-  
+  </div>
 </body>
 </html>
