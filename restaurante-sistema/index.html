@@ -18,17 +18,17 @@
             <nav class="nav-menu">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#sobre">Sobre</a></li>
-                <li><a href="#destaques">Destaques</a></li>
                 <li><a href="#reservas">Reservas</a></li>
-                <li><a href="#contato">Contato</a></li>
+                <li><a href="#destaques">Destaques</a></li>
+                <li><a href="#contato" onclick="scrollToSection('contato')">Contato</a></li>
             </nav>
             <div class="auth-buttons">
-                <button class="btn-login" onclick="showLoginModal()">
+                <a href="login.html" class="btn-login">
                     <i class="fas fa-user"></i> Login
-                </button>
-                <button class="btn-register" onclick="showRegisterModal()">
+                </a>
+                <a href="login.html" class="btn-register">
                     <i class="fas fa-user-plus"></i> Cadastro
-                </button>
+                </a>
             </div>
             <div class="mobile-menu-toggle" id="mobileMenuToggle">
                 <span></span>
@@ -52,14 +52,10 @@
                 Hambúrgueres artesanais que conquistam paladares e criam memórias inesquecíveis
             </p>
             <div class="hero-buttons">
-                <a href="cardapio-digital.html" class="btn-primary">
+                <a href="../principal/cardapio-digital.html" class="btn-primary">
                     <i class="fas fa-utensils"></i>
                     Ver Cardápio
                 </a>
-                <button class="btn-secondary" onclick="scrollToSection('reservas')">
-                    <i class="fas fa-calendar-alt"></i>
-                    Fazer Reserva
-                </button>
             </div>
         </div>
         <div class="scroll-indicator">
@@ -88,22 +84,36 @@
                         escolhido com critério, e cada prato servido com paixão.
                     </p>
                     <div class="chef-signature">
-                        <span class="chef-name">Chef Eduardo Dall Rosa</span>
+                        <span class="chef-name">Chef</span>
                         <span class="chef-title">Fundador & Chef Executivo</span>
                     </div>
                 </div>
                 <div class="sobre-image">
                     <div class="image-placeholder">
                         <i class="fas fa-chef-hat"></i>
-                        <span>Chef Eduardo</span>
+                        <span>Chef</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Reservas Section -->
+    <section class="reservas" id="reservas">
+        <div class="container">
+            <div class="section-header">
+                <h2>Faça sua Reserva</h2>
+                <div class="section-divider"></div>
+                <p>Reserve sua mesa e garante uma experiência única no Covil</p><br>
+                <a href="../principal/reservas.html" class="btn-primary" style="margin-left: 15px;">
+                    <i class="fas fa-calendar-alt"></i>
+                    Fazer Reserva
+                </a>
+            </div>
+        </div>
+
     <!-- Destaques Section -->
-    <section class="destaques" id="destaques">
+    <class="destaques" id="destaques">
         <div class="container">
             <div class="section-header">
                 <h2>Destaques do Cardápio</h2>
@@ -111,11 +121,9 @@
                 <p>Os pratos que fazem do Covil um reino gastronômico</p>
             </div>
             <div class="destaques-grid">
-                <div class="destaque-card" data-aos="fade-up">
+                <div class="destaque-card">
                     <div class="card-image">
-                        <div class="image-placeholder">
-                            <i class="fas fa-hamburger"></i>
-                        </div>
+                        <img src="../Imagens/xcarne.jpg" alt="X-Carne Real" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
                         <div class="price-tag">R$ 50,00</div>
                     </div>
                     <div class="card-content">
@@ -129,11 +137,9 @@
                     </div>
                 </div>
 
-                <div class="destaque-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="destaque-card">
                     <div class="card-image">
-                        <div class="image-placeholder">
-                            <i class="fas fa-bacon"></i>
-                        </div>
+                        <img src="../Imagens/xbacon.jpg" alt="X-Bacon Nobre" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
                         <div class="price-tag">R$ 45,00</div>
                     </div>
                     <div class="card-content">
@@ -147,11 +153,9 @@
                     </div>
                 </div>
 
-                <div class="destaque-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="destaque-card">
                     <div class="card-image">
-                        <div class="image-placeholder">
-                            <i class="fas fa-layer-group"></i>
-                        </div>
+                        <img src="../Imagens/3carnes.jpeg" alt="X-Triplo Império" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
                         <div class="price-tag">R$ 60,00</div>
                     </div>
                     <div class="card-content">
@@ -166,7 +170,7 @@
                 </div>
             </div>
             <div class="cta-cardapio">
-                <a href="cardapio-digital.html" class="btn-primary">
+                <a href="../principal/cardapio-digital.html" class="btn-primary">
                     <i class="fas fa-crown"></i>
                     Ver Cardápio Completo
                 </a>
@@ -175,7 +179,7 @@
     </section>
 
     <!-- Informações Section -->
-    <section class="info-section">
+    <section class="info-section" id="contato">
         <div class="container">
             <div class="info-grid">
                 <div class="info-card">
@@ -198,10 +202,6 @@
                     <p>Rua dos Sabores, 123<br>
                        Centro - Tubarão, SC<br>
                        CEP: 88701-000</p>
-                    <button class="btn-maps">
-                        <i class="fas fa-directions"></i>
-                        Como Chegar
-                    </button>
                 </div>
 
                 <div class="info-card">
@@ -215,87 +215,6 @@
                         <p><i class="fas fa-envelope"></i> contato@covilrestaurante.com.br</p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Reservas Section -->
-    <section class="reservas" id="reservas">
-        <div class="container">
-            <div class="section-header">
-                <h2>Faça sua Reserva</h2>
-                <div class="section-divider"></div>
-                <p>Garante seu lugar em nosso reino gastronômico</p>
-            </div>
-            
-            <div class="reserva-content">
-                <div class="reserva-info">
-                    <h3>Diretrizes da Reserva</h3>
-                    <ul class="reserva-rules">
-                        <li><i class="fas fa-check"></i> Reservas com até 30 dias de antecedência</li>
-                        <li><i class="fas fa-check"></i> Confirmação por email automática</li>
-                        <li><i class="fas fa-check"></i> Cancelamento respondendo o email</li>
-                        <li><i class="fas fa-check"></i> Grupos acima de 8 pessoas têm 15% de desconto</li>
-                        <li><i class="fas fa-check"></i> Tolerância de 15 minutos de atraso</li>
-                    </ul>
-                </div>
-
-                <form class="reserva-form" id="reservationForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="date">Data da Reserva</label>
-                            <input type="date" id="date" name="date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="time">Horário</label>
-                            <select id="time" name="time" required>
-                                <option value="">Selecione primeiro a data</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="guests">Número de Pessoas</label>
-                            <select id="guests" name="guests" required>
-                                <option value="">Selecione</option>
-                                <option value="1">1 pessoa</option>
-                                <option value="2">2 pessoas</option>
-                                <option value="3">3 pessoas</option>
-                                <option value="4">4 pessoas</option>
-                                <option value="5">5 pessoas</option>
-                                <option value="6">6 pessoas</option>
-                                <option value="7">7 pessoas</option>
-                                <option value="8">8 pessoas (15% desconto)</option>
-                                <option value="9">9 pessoas (15% desconto)</option>
-                                <option value="10">10 pessoas (15% desconto)</option>
-                                <option value="11">11 pessoas (15% desconto)</option>
-                                <option value="12">12 pessoas (15% desconto)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="name">Nome Completo</label>
-                        <input type="text" id="name" name="name" required placeholder="Digite seu nome completo">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required placeholder="seu@email.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Telefone</label>
-                            <input type="tel" id="phone" name="phone" required placeholder="(48) 99999-9999">
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-reserva">
-                        <i class="fas fa-crown"></i>
-                        Confirmar Reserva
-                    </button>
-                </form>
             </div>
         </div>
     </section>
@@ -322,7 +241,7 @@
                     <ul>
                         <li><a href="#home">Home</a></li>
                         <li><a href="#sobre">Nossa História</a></li>
-                        <li><a href="cardapio-digital.html">Cardápio</a></li>
+                        <li><a href="../principal/cardapio-digital.html">Cardápio</a></li>
                         <li><a href="#reservas">Reservas</a></li>
                     </ul>
                 </div>
@@ -344,68 +263,13 @@
         </div>
     </footer>
 
-    <!-- Login Modal -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-crown"></i> Login</h2>
-                <span class="close" onclick="closeModal('loginModal')">&times;</span>
-            </div>
-            <form class="auth-form" id="loginForm">
-                <div class="form-group">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" required placeholder="seu@email.com">
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Senha</label>
-                    <input type="password" id="loginPassword" required placeholder="Digite sua senha">
-                </div>
-                <button type="submit" class="btn-auth">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Entrar
-                </button>
-                <p class="auth-switch">
-                    Não tem conta? <a href="#" onclick="switchModal('loginModal', 'registerModal')">Cadastre-se</a>
-                </p>
-            </form>
-        </div>
-    </div>
-
-    <!-- Register Modal -->
-    <div class="modal" id="registerModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-user-plus"></i> Cadastro</h2>
-                <span class="close" onclick="closeModal('registerModal')">&times;</span>
-            </div>
-            <form class="auth-form" id="registerForm">
-                <div class="form-group">
-                    <label for="registerName">Nome Completo</label>
-                    <input type="text" id="registerName" required placeholder="Digite seu nome completo">
-                </div>
-                <div class="form-group">
-                    <label for="registerEmail">Email</label>
-                    <input type="email" id="registerEmail" required placeholder="seu@email.com">
-                </div>
-                <div class="form-group">
-                    <label for="registerPhone">Telefone</label>
-                    <input type="tel" id="registerPhone" required placeholder="(48) 99999-9999">
-                </div>
-                <div class="form-group">
-                    <label for="registerPassword">Senha</label>
-                    <input type="password" id="registerPassword" required placeholder="Digite sua senha">
-                </div>
-                <button type="submit" class="btn-auth">
-                    <i class="fas fa-user-plus"></i>
-                    Cadastrar
-                </button>
-                <p class="auth-switch">
-                    Já tem conta? <a href="#" onclick="switchModal('registerModal', 'loginModal')">Faça login</a>
-                </p>
-            </form>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <script>
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
 </body>
 </html>
