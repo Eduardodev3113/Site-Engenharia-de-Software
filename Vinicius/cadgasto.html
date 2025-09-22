@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Gastos - Restaurante Elegante</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        /* Reset e Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 3px solid #d4af37;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-nav {
+            padding: 0.5rem 1.5rem;
+            background: transparent;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-nav.active,
+        .btn-nav:hover {
+            background: #d4af37;
+            color: #000;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .form-header h2 {
+            color: #d4af37;
+            font-size: 2rem;
+        }
+
+        .form-header i {
+            font-size: 2rem;
+            color: #d4af37;
+        }
+
+        .expense-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #999;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group select option {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Lista de Gastos */
+        .expenses-list {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .list-header h2 {
+            color: #d4af37;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-filter {
+            padding: 0.4rem 1rem;
+            background: transparent;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-filter.active,
+        .btn-filter:hover {
+            background: #d4af37;
+            color: #000;
+        }
+
+        .expense-item {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .expense-item:hover {
+            transform: translateX(5px);
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .expense-info {
+            flex: 1;
+        }
+
+        .expense-title {
+            color: #d4af37;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .expense-details {
+            color: #ccc;
+            font-size: 0.9rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .expense-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #d4af37;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .expense-category {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 0.2rem;
+        }
+
+        .expense-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .btn-action {
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-action:hover {
+            background: #d4af37;
+            color: #000;
+        }
+
+        .btn-action.delete {
+            border-color: #f44336;
+            color: #f44336;
+        }
+
+        .btn-action.delete:hover {
+            background: #f44336;
+            color: #fff;
+        }
+
+        /* Resumo de Gastos */
+        .summary-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            border-color: #d4af37;
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+        }
+
+        .summary-icon {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+        }
+
+        .summary-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-label {
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid #d4af37;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 2rem 2rem 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .modal-header h3 {
+            color: #d4af37;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .close {
+            color: #d4af37;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #ffd700;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .expense-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-section {
+                grid-template-columns: 1fr;
+            }
+
+            .expense-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .expense-actions {
+                margin-left: 0;
+            }
+
+            .list-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .filter-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* Animações */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border-radius: 10px;
+            border-left: 4px solid #2e7d32;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 3000;
+            animation: slideInRight 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            border-left-color: #c62828;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>
+                <i class="fas fa-receipt"></i>
+                Cadastro de Gastos
+            </h1>
+            <p class="subtitle">Sistema de controle de gastos operacionais</p>
+            <div class="nav-buttons">
+                <a href="#" class="btn-nav">
+                    <i class="fas fa-home"></i> Início
+                </a>
+                <a href="#" class="btn-nav active">
+                    <i class="fas fa-receipt"></i> Cadastro de Gastos
+                </a>
+                <a href="#" class="btn-nav">
+                    <i class="fas fa-chart-line"></i> Relatórios
+                </a>
+                <a href="#" class="btn-nav">
+                    <i class="fas fa-cog"></i> Configurações
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Resumo de Gastos -->
+        <section class="summary-section fade-in">
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="summary-value" id="totalExpenses">R$ 15.240,00</div>
+                <div class="summary-label">Total do Mês</div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="summary-value" id="todayExpenses">R$ 680,00</div>
+                <div class="summary-label">Gastos Hoje</div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-tags"></i>
+                </div>
+                <div class="summary-value" id="topCategory">Insumos</div>
+                <div class="summary-label">Categoria Principal</div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-list"></i>
+                </div>
+                <div class="summary-value" id="totalItems">47</div>
+                <div class="summary-label">Total de Itens</div>
+            </div>
+        </section>
+
+        <!-- Formulário de Cadastro -->
+        <section class="form-section fade-in">
+            <div class="form-header">
+                <i class="fas fa-plus-circle"></i>
+                <h2>Novo Gasto</h2>
+            </div>
+            
+            <form class="expense-form" id="expenseForm">
+                <div>
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-tag"></i>
+                            Descrição do Gasto*
+                        </label>
+                        <input type="text" id="description" placeholder="Ex: Compra de ingredientes" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-list-alt"></i>
+                            Categoria*
+                        </label>
+                        <select id="category" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="insumos">Insumos e Ingredientes</option>
+                            <option value="equipamentos">Equipamentos</option>
+                            <option value="manutencao">Manutenção</option>
+                            <option value="limpeza">Produtos de Limpeza</option>
+                            <option value="funcionarios">Funcionários</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="contas">Contas (Luz, Água, Gás)</option>
+                            <option value="impostos">Impostos e Taxas</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-dollar-sign"></i>
+                                Valor*
+                            </label>
+                            <input type="number" id="value" step="0.01" placeholder="0,00" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-calendar"></i>
+                                Data*
+                            </label>
+                            <input type="date" id="date" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-credit-card"></i>
+                            Forma de Pagamento
+                        </label>
+                        <select id="paymentMethod">
+                            <option value="dinheiro">Dinheiro</option>
+                            <option value="cartao">Cartão</option>
+                            <option value="pix">PIX</option>
+                            <option value="transferencia">Transferência</option>
+                            <option value="boleto">Boleto</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-building"></i>
+                            Fornecedor/Empresa
+                        </label>
+                        <input type="text" id="supplier" placeholder="Nome do fornecedor">
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-file-alt"></i>
+                            Número da Nota/Recibo
+                        </label>
+                        <input type="text" id="receiptNumber" placeholder="Número do documento">
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-comment"></i>
+                            Observações
+                        </label>
+                        <textarea id="observations" placeholder="Informações adicionais sobre o gasto..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i>
+                        Cadastrar Gasto
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Lista de Gastos -->
+        <section class="expenses-list fade-in">
+            <div class="list-header">
+                <h2>
+                    <i class="fas fa-list"></i>
+                    Gastos Recentes
+                </h2>
+                <div class="filter-buttons">
+                    <button class="btn-filter active" onclick="filterExpenses('all')">Todos</button>
+                    <button class="btn-filter" onclick="filterExpenses('today')">Hoje</button>
+                    <button class="btn-filter" onclick="filterExpenses('week')">Semana</button>
+                    <button class="btn-filter" onclick="filterExpenses('month')">Mês</button>
+                </div>
+            </div>
+            
+            <div id="expensesList">
+                <!-- Gastos serão carregados aqui pelo JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-edit"></i>
+                    Editar Gasto
+                </h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editId">
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <input type="text" id="editDescription">
+                    </div>
+                    <div class="form-group">
+                        <label>Valor</label>
+                        <input type="number" id="editValue" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="editCategory">
+                            <option value="insumos">Insumos e Ingredientes</option>
+                            <option value="equipamentos">Equipamentos</option>
+                            <option value="manutencao">Manutenção</option>
+                            <option value="limpeza">Produtos de Limpeza</option>
+                            <option value="funcionarios">Funcionários</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="contas">Contas (Luz, Água, Gás)</option>
+                            <option value="impostos">Impostos e Taxas</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i>
+                        Salvar Alterações
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de armazenamento local dos gastos
+        let expenses = JSON.parse(localStorage.getItem('restaurantExpenses')) || [
+            {
+                id: 1,
+                description: 'Compra de carnes variadas',
+                category: 'insumos',
+                value: 850.00,
+                date: '2024-09-20',
+                paymentMethod: 'cartao',
+                supplier: 'Açougue Premium',
+                receiptNumber: 'NF001234',
+                observations: 'Carne para o menu da semana'
+            },
+            {
+                id: 2,
+                description: 'Manutenção do fogão industrial',
+                category: 'manutencao',
+                value: 320.00,
+                date: '2024-09-19',
+                paymentMethod: 'pix',
+                supplier: 'TecnoGás Manutenção',
+                receiptNumber: 'OS4567',
+                observations: 'Limpeza e ajuste dos queimadores'
+            },
+            {
+                id: 3,
+                description: 'Produtos de limpeza',
+                category: 'limpeza',
+                value: 180.00,
+                date: '2024-09-18',
+                paymentMethod: 'dinheiro',
+                supplier: 'Distribuidora Limpa',
+                receiptNumber: '',
+                observations: 'Detergentes e desinfetantes'
+            }
+        ];
+
+        // Função para salvar no localStorage
+        function saveExpenses() {
+            localStorage.setItem('restaurantExpenses', JSON.stringify(expenses));
+            updateSummary();
+        }
+
+        // Função para definir data atual
+        function setCurrentDate() {
+            document.getElementById('date').value = new Date().toISOString().split('T')[0];
+        }
+
+        // Função para mostrar notificação
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Função para formatar valor em Real
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+
+        // Função para obter ícone da categoria
+        function getCategoryIcon(category) {
+            const icons = {
+                'insumos': 'fas fa-apple-alt',
+                'equipamentos': 'fas fa-tools',
+                'manutencao': 'fas fa-wrench',
+                'limpeza': 'fas fa-spray-can',
+                'funcionarios': 'fas fa-users',
+                'marketing': 'fas fa-bullhorn',
+                'contas': 'fas fa-file-invoice-dollar',
+                'impostos': 'fas fa-percentage',
+                'outros': 'fas fa-ellipsis-h'
+            };
+            return icons[category] || 'fas fa-receipt';
+        }
+
+        // Função para obter nome da categoria
+        function getCategoryName(category) {
+            const names = {
+                'insumos': 'Insumos e Ingredientes',
+                'equipamentos': 'Equipamentos',
+                'manutencao': 'Manutenção',
+                'limpeza': 'Produtos de Limpeza',
+                'funcionarios': 'Funcionários',
+                'marketing': 'Marketing',
+                'contas': 'Contas',
+                'impostos': 'Impostos e Taxas',
+                'outros': 'Outros'
+            };
+            return names[category] || category;
+        }
+
+        // Função para cadastrar novo gasto
+        document.getElementById('expenseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newExpense = {
+                id: Date.now(),
+                description: document.getElementById('description').value,
+                category: document.getElementById('category').value,
+                value: parseFloat(document.getElementById('value').value),
+                date: document.getElementById('date').value,
+                paymentMethod: document.getElementById('paymentMethod').value,
+                supplier: document.getElementById('supplier').value,
+                receiptNumber: document.getElementById('receiptNumber').value,
+                observations: document.getElementById('observations').value
+            };
+            
+            expenses.unshift(newExpense);
+            saveExpenses();
+            loadExpenses();
+            
+            // Limpar formulário
+            this.reset();
+            setCurrentDate();
+            
+            showNotification('Gasto cadastrado com sucesso!');
+        });
