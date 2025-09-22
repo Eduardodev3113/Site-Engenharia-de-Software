@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Mensal - Restaurante Elegante</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        /* Reset e Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 3px solid #d4af37;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .period-selector {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .btn-period {
+            padding: 0.5rem 1.5rem;
+            background: transparent;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-period.active,
+        .btn-period:hover {
+            background: #d4af37;
+            color: #000;
+        }
+
+        /* Stats Grid */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #d4af37;
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+        }
+
+        .stat-change.positive {
+            color: #4CAF50;
+        }
+
+        .stat-change.negative {
+            color: #f44336;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            border-color: #d4af37;
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .chart-header h3 {
+            color: #d4af37;
+            font-size: 1.5rem;
+        }
+
+        .chart-header i {
+            font-size: 1.8rem;
+            color: #d4af37;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin: 1rem 0;
+        }
+
+        /* Tables */
+        .table-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .table-header h3 {
+            color: #d4af37;
+            font-size: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        th {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+
+        tr {
+            transition: all 0.3s ease;
+        }
+
+        tr:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: scale(1.01);
+        }
+
+        .status-confirmed {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #FF9800;
+            font-weight: bold;
+        }
+
+        .status-cancelled {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        /* Export Button */
+        .export-section {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .btn-export {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .period-selector {
+                flex-wrap: wrap;
+            }
+
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Animações */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        .stat-card:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>
+                <i class="fas fa-chart-line"></i>
+                Relatório de Gerenciamento
+            </h1>
+            <p class="subtitle">Análise completa de desempenho do restaurante</p>
+            <div class="period-selector">
+                <button class="btn-period" onclick="changePeriod('week')">Semana</button>
+                <button class="btn-period active" onclick="changePeriod('month')">Mês</button>
+                <button class="btn-period" onclick="changePeriod('quarter')">Trimestre</button>
+                <button class="btn-period" onclick="changePeriod('year')">Ano</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Overview -->
+    <section class="container">
+        <div class="stats-overview">
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-value" id="occupancyRate">73.2%</div>
+                <div class="stat-label">Ocupação Média</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    +5.3% vs mês anterior
+                </div>
+            </div>
+
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="stat-value" id="popularDish">Risotto</div>
+                <div class="stat-label">Prato Mais Popular</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-fire"></i>
+                    78 pedidos este mês
+                </div>
+            </div>
+
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-value" id="totalReservations">124</div>
+                <div class="stat-label">Total de Reservas</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    +12% vs mês anterior
+                </div>
+            </div>
+
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-value" id="peakHour">19:00</div>
+                <div class="stat-label">Horário de Pico</div>
+                <div class="stat-change">
+                    <i class="fas fa-users"></i>
+                    35% das reservas
+                </div>
+            </div>
+
+            <div class="stat-card fade-in">
+                <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-value" id="topIngredient">Tomate</div>
+                <div class="stat-label">Insumo Mais Usado</div>
+                <div class="stat-change negative">
+                    <i class="fas fa-arrow-down"></i>
+                    -8% no estoque
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <!-- Gráfico de Pratos Mais Populares -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Pratos Mais Populares</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="dishesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico de Insumos -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <i class="fas fa-leaf"></i>
+                    <h3>Insumos Mais Utilizados</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="ingredientsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico de Horários de Pico -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <i class="fas fa-clock"></i>
+                    <h3>Horários de Pico</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="peakHoursChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico de Frequência de Reservas -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <i class="fas fa-chart-area"></i>
+                    <h3>Frequência de Reservas</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="reservationsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico de Ocupação por Dia da Semana -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Ocupação por Dia da Semana</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="weeklyOccupancyChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfico de Revenue por Mesa -->
+            <div class="chart-card fade-in">
+                <div class="chart-header">
+                    <i class="fas fa-coins"></i>
+                    <h3>Faturamento por Mesa</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="tableRevenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Reservas Detalhadas -->
+        <div class="table-card fade-in">
+            <div class="table-header">
+                <i class="fas fa-table"></i>
+                <h3>Detalhamento de Reservas do Mês</h3>
+            </div>
+            <table id="reservationsTable">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-calendar"></i> Data</th>
+                        <th><i class="fas fa-clock"></i> Horário</th>
+                        <th><i class="fas fa-users"></i> Convidados</th>
+                        <th><i class="fas fa-chair"></i> Mesa</th>
+                        <th><i class="fas fa-user"></i> Cliente</th>
+                        <th><i class="fas fa-info-circle"></i> Status</th>
+                        <th><i class="fas fa-dollar-sign"></i> Valor</th>
+                    </tr>
+                </thead>
+                <tbody id="reservationsTableBody">
+                    <!-- Dados serão inseridos via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Export Section -->
+        <div class="export-section">
+            <button class="btn-export" onclick="exportReport()">
+                <i class="fas fa-download"></i>
+                Exportar Relatório PDF
+            </button>
+        </div>
+    </section>
+
+    <script>
+        // Dados simulados do restaurante
+        const restaurantData = {
+            dishes: [
+                { name: 'Risotto de Camarão', orders: 78, revenue: 15600 },
+                { name: 'Filé à Parmegiana', orders: 65, revenue: 13000 },
+                { name: 'Salmão Grelhado', orders: 52, revenue: 12480 },
+                { name: 'Lasanha da Casa', orders: 48, revenue: 9600 },
+                { name: 'Picanha Angus', orders: 43, revenue: 12900 },
+                { name: 'Pasta Carbonara', orders: 38, revenue: 7600 }
+            ],
+            ingredients: [
+                { name: 'Tomate', usage: 45, cost: 2250 },
+                { name: 'Carne Bovina', usage: 38, cost: 5700 },
+                { name: 'Queijo', usage: 35, cost: 3500 },
+                { name: 'Alface', usage: 32, cost: 960 },
+                { name: 'Cebola', usage: 28, cost: 840 },
+                { name: 'Frango', usage: 25, cost: 2500 },
+                { name: 'Massa', usage: 22, cost: 1100 },
+                { name: 'Azeite', usage: 20, cost: 800 }
+            ],
+            reservations: [
+                { date: '2024-09-01', time: '19:00', guests: 4, table: 1, client: 'João Silva', status: 'confirmed', value: 480 },
+                { date: '2024-09-01', time: '20:00', guests: 2, table: 3, client: 'Maria Santos', status: 'confirmed', value: 240 },
+                { date: '2024-09-02', time: '18:30', guests: 6, table: 5, client: 'Carlos Oliveira', status: 'confirmed', value: 720 },
+                { date: '2024-09-02', time: '19:30', guests: 3, table: 2, client: 'Ana Costa', status: 'pending', value: 360 },
+                { date: '2024-09-03', time: '20:30', guests: 4, table: 4, client: 'Pedro Souza', status: 'confirmed', value: 480 },
+                { date: '2024-09-04', time: '19:00', guests: 5, table: 6, client: 'Lucia Fernandes', status: 'confirmed', value: 600 },
+                { date: '2024-09-05', time: '18:00', guests: 2, table: 1, client: 'Roberto Lima', status: 'cancelled', value: 0 },
+                { date: '2024-09-05', time: '21:00', guests: 8, table: 7, client: 'Família Ribeiro', status: 'confirmed', value: 960 },
+                { date: '2024-09-06', time: '19:30', guests: 3, table: 8, client: 'Sandra Alves', status: 'confirmed', value: 360 },
+                { date: '2024-09-07', time: '20:00', guests: 4, table: 9, client: 'Marcos Pereira', status: 'confirmed', value: 480 }
+            ],
+            weeklyOccupancy: [
+                { day: 'Segunda', occupancy: 45 },
+                { day: 'Terça', occupancy: 52 },
+                { day: 'Quarta', occupancy: 68 },
+                { day: 'Quinta', occupancy: 75 },
+                { day: 'Sexta', occupancy: 89 },
+                { day: 'Sábado', occupancy: 95 },
+                { day: 'Domingo', occupancy: 78 }
+            ],
+            tableRevenue: [
+                { table: 1, revenue: 4800 },
+                { table: 2, revenue: 3600 },
+                { table: 3, revenue: 5200 },
+                { table: 4, revenue: 4100 },
+                { table: 5, revenue: 6300 },
+                { table: 6, revenue: 5800 },
+                { table: 7, revenue: 3900 },
+                { table: 8, revenue: 4500 },
+                { table: 9, revenue: 4200 },
+                { table: 10, revenue: 3800 }
+            ]
+        };
+
+        // Função para popular tabela de reservas
+        function populateReservationsTable() {
+            const tbody = document.getElementById('reservationsTableBody');
+            tbody.innerHTML = '';
+            
+            restaurantData.reservations.forEach(reservation => {
+                const row = document.createElement('tr');
+                const statusClass = reservation.status === 'confirmed' ? 'status-confirmed' : 
+                                   reservation.status === 'pending' ? 'status-pending' : 'status-cancelled';
+                
+                row.innerHTML = `
+                    <td>${new Date(reservation.date).toLocaleDateString('pt-BR')}</td>
+                    <td>${reservation.time}</td>
+                    <td>${reservation.guests}</td>
+                    <td>Mesa ${reservation.table}</td>
+                    <td>${reservation.client}</td>
+                    <td class="${statusClass}">${reservation.status === 'confirmed' ? 'Confirmada' : 
+                                                reservation.status === 'pending' ? 'Pendente' : 'Cancelada'}</td>
+                    <td>R$ ${reservation.value.toFixed(2)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
