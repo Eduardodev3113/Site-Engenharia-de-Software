@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Relatórios</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Reset e base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #0a0a0a;
+      color: #fff;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 5%;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      padding: 2rem 0;
+      text-align: center;
+      border-bottom: 3px solid #d4af37;
+      margin-bottom: 3rem;
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      color: #d4af37;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .header p {
+      font-size: 1.1rem;
+      color: #ccc;
+      margin-top: 0.5rem;
+    }
+
+    /* Grid de relatórios */
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .report-card {
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      transition: all 0.3s ease;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .report-card:hover {
+      transform: translateY(-5px);
+      border-color: #d4af37;
+      box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+    }
+    .report-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(135deg, #d4af37, #ffd700);
+    }
+    .report-icon {
+      font-size: 3rem;
+      color: #d4af37;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+    }
+    .report-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .report-desc {
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+        flex-direction: column;
+      }
+    }
+
+    /* Animação */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .report-card:nth-child(1) { animation-delay: 0.1s; }
+    .report-card:nth-child(2) { animation-delay: 0.2s; }
+    .report-card:nth-child(3) { animation-delay: 0.3s; }
+    .report-card:nth-child(4) { animation-delay: 0.4s; }
+    .report-card:nth-child(5) { animation-delay: 0.5s; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <h1><i class="fas fa-file-alt"></i> Painel de Relatórios</h1>
+      <p>Selecione um relatório para visualizar os detalhes</p>
+    </div>
+  </header>
+
+  <!-- Lista de Relatórios -->
+  <main class="container">
+    <div class="reports-grid">
+      <a href="#" class="report-card fade-in">
+        <div class="report-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="report-title">Nome do Relatório 1</div>
+        <div class="report-desc">Descrição curta do relatório.</div>
+      </a>
+
+      <a href="#" class="report-card fade-in">
+        <div class="report-icon"><i class="fas fa-utensils"></i></div>
+        <div class="report-title">Nome do Relatório 2</div>
+        <div class="report-desc">Descrição curta do relatório.</div>
+      </a>
+
+      <a href="#" class="report-card fade-in">
+        <div class="report-icon"><i class="fas fa-calendar-check"></i></div>
+        <div class="report-title">Nome do Relatório 3</div>
+        <div class="report-desc">Descrição curta do relatório.</div>
+      </a>
+
+      <a href="#" class="report-card fade-in">
+        <div class="report-icon"><i class="fas fa-leaf"></i></div>
+        <div class="report-title">Nome do Relatório 4</div>
+        <div class="report-desc">Descrição curta do relatório.</div>
+      </a>
+
+      <a href="#" class="report-card fade-in">
+        <div class="report-icon"><i class="fas fa-coins"></i></div>
+        <div class="report-title">Nome do Relatório 5</div>
+        <div class="report-desc">Descrição curta do relatório.</div>
+      </a>
+    </div>
+  </main>
+
+</body>
+</html>
