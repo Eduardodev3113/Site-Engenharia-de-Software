@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório de Vendas - Restaurante Elegante</title>
+    <title>Relatório de Vendas - Covil Restaurante</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <style>
         /* Reset e Base */
         * {
@@ -422,16 +424,12 @@
         }
 
         /* Status indicators */
-        .table td:nth-child(5) {
-            font-weight: bold;
+        .status-sim {
+            color: #4CAF50 !important;
         }
 
-        .table tr:nth-child(odd) td:nth-child(5):contains("✓") {
-            color: #4CAF50;
-        }
-
-        .table tr:nth-child(even) td:nth-child(5):contains("✗") {
-            color: #f44336;
+        .status-nao {
+            color: #f44336 !important;
         }
 
         /* Animation */
@@ -489,6 +487,22 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            border-top-color: #d4af37;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Responsivo */
@@ -574,7 +588,7 @@
         <header>
             <div class="logo">
                 <i class="fas fa-crown"></i>
-                Sistema Restaurante Elegante
+                Covil Restaurante
             </div>
             <nav>
                 <a href="index.html" class="nav-button">
@@ -600,7 +614,7 @@
     <div class="main-content">
         <div class="container">
             <div class="back-button fade-in">
-                <a href="sistema.html" class="btn-secondary">
+                <a href="../restaurante-sistema/sistema.html" class="btn-secondary">
                     <i class="fas fa-arrow-left"></i>
                     Voltar ao Sistema
                 </a>
@@ -608,7 +622,7 @@
 
             <div class="welcome-section fade-in">
                 <h1>Relatório de Vendas</h1>
-                <p>Desenvolvido por: <strong>Eduardo Dall Rosa</strong></p>
+                <p>Sistema de relatórios - <strong>Covil Restaurante</strong></p>
             </div>
 
             <!-- Filtros -->
@@ -664,7 +678,7 @@
                     </div>
                     <div class="text-center">
                         <button type="button" class="btn-primary" onclick="filtrarVendas()">Filtrar</button>
-                        <button type="button" class="btn-success" onclick="exportarRelatorio()">Exportar PDF</button>
+                        <button type="button" class="btn-success" onclick="exportarRelatorio()" id="exportBtn">Exportar PDF</button>
                         <button type="button" class="btn-secondary" onclick="limparFiltros()">
                             <i class="fas fa-eraser"></i>
                             Limpar
@@ -679,28 +693,28 @@
                     <div class="feature-card">
                         <i class="fas fa-dollar-sign" style="color: #d4af37; font-size: 2rem; margin-bottom: 1rem;"></i>
                         <h4>Total de Vendas</h4>
-                        <h2>R$ 15.850,50</h2>
+                        <h2 id="totalVendas">R$ 15.850,50</h2>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="feature-card">
                         <i class="fas fa-shopping-cart" style="color: #d4af37; font-size: 2rem; margin-bottom: 1rem;"></i>
                         <h4>Quantidade de Vendas</h4>
-                        <h2>187</h2>
+                        <h2 id="qtdVendas">187</h2>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="feature-card">
                         <i class="fas fa-chart-line" style="color: #d4af37; font-size: 2rem; margin-bottom: 1rem;"></i>
                         <h4>Ticket Médio</h4>
-                        <h2>R$ 84,77</h2>
+                        <h2 id="ticketMedio">R$ 84,77</h2>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="feature-card">
                         <i class="fas fa-receipt" style="color: #d4af37; font-size: 2rem; margin-bottom: 1rem;"></i>
                         <h4>Com Nota Fiscal</h4>
-                        <h2>92%</h2>
+                        <h2 id="notaFiscal">92%</h2>
                     </div>
                 </div>
             </div>
@@ -731,7 +745,7 @@
                                     <td>#001</td>
                                     <td>R$ 125,50</td>
                                     <td>Cartão Crédito</td>
-                                    <td style="color: #4CAF50;">✓ Sim</td>
+                                    <td class="status-sim">✓ Sim</td>
                                     <td>Mesa 5 - 2 pessoas</td>
                                 </tr>
                                 <tr>
@@ -739,7 +753,7 @@
                                     <td>#002</td>
                                     <td>R$ 87,30</td>
                                     <td>PIX</td>
-                                    <td style="color: #4CAF50;">✓ Sim</td>
+                                    <td class="status-sim">✓ Sim</td>
                                     <td>Mesa 3 - 1 pessoa</td>
                                 </tr>
                                 <tr>
@@ -747,7 +761,7 @@
                                     <td>#003</td>
                                     <td>R$ 156,80</td>
                                     <td>Dinheiro</td>
-                                    <td style="color: #f44336;">✗ Não</td>
+                                    <td class="status-nao">✗ Não</td>
                                     <td>Mesa 8 - 3 pessoas</td>
                                 </tr>
                                 <tr>
@@ -755,7 +769,7 @@
                                     <td>#004</td>
                                     <td>R$ 98,45</td>
                                     <td>Cartão Débito</td>
-                                    <td style="color: #4CAF50;">✓ Sim</td>
+                                    <td class="status-sim">✓ Sim</td>
                                     <td>Mesa 2 - 2 pessoas</td>
                                 </tr>
                                 <tr>
@@ -763,7 +777,7 @@
                                     <td>#005</td>
                                     <td>R$ 203,90</td>
                                     <td>Cartão Crédito + PIX</td>
-                                    <td style="color: #4CAF50;">✓ Sim</td>
+                                    <td class="status-sim">✓ Sim</td>
                                     <td>Mesa 12 - 4 pessoas - Conta dividida</td>
                                 </tr>
                                 <tr>
@@ -771,7 +785,7 @@
                                     <td>#006</td>
                                     <td>R$ 76,20</td>
                                     <td>PIX</td>
-                                    <td style="color: #4CAF50;">✓ Sim</td>
+                                    <td class="status-sim">✓ Sim</td>
                                     <td>Mesa 1 - 1 pessoa</td>
                                 </tr>
                                 <tr>
@@ -779,7 +793,7 @@
                                     <td>#007</td>
                                     <td>R$ 145,60</td>
                                     <td>Cartão Crédito</td>
-                                    <td style="color: #4CAF50;">✓ Sim</td>
+                                    <td class="status-sim">✓ Sim</td>
                                     <td>Mesa 7 - 2 pessoas</td>
                                 </tr>
                                 <tr>
@@ -787,7 +801,7 @@
                                     <td>#008</td>
                                     <td>R$ 189,75</td>
                                     <td>Dinheiro</td>
-                                    <td style="color: #f44336;">✗ Não</td>
+                                    <td class="status-nao">✗ Não</td>
                                     <td>Mesa 10 - 3 pessoas</td>
                                 </tr>
                             </tbody>
@@ -830,52 +844,259 @@
     </div>
 
     <script>
-        // Sistema de notificações
-        function showAlert(message, type = 'info') {
+        // Dados de vendas (simulados)
+        const vendasOriginais = [
+            { data: '15/01/2024', pedido: '#001', valor: 125.50, formaPagamento: 'Cartão Crédito', notaFiscal: true, obs: 'Mesa 5 - 2 pessoas' },
+            { data: '15/01/2024', pedido: '#002', valor: 87.30, formaPagamento: 'PIX', notaFiscal: true, obs: 'Mesa 3 - 1 pessoa' },
+            { data: '15/01/2024', pedido: '#003', valor: 156.80, formaPagamento: 'Dinheiro', notaFiscal: false, obs: 'Mesa 8 - 3 pessoas' },
+            { data: '15/01/2024', pedido: '#004', valor: 98.45, formaPagamento: 'Cartão Débito', notaFiscal: true, obs: 'Mesa 2 - 2 pessoas' },
+            { data: '15/01/2024', pedido: '#005', valor: 203.90, formaPagamento: 'Cartão Crédito', notaFiscal: true, obs: 'Mesa 12 - 4 pessoas - Conta dividida' },
+            { data: '16/01/2024', pedido: '#006', valor: 76.20, formaPagamento: 'PIX', notaFiscal: true, obs: 'Mesa 1 - 1 pessoa' },
+            { data: '16/01/2024', pedido: '#007', valor: 145.60, formaPagamento: 'Cartão Crédito', notaFiscal: true, obs: 'Mesa 7 - 2 pessoas' },
+            { data: '16/01/2024', pedido: '#008', valor: 189.75, formaPagamento: 'Dinheiro', notaFiscal: false, obs: 'Mesa 10 - 3 pessoas' },
+            { data: '17/01/2024', pedido: '#009', valor: 112.30, formaPagamento: 'PIX', notaFiscal: true, obs: 'Mesa 4 - 2 pessoas' },
+            { data: '17/01/2024', pedido: '#010', valor: 234.80, formaPagamento: 'Cartão Crédito', notaFiscal: true, obs: 'Mesa 15 - 5 pessoas' },
+            { data: '17/01/2024', pedido: '#011', valor: 89.45, formaPagamento: 'Cartão Débito', notaFiscal: true, obs: 'Mesa 6 - 1 pessoa' },
+            { data: '18/01/2024', pedido: '#012', valor: 167.90, formaPagamento: 'Dinheiro', notaFiscal: false, obs: 'Mesa 9 - 3 pessoas' },
+            { data: '18/01/2024', pedido: '#013', valor: 92.65, formaPagamento: 'PIX', notaFiscal: true, obs: 'Mesa 2 - 1 pessoa' },
+            { data: '18/01/2024', pedido: '#014', valor: 178.25, formaPagamento: 'Cartão Crédito', notaFiscal: true, obs: 'Mesa 11 - 3 pessoas' },
+            { data: '19/01/2024', pedido: '#015', valor: 143.50, formaPagamento: 'Cartão Débito', notaFiscal: true, obs: 'Mesa 8 - 2 pessoas' }
+        ];
+
+        let vendas = [...vendasOriginais];
+        let vendasFiltradas = [...vendas];
+
+        // Função para formatar valor em moeda
+        function formatarMoeda(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+
+        // Função para filtrar vendas
+        function filtrarVendas() {
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataFim = document.getElementById('dataFim').value;
+            const formaPagamento = document.getElementById('formaPagamento').value;
+
+            vendasFiltradas = vendasOriginais.filter(venda => {
+                // Converter data para formato de comparação
+                const dataVenda = converterData(venda.data);
+                const inicio = dataInicio ? new Date(dataInicio) : null;
+                const fim = dataFim ? new Date(dataFim) : null;
+
+                // Filtro por data
+                if (inicio && dataVenda < inicio) return false;
+                if (fim && dataVenda > fim) return false;
+
+                // Filtro por forma de pagamento
+                if (formaPagamento && !venda.formaPagamento.toLowerCase().includes(formaPagamento.replace('_', ' '))) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            atualizarTabela();
+            atualizarResumo();
+            mostrarNotificacao('Filtros aplicados com sucesso!', 'success');
+        }
+
+        // Função para converter data do formato brasileiro para Date
+        function converterData(dataStr) {
+            const [dia, mes, ano] = dataStr.split('/');
+            return new Date(ano, mes - 1, dia);
+        }
+
+        // Função para limpar filtros
+        function limparFiltros() {
+            document.getElementById('dataInicio').value = '2024-01-01';
+            document.getElementById('dataFim').value = '2024-12-31';
+            document.getElementById('formaPagamento').value = '';
+            document.getElementById('tipoRelatorio').value = 'diario';
+            
+            vendasFiltradas = [...vendasOriginais];
+            atualizarTabela();
+            atualizarResumo();
+            mostrarNotificacao('Filtros removidos!', 'info');
+        }
+
+        // Função para atualizar tabela
+        function atualizarTabela() {
+            const tbody = document.querySelector('#vendasTable tbody');
+            tbody.innerHTML = '';
+
+            vendasFiltradas.forEach(venda => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${venda.data}</td>
+                    <td>${venda.pedido}</td>
+                    <td>${formatarMoeda(venda.valor)}</td>
+                    <td>${venda.formaPagamento}</td>
+                    <td class="${venda.notaFiscal ? 'status-sim' : 'status-nao'}">
+                        ${venda.notaFiscal ? '✓ Sim' : '✗ Não'}
+                    </td>
+                    <td>${venda.obs}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Função para atualizar resumo
+        function atualizarResumo() {
+            const totalVendas = vendasFiltradas.reduce((total, venda) => total + venda.valor, 0);
+            const qtdVendas = vendasFiltradas.length;
+            const ticketMedio = qtdVendas > 0 ? totalVendas / qtdVendas : 0;
+            const comNotaFiscal = vendasFiltradas.filter(venda => venda.notaFiscal).length;
+            const percentualNF = qtdVendas > 0 ? (comNotaFiscal / qtdVendas) * 100 : 0;
+
+            document.getElementById('totalVendas').textContent = formatarMoeda(totalVendas);
+            document.getElementById('qtdVendas').textContent = qtdVendas;
+            document.getElementById('ticketMedio').textContent = formatarMoeda(ticketMedio);
+            document.getElementById('notaFiscal').textContent = `${percentualNF.toFixed(1)}%`;
+        }
+
+        // Função para buscar vendas
+        function buscarVendas() {
+            const termo = document.getElementById('searchVenda').value.toLowerCase();
+            const linhas = document.querySelectorAll('#vendasTable tbody tr');
+
+            linhas.forEach(linha => {
+                const texto = linha.textContent.toLowerCase();
+                linha.style.display = texto.includes(termo) ? '' : 'none';
+            });
+        }
+
+        // Função para exportar relatório em PDF
+        function exportarRelatorio() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Configurações do documento
+            doc.setFontSize(20);
+            doc.setTextColor(212, 175, 55);
+            doc.text('Covil Restaurante', 20, 20);
+            
+            doc.setFontSize(16);
+            doc.setTextColor(0, 0, 0);
+            doc.text('Relatório de Vendas', 20, 35);
+
+            // Data do relatório
+            const hoje = new Date().toLocaleDateString('pt-BR');
+            doc.setFontSize(12);
+            doc.text(`Gerado em: ${hoje}`, 20, 45);
+
+            // Período do relatório
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataFim = document.getElementById('dataFim').value;
+            doc.text(`Período: ${dataInicio || 'Início'} até ${dataFim || 'Fim'}`, 20, 55);
+
+            // Resumo
+            const totalVendas = document.getElementById('totalVendas').textContent;
+            const qtdVendas = document.getElementById('qtdVendas').textContent;
+            const ticketMedio = document.getElementById('ticketMedio').textContent;
+            const notaFiscal = document.getElementById('notaFiscal').textContent;
+
+            doc.setFontSize(14);
+            doc.text('Resumo:', 20, 70);
+            doc.setFontSize(12);
+            doc.text(`Total de Vendas: ${totalVendas}`, 20, 80);
+            doc.text(`Quantidade de Vendas: ${qtdVendas}`, 20, 90);
+            doc.text(`Ticket Médio: ${ticketMedio}`, 20, 100);
+            doc.text(`Com Nota Fiscal: ${notaFiscal}`, 20, 110);
+
+            // Tabela de vendas
+            const colunas = ['Data', 'Pedido', 'Valor', 'Pagamento', 'NF', 'Observações'];
+            const linhas = vendasFiltradas.map(venda => [
+                venda.data,
+                venda.pedido,
+                formatarMoeda(venda.valor),
+                venda.formaPagamento,
+                venda.notaFiscal ? 'Sim' : 'Não',
+                venda.obs
+            ]);
+
+            doc.autoTable({
+                head: [colunas],
+                body: linhas,
+                startY: 125,
+                styles: {
+                    fontSize: 10,
+                    cellPadding: 3
+                },
+                headStyles: {
+                    fillColor: [212, 175, 55],
+                    textColor: [0, 0, 0]
+                },
+                alternateRowStyles: {
+                    fillColor: [245, 245, 245]
+                }
+            });
+
+            // Salvar o PDF
+            doc.save('relatorio-vendas-covil.pdf');
+            mostrarNotificacao('Relatório exportado com sucesso!', 'success');
+        }
+
+        // Função para mostrar notificação
+        function mostrarNotificacao(mensagem, tipo = 'info') {
             const alert = document.createElement('div');
-            alert.className = `alert ${type}`;
-            
-            const icon = type === 'success' ? 'fa-check-circle' : 
-                        type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
-            
+            alert.className = `alert ${tipo}`;
             alert.innerHTML = `
-                <i class="fas ${icon}"></i>
-                ${message}
+                <i class="fas fa-${tipo === 'success' ? 'check-circle' : tipo === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                ${mensagem}
             `;
             
             document.body.appendChild(alert);
             
             setTimeout(() => {
                 alert.remove();
-            }, 4000);
+            }, 3000);
         }
 
-        // Filtro de busca na tabela
-        function filterTable(searchInputId, tableId) {
-            const searchInput = document.getElementById(searchInputId);
-            const table = document.getElementById(tableId);
-            
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const rows = table.querySelectorAll('tbody tr');
-                
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+        // Função para scroll do header
+        function handleScroll() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar dados
+            atualizarTabela();
+            atualizarResumo();
+
+            // Busca em tempo real
+            document.getElementById('searchVenda').addEventListener('input', buscarVendas);
+
+            // Scroll do header
+            window.addEventListener('scroll', handleScroll);
+
+            // Animação dos cards
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
                 });
             });
-        }
 
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
-            filterTable('searchVenda', 'vendasTable');
-            
-            // Definir datas padrão
-            const hoje = new Date().toISOString().split('T')[0];
-            const inicioMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
-            
-            document.getElementById('dataInicio').value = inicioMes;
-            document.getElementById('dataFim').value = hoje;
+            document.querySelectorAll('.feature-card, .form-container, .table-section').forEach(el => {
+                observer.observe(el);
+            });
         });
 
-    
+        // Tecla Enter para filtrar
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.target.closest('.form-container')) {
+                filtrarVendas();
+            }
+        });
+    </script>
+</body>
+</html>

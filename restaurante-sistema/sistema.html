@@ -5,82 +5,663 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Administrativo - Restaurante</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Estilos específicos para o sistema administrativo */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .system-hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .system-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .system-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        /* Header moderno */
+        .system-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 20px;
+            padding: 2rem 3rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .system-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .system-nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-button {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #d4af37;
+            background: transparent;
+            color: #d4af37;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-button:hover {
+            background: #d4af37;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .nav-button.logout {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .nav-button.logout:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            z-index: 1;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-section h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .welcome-section p {
+            font-size: 1.3rem;
+            color: #ccc;
+            margin-bottom: 2rem;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            display: inline-flex;
+        }
+
+        .user-info i {
+            color: #d4af37;
+            font-size: 1.2rem;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: #d4af37;
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card ul {
+            list-style: none;
+            padding: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card li {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .feature-card li::before {
+            content: '▶';
+            color: #d4af37;
+            font-size: 0.8rem;
+            position: absolute;
+            left: -1.5rem;
+            top: 0.2rem;
+        }
+
+        .feature-card a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+            display: block;
+            border-radius: 8px;
+            padding-left: 1rem;
+        }
+
+        .feature-card a:hover {
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateX(5px);
+            text-decoration: underline;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .system-container {
+                padding: 1rem 3%;
+            }
+
+            .system-header {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+                padding: 2rem;
+            }
+
+            .system-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .welcome-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .welcome-section p {
+                font-size: 1.1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 2rem;
+            }
+
+            .user-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .system-container {
+                padding: 1rem 2%;
+            }
+
+            .system-header {
+                padding: 1.5rem;
+            }
+
+            .system-logo {
+                font-size: 1.5rem;
+            }
+
+            .nav-button {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .welcome-section {
+                padding: 2rem 1rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animações de entrada */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .fade-in:nth-child(1) { animation-delay: 0.1s; }
+        .fade-in:nth-child(2) { animation-delay: 0.2s; }
+        .fade-in:nth-child(3) { animation-delay: 0.3s; }
+        .fade-in:nth-child(4) { animation-delay: 0.4s; }
+        .fade-in:nth-child(5) { animation-delay: 0.5s; }
+        .fade-in:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading state */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50vh;
+        }
+
+        .spinner {
+            border: 4px solid rgba(212, 175, 55, 0.3);
+            border-top: 4px solid #d4af37;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">🍽️ Sistema Restaurante</div>
-            <nav>
-                <a href="index.html" class="nav-button">Home</a>
-                <a href="sistema.html" class="nav-button">Sistema</a>
-                <a href="login.html" class="nav-button">Logout</a>
-            </nav>
-        </header>
+    <div class="system-hero">
+        <div class="system-container">
+            <header class="system-header">
+                <div class="system-logo">
+                    <i class="fas fa-crown"></i>
+                    Sistema Restaurante
+                </div>
+                <nav class="system-nav">
+                    <a href="index.html" class="nav-button">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                    <a href="sistema.html" class="nav-button">
+                        <i class="fas fa-cogs"></i>
+                        Sistema
+                    </a>
+                    <a href="#" class="nav-button logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </nav>
+            </header>
 
-        <div class="main-content">
-            <div class="welcome-section">
-                <h1>Sistema Administrativo</h1>
-                <p>Gerencie todas as operações do restaurante de forma integrada</p>
+            <div class="welcome-section fade-in">
+                <div class="welcome-content">
+                    <h1>
+                        <i class="fas fa-chart-line"></i>
+                        Sistema Administrativo
+                    </h1>
+                    <p>Gerencie todas as operações do restaurante de forma integrada e eficiente</p>
+                    
+                    <div class="user-info" id="userInfo">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Carregando informações do usuário...</span>
+                    </div>
+                </div>
             </div>
 
             <div class="features-grid">
-                <!-- EDUARDO - Produtos e Vendas -->
-                <div class="feature-card">
-                    <h3>📦 Gestão de Produtos - Eduardo</h3>
-                    <ul>
-                        <li><a href="produtos.html" style="color: white; text-decoration: underline;">Cadastro de Produtos (CRUD)</a></li>
-                        <li><a href="relatorio-vendas.html" style="color: white; text-decoration: underline;">Relatório de Vendas</a></li>
-                    </ul>
+                <!-- Gestão de Produtos -->
+                <div class="feature-card fade-in">
+                    <h3>
+                        <i class="fas fa-box"></i>
+                        Gestão de Produtos
+                    </h3>
+                    <div class="card-buttons">
+                        <a href="../Eduardo/produtos.html" class="feature-btn">
+                            <i class="fas fa-plus-circle"></i>
+                            Cadastro de Produtos
+                        </a>
+                        <a href="relatorio-vendas.html" class="feature-btn">
+                            <i class="fas fa-chart-bar"></i>
+                            Relatório de Vendas
+                        </a>
+                    </div>
                 </div>
 
-                <!-- BIANCA - Funcionários e Ponto -->
-                <div class="feature-card">
-                    <h3>👥 Gestão de Funcionários - Bianca</h3>
-                    <ul>
-                        <li><a href="funcionarios.html" style="color: white; text-decoration: underline;">Cadastro de Funcionários (CRUD)</a></li>
-                        <li><a href="relatorio-ponto.html" style="color: white; text-decoration: underline;">Relatório de Ponto</a></li>
-                    </ul>
+                <!-- Gestão de Funcionários -->
+                <div class="feature-card fade-in">
+                    <h3>
+                        <i class="fas fa-users"></i>
+                        Gestão de Funcionários
+                    </h3>
+                    <div class="card-buttons">
+                        <a href="registro_ponto.html" class="feature-btn">
+                            <i class="fas fa-clock"></i>
+                            Registro de Ponto
+                        </a>
+                        <a href="relatorio-ponto.html" class="feature-btn">
+                            <i class="fas fa-chart-line"></i>
+                            Relatório de Ponto
+                        </a>
+                    </div>
                 </div>
 
-                <!-- VINICIUS - Insumos e Estoque -->
-                <div class="feature-card">
-                    <h3>📋 Gestão de Insumos - Vinicius</h3>
-                    <ul>
-                        <li><a href="insumos.html" style="color: white; text-decoration: underline;">Cadastro de Insumos (CRUD)</a></li>
-                        <li><a href="relatorio-estoque.html" style="color: white; text-decoration: underline;">Relatório de Estoque</a></li>
-                    </ul>
+                <!-- Gestão de Insumos -->
+                <div class="feature-card fade-in">
+                    <h3>
+                        <i class="fas fa-clipboard-list"></i>
+                        Gestão de Insumos
+                    </h3>
+                    <div class="card-buttons">
+                        <a href="insumos.html" class="feature-btn">
+                            <i class="fas fa-warehouse"></i>
+                            Cadastro de Insumos
+                        </a>
+                        <a href="relatorio-estoque.html" class="feature-btn">
+                            <i class="fas fa-boxes"></i>
+                            Relatório de Estoque
+                        </a>
+                    </div>
                 </div>
 
-                <!-- MARIANA - Clientes e Reservas -->
-                <div class="feature-card">
-                    <h3>🧑‍🤝‍🧑 Gestão de Clientes - Mariana</h3>
-                    <ul>
-                        <li><a href="clientes.html" style="color: white; text-decoration: underline;">Cadastro de Clientes (CRUD)</a></li>
-                        <li><a href="relatorio-reservas.html" style="color: white; text-decoration: underline;">Relatório de Reservas</a></li>
-                    </ul>
+                <!-- Gestão de Clientes -->
+                <div class="feature-card fade-in">
+                    <h3>
+                        <i class="fas fa-user-friends"></i>
+                        Gestão de Clientes
+                    </h3>
+                    <div class="card-buttons">
+                        <a href="clientes.html" class="feature-btn">
+                            <i class="fas fa-address-book"></i>
+                            Cadastro de Clientes
+                        </a>
+                        <a href="relatorio-reservas.html" class="feature-btn">
+                            <i class="fas fa-calendar-check"></i>
+                            Relatório de Reservas
+                        </a>
+                    </div>
                 </div>
 
-                <!-- AMANDA - Mesas e Gerenciamento -->
-                <div class="feature-card">
-                    <h3>🪑 Gestão de Mesas - Amanda</h3>
-                    <ul>
-                        <li><a href="mesas.html" style="color: white; text-decoration: underline;">Cadastro de Mesas (CRUD)</a></li>
-                        <li><a href="relatorio-gerenciamento.html" style="color: white; text-decoration: underline;">Relatório de Gerenciamento</a></li>
-                    </ul>
+                <!-- Gestão de Mesas -->
+                <div class="feature-card fade-in">
+                    <h3>
+                        <i class="fas fa-chair"></i>
+                        Gestão de Mesas
+                    </h3>
+                    <div class="card-buttons">
+                        <a href="mesas.html" class="feature-btn">
+                            <i class="fas fa-table"></i>
+                            Cadastro de Mesas
+                        </a>
+                        <a href="gerenciamento.html" class="feature-btn">
+                            <i class="fas fa-tasks"></i>
+                            Gerenciamento
+                        </a>
+                    </div>
                 </div>
 
-                <!-- Funcionalidades Extras -->
-                <div class="feature-card">
-                    <h3>📊 Outras Funcionalidades</h3>
-                    <ul>
-                        <li><a href="pedidos.html" style="color: white; text-decoration: underline;">Registro de Pedidos</a></li>
-                        <li><a href="cardapio.html" style="color: white; text-decoration: underline;">Cardápio Digital</a></li>
-                        <li><a href="reservas.html" style="color: white; text-decoration: underline;">Sistema de Reservas</a></li>
-                        <li><a href="avaliacoes.html" style="color: white; text-decoration: underline;">Avaliações de Clientes</a></li>
-                    </ul>
+                <!-- Sistema Principal -->
+                <div class="feature-card fade-in">
+                    <h3>
+                        <i class="fas fa-cogs"></i>
+                        Sistema Principal
+                    </h3>
+                    <div class="card-buttons">
+                        <a href="index.html" class="feature-btn">
+                            <i class="fas fa-home"></i>
+                            Página Inicial
+                        </a>
+                        <a href="sistema.html" class="feature-btn">
+                            <i class="fas fa-desktop"></i>
+                            Sistema
+                        </a>
+                        <a href="cadpessoas.html" class="feature-btn">
+                            <i class="fas fa-user-plus"></i>
+                            Cadastro de Pessoas
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cardápio e Reservas -->
+                <div class="feature-card fade-in">
+                    <h3>
+                        <i class="fas fa-utensils"></i>
+                        Cardápio e Reservas
+                    </h3>
+                    <div class="card-buttons">
+                        <a href="cardapio-digital.html" class="feature-btn">
+                            <i class="fas fa-book-open"></i>
+                            Cardápio Digital
+                        </a>
+                        <a href="reservas.html" class="feature-btn">
+                            <i class="fas fa-calendar-alt"></i>
+                            Sistema de Reservas
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Outros Módulos -->
+                <div class="feature-card fade-in">
+                    <h3>
+                        <i class="fas fa-plus-square"></i>
+                        Outros Módulos
+                    </h3>
+                    <div class="card-buttons">
+                        <a href="cadgasto.html" class="feature-btn">
+                            <i class="fas fa-receipt"></i>
+                            Cadastro de Gastos
+                        </a>
+                        <a href="homerelat.html" class="feature-btn">
+                            <i class="fas fa-chart-pie"></i>
+                            Home Relatórios
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar se o usuário está logado
+            checkUserAuthentication();
+            
+            // Carregar informações do usuário
+            loadUserInfo();
+        });
+
+        function checkUserAuthentication() {
+            const isLoggedIn = sessionStorage.getItem('userLoggedIn');
+            const userType = sessionStorage.getItem('userType');
+
+            if (!isLoggedIn || isLoggedIn !== 'true') {
+                // Usuário não está logado, redirecionar para login
+                alert('Acesso não autorizado. Faça login primeiro.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Verificar se o tipo de usuário tem acesso ao sistema administrativo
+            if (userType === 'cliente') {
+                alert('Acesso restrito. Clientes não têm permissão para acessar o sistema administrativo.');
+                window.location.href = 'reservas.html';
+                return;
+            }
+        }
+
+        function loadUserInfo() {
+            const username = sessionStorage.getItem('username');
+            const userType = sessionStorage.getItem('userType');
+            const loginTime = sessionStorage.getItem('loginTime');
+            const userInfoElement = document.getElementById('userInfo');
+
+            if (username && userType) {
+                let userTypeDisplay = '';
+                let userIcon = '';
+                
+                switch(userType) {
+                    case 'gerente':
+                        userTypeDisplay = 'Gerente';
+                        userIcon = 'fas fa-user-shield';
+                        break;
+                    case 'funcionario':
+                        userTypeDisplay = 'Funcionário';
+                        userIcon = 'fas fa-user-tie';
+                        break;
+                    default:
+                        userTypeDisplay = 'Usuário';
+                        userIcon = 'fas fa-user';
+                }
+
+                const loginDate = loginTime ? new Date(loginTime).toLocaleString('pt-BR') : 'Não disponível';
+
+                userInfoElement.innerHTML = `
+                    <i class="${userIcon}"></i>
+                    <div style="text-align: center;">
+                        <div><strong>${username}</strong> - ${userTypeDisplay}</div>
+                        <div style="font-size: 0.9rem; color: #ccc; margin-top: 0.3rem;">
+                            Login: ${loginDate}
+                        </div>
+                    </div>
+                `;
+            } else {
+                userInfoElement.innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Erro ao carregar informações do usuário</span>
+                `;
+            }
+        }
+
+        function logout() {
+            if (confirm('Tem certeza que deseja sair do sistema?')) {
+                // Limpar dados da sessão
+                sessionStorage.clear();
+                localStorage.removeItem('rememberUser');
+                localStorage.removeItem('rememberUserType');
+                
+                // Mostrar mensagem e redirecionar
+                alert('Logout realizado com sucesso!');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Função para verificar sessão periodicamente (opcional)
+        setInterval(function() {
+            if (!sessionStorage.getItem('userLoggedIn')) {
+                alert('Sua sessão expirou. Faça login novamente.');
+                window.location.href = 'login.html';
+            }
+        }, 300000); // Verificar a cada 5 minutos
+    </script>
+</body>
+</html>

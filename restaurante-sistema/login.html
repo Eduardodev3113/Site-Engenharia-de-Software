@@ -1,42 +1,686 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Sistema Restaurante</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Estilos específicos para a página de login */
+    .login-hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+      padding: 2rem 0;
+    }
+
+    .login-container {
+      max-width: 500px;
+      width: 90%;
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      border-radius: 20px;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+      z-index: 1;
+    }
+
+    .login-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #d4af37, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+    }
+
+    .login-subtitle {
+      color: #ccc;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .user-type-selector {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.5rem;
+      border-radius: 15px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .user-type-btn {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      background: transparent;
+      border: none;
+      color: #ccc;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .user-type-btn.active {
+      background: linear-gradient(135deg, #d4af37, #ffd700);
+      color: #000;
+      font-weight: bold;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .user-type-btn:hover:not(.active) {
+      background: rgba(212, 175, 55, 0.1);
+      color: #d4af37;
+    }
+
+    .user-type-btn i {
+      font-size: 1.2rem;
+    }
+
+    .credentials-hint {
+      background: rgba(212, 175, 55, 0.1);
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .credentials-hint h4 {
+      color: #d4af37;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .credential-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .credential-item:last-child {
+      border-bottom: none;
+    }
+
+    .credential-label {
+      color: #ccc;
+      font-weight: 500;
+    }
+
+    .credential-value {
+      color: #d4af37;
+      font-weight: bold;
+      font-family: monospace;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      color: #d4af37;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .input-container {
+      position: relative;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 1rem 1rem 1rem 3rem;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #d4af37;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .form-group input::placeholder {
+      color: #999;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #d4af37;
+      font-size: 1.1rem;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, #d4af37, #ffd700);
+      color: #000;
+      border: none;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .remember-me input[type="checkbox"] {
+      accent-color: #d4af37;
+      width: auto;
+      margin: 0;
+      padding: 0;
+    }
+
+    .forgot-password {
+      color: #d4af37;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .btn-register:hover {
+      background: #d4af37;
+      color: #000;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .forgot-password.disabled {
+      color: #666;
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+
+    .forgot-password.disabled:hover {
+      color: #666;
+      text-decoration: none;
+    }
+
+    /* Mensagens de feedback */
+    .message {
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-weight: 500;
+      display: none;
+    }
+
+    .message.success {
+      background: rgba(40, 167, 69, 0.2);
+      border: 2px solid #28a745;
+      color: #28a745;
+    }
+
+    .message.error {
+      background: rgba(220, 53, 69, 0.2);
+      border: 2px solid #dc3545;
+      color: #dc3545;
+    }
+
+    .message.info {
+      background: rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      color: #d4af37;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      border-top: 2px solid #d4af37;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .login-container {
+        padding: 2rem;
+        margin: 1rem;
+      }
+
+      .login-title {
+        font-size: 2rem;
+      }
+
+      .user-type-selector {
+        flex-direction: column;
+      }
+
+      .user-type-btn {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .login-footer {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Login como seção central -->
-    <div class="hero">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <h1 class="hero-title">Bem-vindo de volta!</h1>
-        <p class="hero-subtitle">Entre na sua conta para continuar</p>
+  <div class="login-hero">
+    <div class="login-container">
+      <div class="login-content">
+        <div class="login-header">
+          <h1 class="login-title">
+            <i class="fas fa-crown"></i>
+            Bem-vindo!
+          </h1>
+          <p class="login-subtitle">Acesse sua conta para continuar</p>
+        </div>
 
-        <div class="auth-form">
-          <form action="#">
-            <div class="form-group">
-              <label for="email">Email ou telefone</label>
-              <input type="text" id="email" placeholder="Digite seu email" required>
+        <!-- Seletor de tipo de usuário -->
+        <div class="user-type-selector">
+          <button type="button" class="user-type-btn active" data-type="cliente">
+            <i class="fas fa-user"></i>
+            <span>Cliente</span>
+          </button>
+          <button type="button" class="user-type-btn" data-type="funcionario">
+            <i class="fas fa-user-tie"></i>
+            <span>Funcionário</span>
+          </button>
+          <button type="button" class="user-type-btn" data-type="gerente">
+            <i class="fas fa-user-shield"></i>
+            <span>Gerente</span>
+          </button>
+        </div>
+
+        <!-- Dica de credenciais -->
+        <div class="credentials-hint" id="credentialsHint">
+          <h4><i class="fas fa-info-circle"></i> Credenciais de Teste</h4>
+          <div id="credentialsList">
+            <div class="credential-item">
+              <span class="credential-label">Cliente:</span>
+              <span class="credential-value">Qualquer usuário/senha</span>
             </div>
-            <div class="form-group">
-              <label for="password">Senha</label>
+          </div>
+        </div>
+
+        <!-- Mensagem de feedback -->
+        <div id="message" class="message"></div>
+
+        <!-- Formulário de login -->
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Usuário</label>
+            <div class="input-container">
+              <i class="fas fa-user input-icon"></i>
+              <input type="text" id="username" placeholder="Digite seu usuário" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Senha</label>
+            <div class="input-container">
+              <i class="fas fa-lock input-icon"></i>
               <input type="password" id="password" placeholder="Digite sua senha" required>
             </div>
+          </div>
 
-            <button type="submit" class="btn-auth">Entrar</button>
-            <div class="auth-switch">
-              <input type="checkbox" id="remember-me">
-              <label for="remember-me">Lembrar-me</label> | 
-              <a href="#">Precisa de ajuda?</a>
-            </div>
-          </form>
+          <button type="submit" class="btn-login" id="loginBtn">
+            <i class="fas fa-sign-in-alt"></i>
+            Entrar
+          </button>
 
-          <p class="auth-switch">Não possui cadastro? <a href="cadpessoas.html">Cadastre-se agora</a></p>
-        </div>
+          <div class="login-footer">
+            <label class="remember-me">
+              <input type="checkbox" id="rememberMe">
+              <span>Lembrar-me</span>
+            </label>
+            <a href="#" class="forgot-password" id="forgotPassword">Esqueceu a senha?</a>
+          </div>
+
+          <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(212, 175, 55, 0.2);">
+            <p style="color: #ccc; margin-bottom: 1rem;">Não possui cadastro?</p>
+            <a href="cadpessoas.html" class="btn-register" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 2rem; background: transparent; color: #d4af37; border: 2px solid #d4af37; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+              <i class="fas fa-user-plus"></i>
+              Cadastrar-se
+            </a>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const userTypeBtns = document.querySelectorAll('.user-type-btn');
+      const credentialsHint = document.getElementById('credentialsHint');
+      const credentialsList = document.getElementById('credentialsList');
+      const loginForm = document.getElementById('loginForm');
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const loginBtn = document.getElementById('loginBtn');
+      const messageDiv = document.getElementById('message');
+      const rememberMe = document.getElementById('rememberMe');
+      const forgotPasswordLink = document.getElementById('forgotPassword');
+
+      let currentUserType = 'cliente';
+
+      // Credenciais dos usuários
+      const CREDENTIALS = {
+        gerente: {
+          username: 'Eduardo',
+          password: '123',
+          redirectUrl: 'sistema.html',
+          icon: 'fas fa-user-shield',
+          color: '#ff6b6b'
+        },
+        funcionario: {
+          username: 'Vinicius',
+          password: '321',
+          redirectUrl: 'sistema.html',
+          icon: 'fas fa-user-tie',
+          color: '#4ecdc4'
+        },
+        cliente: {
+          username: 'qualquer',
+          password: 'qualquer',
+          redirectUrl: 'reservas.html',
+          icon: 'fas fa-user',
+          color: '#45b7d1'
+        }
+      };
+
+      // Templates de credenciais para exibição
+      const CREDENTIALS_TEMPLATES = {
+        cliente: `
+          <div class="credential-item">
+            <span class="credential-label">Cliente:</span>
+            <span class="credential-value">Qualquer usuário/senha</span>
+          </div>
+        `,
+        funcionario: `
+          <div class="credential-item">
+            <span class="credential-label">Acesso restrito:</span>
+            <span class="credential-value">Somente funcionários autorizados</span>
+          </div>
+        `,
+        gerente: `
+          <div class="credential-item">
+            <span class="credential-label">Acesso restrito:</span>
+            <span class="credential-value">Somente gerência autorizada</span>
+          </div>
+        `
+      };
+
+      // Função para alternar entre tipos de usuário
+      function switchUserType(type) {
+        currentUserType = type;
+        
+        // Atualizar botões
+        userTypeBtns.forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.dataset.type === type) {
+            btn.classList.add('active');
+          }
+        });
+
+        // Atualizar dica de credenciais
+        credentialsList.innerHTML = CREDENTIALS_TEMPLATES[type];
+        
+        // Atualizar link "Esqueceu a senha?"
+        if (type === 'cliente') {
+          forgotPasswordLink.classList.remove('disabled');
+          forgotPasswordLink.style.color = '#d4af37';
+          forgotPasswordLink.style.cursor = 'pointer';
+          forgotPasswordLink.textContent = 'Esqueceu a senha?';
+        } else {
+          forgotPasswordLink.classList.add('disabled');
+          forgotPasswordLink.style.color = '#666';
+          forgotPasswordLink.style.cursor = 'not-allowed';
+          forgotPasswordLink.textContent = 'Recuperação não disponível';
+        }
+        
+        // Limpar campos
+        usernameInput.value = '';
+        passwordInput.value = '';
+        hideMessage();
+      }
+
+      // Event listeners para seleção de tipo de usuário
+      userTypeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          switchUserType(btn.dataset.type);
+        });
+      });
+
+      // Função para mostrar mensagem
+      function showMessage(text, type) {
+        messageDiv.textContent = text;
+        messageDiv.className = `message ${type}`;
+        messageDiv.style.display = 'block';
+        
+        // Auto-hide após 5 segundos (exceto para success)
+        if (type !== 'success') {
+          setTimeout(() => {
+            hideMessage();
+          }, 5000);
+        }
+      }
+
+      // Função para esconder mensagem
+      function hideMessage() {
+        messageDiv.style.display = 'none';
+      }
+
+      // Função para loading
+      function setLoading(loading) {
+        if (loading) {
+          loginBtn.disabled = true;
+          loginBtn.innerHTML = '<div class="spinner"></div>Entrando...';
+        } else {
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i>Entrar';
+        }
+      }
+
+      // Função para validar credenciais
+      function validateCredentials(username, password, userType) {
+        const credentials = CREDENTIALS[userType];
+        
+        if (userType === 'cliente') {
+          // Cliente pode usar qualquer usuário/senha
+          return {
+            valid: true,
+            userType: 'cliente',
+            redirectUrl: credentials.redirectUrl,
+            userName: username
+          };
+        }
+        
+        // Verificar credenciais específicas para gerente e funcionário
+        if (username === credentials.username && password === credentials.password) {
+          return {
+            valid: true,
+            userType: userType,
+            redirectUrl: credentials.redirectUrl,
+            userName: credentials.username
+          };
+        }
+        
+        return {
+          valid: false,
+          userType: null,
+          redirectUrl: null,
+          userName: null
+        };
+      }
+
+      // Event listener do formulário
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        // Validação básica
+        if (!username || !password) {
+          showMessage('Por favor, preencha todos os campos.', 'error');
+          return;
+        }
+
+        // Simular delay de autenticação
+        setLoading(true);
+        
+        setTimeout(() => {
+          const authResult = validateCredentials(username, password, currentUserType);
+          
+          if (authResult.valid) {
+            showMessage(`Login realizado com sucesso como ${currentUserType}! Redirecionando...`, 'success');
+            
+            // Salvar sessão se "lembrar-me" estiver marcado
+            if (rememberMe.checked) {
+              localStorage.setItem('rememberUser', username);
+              localStorage.setItem('rememberUserType', currentUserType);
+            }
+
+            // Salvar informações da sessão
+            sessionStorage.setItem('userLoggedIn', 'true');
+            sessionStorage.setItem('userType', authResult.userType);
+            sessionStorage.setItem('username', authResult.userName);
+            sessionStorage.setItem('loginTime', new Date().toISOString());
+
+            // Redirecionar após 2 segundos
+            setTimeout(() => {
+              window.location.href = authResult.redirectUrl;
+            }, 2000);
+            
+          } else {
+            let errorMessage = 'Credenciais inválidas.';
+            
+            if (currentUserType === 'gerente') {
+              errorMessage += ' Acesso restrito à gerência.';
+            } else if (currentUserType === 'funcionario') {
+              errorMessage += ' Acesso restrito a funcionários.';
+            }
+            
+            showMessage(errorMessage, 'error');
+            setLoading(false);
+            
+            // Limpar senha
+            passwordInput.value = '';
+            passwordInput.focus();
+          }
+        }, 1500);
+      });
+
+      // Carregar usuário e tipo lembrado
+      const rememberedUser = localStorage.getItem('rememberUser');
+      const rememberedUserType = localStorage.getItem('rememberUserType');
+      
+      if (rememberedUser && rememberedUserType) {
+        usernameInput.value = rememberedUser;
+        rememberMe.checked = true;
+        switchUserType(rememberedUserType);
+        passwordInput.focus();
+      }
+
+      // Verificar se já está logado (removido para evitar redirecionamento automático)
+      // Usuário precisa fazer login manualmente a cada sessão
+
+      // Inicializar com cliente selecionado
+      switchUserType('cliente');
+    });
+
+    // Função global para logout
+    function logout() {
+      sessionStorage.clear();
+      localStorage.removeItem('rememberUser');
+      localStorage.removeItem('rememberUserType');
+      window.location.href = 'login.html';
+    }
+
+    // Disponibilizar função logout globalmente
+    window.logout = logout;
+  </script>
 </body>
 </html>
