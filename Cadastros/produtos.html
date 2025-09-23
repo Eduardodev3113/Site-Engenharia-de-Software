@@ -28,7 +28,7 @@
         }
 
         /* Header */
-        .header {
+        header {
             position: fixed;
             top: 0;
             width: 100%;
@@ -36,20 +36,14 @@
             backdrop-filter: blur(10px);
             z-index: 1000;
             transition: all 0.3s ease;
+            border-bottom: 2px solid #d4af37;
         }
 
-        .header.scrolled {
-            background: rgba(0, 0, 0, 0.98);
-            box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
-        }
-
-        .nav-container {
+        header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 5%;
-            max-width: 1400px;
-            margin: 0 auto;
+            padding: 1rem 0;
         }
 
         .logo {
@@ -62,151 +56,178 @@
             gap: 10px;
         }
 
-        .logo i {
-            font-size: 2rem;
-            filter: drop-shadow(0 0 5px #d4af37);
-        }
-
-        .nav-menu {
+        nav {
             display: flex;
-            list-style: none;
             gap: 2rem;
+            list-style: none;
         }
 
-        .nav-menu li a {
+        .nav-button {
             color: #fff;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
-        }
-
-        .nav-menu li a:hover {
-            color: #d4af37;
-        }
-
-        .nav-menu li a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #d4af37;
-            transition: width 0.3s ease;
-        }
-
-        .nav-menu li a:hover::after {
-            width: 100%;
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn-login, .btn-register {
             padding: 0.5rem 1rem;
-            border: 2px solid #d4af37;
-            background: transparent;
-            color: #d4af37;
+            border: 2px solid transparent;
             border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
         }
 
-        .btn-login:hover, .btn-register:hover {
-            background: #d4af37;
-            color: #000;
+        .nav-button:hover {
+            color: #d4af37;
+            border-color: #d4af37;
             transform: translateY(-2px);
         }
 
-        .mobile-menu-toggle {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 4px;
-        }
-
-        .mobile-menu-toggle span {
-            width: 25px;
-            height: 3px;
-            background: #d4af37;
-            transition: 0.3s;
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+        /* Main Content */
+        .main-content {
+            margin-top: 120px;
+            padding: 2rem 0;
             background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-            overflow: hidden;
+            min-height: 100vh;
         }
 
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23d4af37" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        .back-button {
+            margin-bottom: 2rem;
         }
 
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.3) 100%);
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 3rem;
             padding: 2rem;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            position: relative;
         }
 
-        .hero-title {
-            font-size: 4rem;
-            font-weight: bold;
+        .back-button-inline {
+            position: absolute;
+            left: 2rem;
+            top: 2rem;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            color: #d4af37;
             margin-bottom: 1rem;
             background: linear-gradient(135deg, #d4af37, #ffd700);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
         }
 
-        .crown {
-            display: block;
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            filter: drop-shadow(0 0 10px #d4af37);
+        .section-divider {
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            margin: 0 auto 1rem auto;
         }
 
-        .hero-subtitle {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
+        .welcome-section p {
             color: #ccc;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            font-size: 1.1rem;
         }
 
-        .hero-buttons {
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        h3 {
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        /* Form Styles */
+        .reserva-form {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group label {
+            display: block;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Table Styles */
+        .search-container {
             display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
         }
 
+        .search-container h3 {
+            text-align: left;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .table th {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .table td {
+            color: #ddd;
+        }
+
+        .table tr:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .table tbody tr:nth-child(even) {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        /* Button Styles */
         .btn-primary, .btn-secondary {
             padding: 1rem 2rem;
             border-radius: 50px;
@@ -242,410 +263,6 @@
             transform: translateY(-3px);
         }
 
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
-            color: #d4af37;
-            font-size: 1.5rem;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            40% {
-                transform: translateX(-50%) translateY(-10px);
-            }
-            60% {
-                transform: translateX(-50%) translateY(-5px);
-            }
-        }
-
-        /* Sections */
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-header h2 {
-            font-size: 3rem;
-            color: #d4af37;
-            margin-bottom: 1rem;
-        }
-
-        .section-divider {
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-            margin: 0 auto 1rem auto;
-        }
-
-        .section-header p {
-            font-size: 1.2rem;
-            color: #ccc;
-        }
-
-        /* Sobre Section */
-        .sobre {
-            padding: 8rem 0;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-        }
-
-        .sobre-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .sobre-text h3 {
-            font-size: 2rem;
-            color: #d4af37;
-            margin-bottom: 1.5rem;
-        }
-
-        .sobre-text p {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            color: #ddd;
-        }
-
-        .chef-signature {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid #d4af37;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chef-name {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #d4af37;
-        }
-
-        .chef-title {
-            color: #ccc;
-            font-style: italic;
-        }
-
-        .sobre-image {
-            display: flex;
-            justify-content: center;
-        }
-
-        .image-placeholder {
-            width: 300px;
-            height: 300px;
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #000;
-            font-size: 4rem;
-            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
-        }
-
-        .image-placeholder span {
-            font-size: 1.2rem;
-            margin-top: 1rem;
-            font-weight: bold;
-        }
-
-        /* Destaques Section */
-        .destaques {
-            padding: 8rem 0;
-            background: #0a0a0a;
-        }
-
-        .destaques-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
-            margin-bottom: 4rem;
-        }
-
-        .destaque-card {
-            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .destaque-card:hover {
-            transform: translateY(-10px);
-            border-color: #d4af37;
-            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
-        }
-
-        .card-image {
-            position: relative;
-            height: 250px;
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card-image .image-placeholder {
-            font-size: 4rem;
-            color: #000;
-        }
-
-        .price-tag {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #000;
-            color: #d4af37;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .card-content {
-            padding: 2rem;
-        }
-
-        .card-content h3 {
-            font-size: 1.5rem;
-            color: #d4af37;
-            margin-bottom: 1rem;
-        }
-
-        .card-content p {
-            color: #ddd;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .ingredients {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .ingredients span {
-            background: rgba(212, 175, 55, 0.2);
-            color: #d4af37;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.9rem;
-            border: 1px solid #d4af37;
-        }
-
-        .cta-cardapio {
-            text-align: center;
-        }
-
-        /* Info Section */
-        .info-section {
-            padding: 8rem 0;
-            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-        }
-
-        .info-card {
-            background: rgba(212, 175, 55, 0.1);
-            padding: 3rem 2rem;
-            border-radius: 20px;
-            text-align: center;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .info-card:hover {
-            transform: translateY(-5px);
-            border-color: #d4af37;
-            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
-        }
-
-        .info-icon {
-            font-size: 3rem;
-            color: #d4af37;
-            margin-bottom: 1.5rem;
-        }
-
-        .info-card h3 {
-            font-size: 1.5rem;
-            color: #d4af37;
-            margin-bottom: 1.5rem;
-        }
-
-        .info-card p {
-            color: #ddd;
-            line-height: 1.6;
-        }
-
-        .horarios p {
-            margin-bottom: 0.5rem;
-        }
-
-        .fechado {
-            color: #ff4444;
-            font-weight: bold;
-        }
-
-        .btn-maps {
-            margin-top: 1rem;
-            padding: 0.7rem 1.5rem;
-            background: transparent;
-            border: 2px solid #d4af37;
-            color: #d4af37;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-maps:hover {
-            background: #d4af37;
-            color: #000;
-        }
-
-        .contatos p {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Reservas Section */
-        .reservas {
-            padding: 8rem 0;
-            background: #0a0a0a;
-        }
-
-        .reserva-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .reserva-info h3 {
-            font-size: 1.8rem;
-            color: #d4af37;
-            margin-bottom: 1.5rem;
-        }
-
-        .reserva-rules {
-            list-style: none;
-        }
-
-        .reserva-rules li {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            color: #ddd;
-        }
-
-        .reserva-rules li i {
-            color: #d4af37;
-            font-size: 1.1rem;
-        }
-
-        .reserva-form {
-            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-            padding: 3rem;
-            border-radius: 20px;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            color: #d4af37;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #d4af37;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
-        }
-
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: #999;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #d4af37;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn-reserva {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-            color: #000;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-reserva:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
-        }
-
         .btn-success {
             padding: 0.8rem 1.5rem;
             background: linear-gradient(135deg, #28a745, #20c997);
@@ -675,6 +292,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-right: 0.5rem;
+            font-size: 0.9rem;
         }
 
         .btn-warning:hover {
@@ -691,6 +309,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
 
         .btn-danger:hover {
@@ -698,101 +317,11 @@
             box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
         }
 
-        /* Footer */
-        .footer {
-            background: #000;
-            padding: 4rem 0 2rem 0;
-            border-top: 2px solid #d4af37;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 3rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #d4af37;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 1rem;
-        }
-
-        .footer-section p {
-            color: #ccc;
-            margin-bottom: 1rem;
-        }
-
-        .footer-section h3 {
-            color: #d4af37;
-            margin-bottom: 1rem;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-section ul li a {
-            color: #ccc;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section ul li a:hover {
-            color: #d4af37;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-links a {
-            color: #d4af37;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            transform: translateY(-3px);
-            filter: brightness(1.2);
-        }
-
-        .footer-contact p {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            color: #ccc;
-        }
-
-        .footer-contact i {
-            color: #d4af37;
-            width: 20px;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid #333;
-            padding-top: 2rem;
+        .text-center {
             text-align: center;
-            color: #999;
         }
 
-        .footer-bottom p {
-            margin-bottom: 0.5rem;
-        }
-
-        /* Modais */
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -814,7 +343,7 @@
         .modal-content {
             background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
             border-radius: 20px;
-            max-width: 400px;
+            max-width: 500px;
             width: 90%;
             border: 2px solid #d4af37;
             animation: modalSlideIn 0.3s ease;
@@ -837,13 +366,16 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            text-align: center;
         }
 
-        .modal-header h2 {
+        .modal-header h3 {
             color: #d4af37;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            text-align: center;
+            width: 100%;
         }
 
         .close {
@@ -859,242 +391,21 @@
 
         .auth-form {
             padding: 2rem;
-        }
-
-        .btn-auth {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-            color: #000;
-            border: none;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .btn-auth:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-        }
-
-        .auth-switch {
-            text-align: center;
-            color: #ccc;
-        }
-
-        .auth-switch a {
-            color: #d4af37;
-            text-decoration: none;
-        }
-
-        .auth-switch a:hover {
-            text-decoration: underline;
-        }
-
-        /* Específico para o sistema de produtos */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            transition: all 0.3s ease;
-            border-bottom: 2px solid #d4af37;
-        }
-
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
-
-        nav {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-button {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 0.5rem 1rem;
-            border: 2px solid transparent;
-            border-radius: 25px;
-        }
-
-        .nav-button:hover {
-            color: #d4af37;
-            border-color: #d4af37;
-            transform: translateY(-2px);
-        }
-
-        .main-content {
-            margin-top: 120px;
-            padding: 2rem 0;
-            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-            min-height: 100vh;
-        }
-
-        .back-button {
-            margin-bottom: 2rem;
-        }
-
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem;
-            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-            border-radius: 20px;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .welcome-section h1 {
-            font-size: 2.5rem;
-            color: #d4af37;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .welcome-section p {
-            color: #ccc;
-            font-size: 1.1rem;
-        }
-
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 3rem;
-            margin-bottom: 2rem;
-        }
-
-        .col-md-4, .col-md-8, .col-md-6 {
-            /* Removido para usar grid */
-        }
-
-        h3 {
-            color: #d4af37;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            margin-top: 1rem;
-        }
-
-        .table th,
-        .table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .table th {
-            background: rgba(212, 175, 55, 0.2);
-            color: #d4af37;
-            font-weight: bold;
-        }
-
-        .table td {
-            color: #ddd;
-        }
-
-        .table tr:hover {
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .text-center {
             text-align: center;
         }
 
-        /* Ajustes adicionais para melhor apresentação */
-        .form-group {
-            background: rgba(212, 175, 55, 0.05);
-            padding: 1.5rem;
+        /* Special Styles */
+        td span[style*="color: red"] {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff6b6b !important;
+            padding: 0.3rem 0.8rem;
             border-radius: 15px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            font-weight: bold;
+            border: 1px solid #ff6b6b;
         }
 
-        .search-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        /* Responsivo */
+        /* Responsive */
         @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-            
-            .mobile-menu-toggle {
-                display: flex;
-            }
-            
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1.1rem;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .section-header h2 {
-                font-size: 2rem;
-            }
-            
-            .sobre-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            
-            .reserva-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            
-            .destaques-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
             .row {
                 grid-template-columns: 1fr;
                 gap: 2rem;
@@ -1104,27 +415,14 @@
                 flex-direction: column;
                 gap: 1rem;
             }
-        }
 
-        @media (max-width: 480px) {
-            .container {
-                padding: 0 1rem;
+            .search-container {
+                flex-direction: column;
+                gap: 1rem;
             }
-            
-            .nav-container {
-                padding: 1rem;
-            }
-            
-            .hero-content {
-                padding: 1rem;
-            }
-            
-            .reserva-form {
-                padding: 1.5rem;
-            }
-            
-            .auth-buttons {
-                display: none;
+
+            .search-container h3 {
+                text-align: center;
             }
 
             .welcome-section h1 {
@@ -1134,52 +432,43 @@
             .main-content {
                 margin-top: 100px;
             }
+
+            .table th,
+            .table td {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
         }
 
-        /* Animações de scroll */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .reserva-form {
+                padding: 1.5rem;
+            }
         }
 
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Smooth scroll */
-        html {
-            scroll-behavior: smooth;
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
         }
 
-        /* Estilos específicos para o modal de edição */
-        #editModal .modal-content {
-            max-width: 500px;
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
-        #editModal .modal-header h3 {
-            color: #d4af37;
-        }
-
-        /* Efeitos visuais adicionais */
-        .table tbody tr:nth-child(even) {
-            background: rgba(212, 175, 55, 0.05);
-        }
-
-        .btn-warning, .btn-danger, .btn-success {
-            font-size: 0.9rem;
-            padding: 0.6rem 1.2rem;
-        }
-
-        /* Indicador de promoção */
-        td span[style*="color: red"] {
-            background: rgba(255, 0, 0, 0.1);
-            color: #ff6b6b !important;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-weight: bold;
-            border: 1px solid #ff6b6b;
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
         }
     </style>
 </head>
@@ -1189,23 +478,20 @@
             <div class="container">
                 <div class="logo">🍽️ Sistema Restaurante</div>
                 <nav>
-                    <a href="index.html" class="nav-button">Home</a>
-                    <a href="sistema.html" class="nav-button">Sistema</a>
-                    <a href="produtos.html" class="nav-button">Produtos</a>
-                    <a href="login.html" class="nav-button">Logout</a>
+                    <a href="#" class="nav-button">Home</a>
+                    <a href="#" class="nav-button">Produtos</a>
+                    <a href="#" class="nav-button">Logout</a>
                 </nav>
             </div>
         </header>
 
         <div class="main-content">
-            <div class="back-button">
-                <a href="sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
-            </div>
-
             <div class="welcome-section">
+                <div class="back-button-inline">
+                    <a href="../restaurante-sistema/sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
+                </div>
                 <h1>Gestão de Produtos</h1>
                 <div class="section-divider"></div>
-                <p>Desenvolvido por: <strong>Eduardo Dall Rosa</strong></p>
             </div>
 
             <div class="row">
@@ -1220,12 +506,12 @@
 
                         <div class="form-group">
                             <label for="valorProduto">Valor (R$) *</label>
-                            <input type="text" id="valorProduto" name="valor" class="form-control" data-format="currency" required>
+                            <input type="text" id="valorProduto" name="valor" class="form-control" data-format="currency" required placeholder="0,00">
                         </div>
 
                         <div class="form-group">
                             <label for="ingredientesProduto">Ingredientes *</label>
-                            <textarea id="ingredientesProduto" name="ingredientes" class="form-control" rows="3" required></textarea>
+                            <textarea id="ingredientesProduto" name="ingredientes" class="form-control" rows="3" required placeholder="Liste os ingredientes principais"></textarea>
                         </div>
 
                         <div class="form-group">
@@ -1372,21 +658,61 @@
     </div>
 
     <script>
+        // Variável global para controle de IDs
+        let nextProductId = 5;
+
         // Módulo de Produtos
         const ProdutoModule = {
             create: function() {
                 const form = document.getElementById('produtoForm');
                 if (this.validateForm(form)) {
-                    if (this.simulateCreate()) {
+                    const produto = this.getFormData(form);
+                    if (this.addProductToTable(produto)) {
                         this.clearForm(form);
                         this.showSuccess('Produto cadastrado com sucesso!');
                     }
                 }
             },
 
+            getFormData: function(form) {
+                return {
+                    id: nextProductId++,
+                    nome: form.nomeProduto.value,
+                    valor: form.valorProduto.value,
+                    ingredientes: form.ingredientesProduto.value,
+                    promocao: form.promocaoProduto.value === 'sim'
+                };
+            },
+
+            addProductToTable: function(produto) {
+                const tbody = document.querySelector('#produtosTable tbody');
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', produto.id);
+                
+                const promocaoText = produto.promocao ? '<span style="color: red;">✓ Sim</span>' : 'Não';
+                const valorFormatado = produto.valor.startsWith('R$') ? produto.valor : `R$ ${produto.valor}`;
+                
+                row.innerHTML = `
+                    <td>${produto.nome}</td>
+                    <td>${valorFormatado}</td>
+                    <td>${promocaoText}</td>
+                    <td>
+                        <button class="btn-warning" onclick="editarProduto(${produto.id})">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button class="btn-danger" onclick="ProdutoModule.delete(${produto.id}, '${produto.nome}')">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+                row.style.animation = 'fadeIn 0.3s ease';
+                return true;
+            },
+
             delete: function(id, nome) {
                 if (confirm(`Tem certeza que deseja excluir o produto "${nome}"?`)) {
-                    // Simular exclusão
                     const row = document.querySelector(`tr[data-id="${id}"]`);
                     if (row) {
                         row.style.animation = 'fadeOut 0.3s ease';
@@ -1410,27 +736,25 @@
                 return true;
             },
 
-            simulateCreate: function() {
-                // Simular delay de criação
-                return true;
-            },
-
             clearForm: function(form) {
                 form.reset();
             },
 
             showSuccess: function(message) {
-                // Criar notificação de sucesso
                 this.showNotification(message, 'success');
             },
 
             showError: function(message) {
-                // Criar notificação de erro
                 this.showNotification(message, 'error');
             },
 
             showNotification: function(message, type) {
+                // Remove notificação existente se houver
+                const existing = document.querySelector('.notification');
+                if (existing) existing.remove();
+
                 const notification = document.createElement('div');
+                notification.className = 'notification';
                 notification.style.cssText = `
                     position: fixed;
                     top: 20px;
@@ -1441,6 +765,8 @@
                     font-weight: bold;
                     z-index: 3000;
                     animation: slideIn 0.3s ease;
+                    text-align: center;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
                     ${type === 'success' ? 'background: linear-gradient(135deg, #28a745, #20c997);' : 'background: linear-gradient(135deg, #dc3545, #c82333);'}
                 `;
                 notification.textContent = message;
@@ -1459,27 +785,43 @@
         }
 
         function editarProduto(id) {
-            // Simular carregamento dos dados do produto
-            document.getElementById('editNomeProduto').value = 'Produto ' + id;
-            document.getElementById('editValorProduto').value = 'R$ 45,90';
-            document.getElementById('editIngredientesProduto').value = 'Ingredientes do produto ' + id;
-            document.getElementById('editPromocaoProduto').value = 'nao';
-            
-            openModal('editModal');
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            if (row) {
+                const cells = row.querySelectorAll('td');
+                document.getElementById('editNomeProduto').value = cells[0].textContent;
+                document.getElementById('editValorProduto').value = cells[1].textContent;
+                document.getElementById('editIngredientesProduto').value = `Ingredientes do ${cells[0].textContent}`;
+                document.getElementById('editPromocaoProduto').value = cells[2].textContent.includes('Sim') ? 'sim' : 'nao';
+                
+                // Armazenar ID do produto sendo editado
+                document.getElementById('editProdutoForm').setAttribute('data-product-id', id);
+                
+                openModal('editModal');
+            }
         }
 
         function salvarEdicao() {
             const form = document.getElementById('editProdutoForm');
             if (ProdutoModule.validateForm(form)) {
-                if (simulateUpdate('produto')) {
+                const productId = form.getAttribute('data-product-id');
+                const row = document.querySelector(`tr[data-id="${productId}"]`);
+                
+                if (row) {
+                    const cells = row.querySelectorAll('td');
+                    const promocao = document.getElementById('editPromocaoProduto').value === 'sim';
+                    const promocaoText = promocao ? '<span style="color: red;">✓ Sim</span>' : 'Não';
+                    const valor = document.getElementById('editValorProduto').value;
+                    const valorFormatado = valor.startsWith('R$') ? valor : `R$ ${valor}`;
+                    
+                    cells[0].textContent = document.getElementById('editNomeProduto').value;
+                    cells[1].textContent = valorFormatado;
+                    cells[2].innerHTML = promocaoText;
+                    
+                    row.style.animation = 'fadeIn 0.3s ease';
                     closeModal('editModal');
                     ProdutoModule.showSuccess('Produto atualizado com sucesso!');
                 }
             }
-        }
-
-        function simulateUpdate(type) {
-            return true;
         }
 
         function openModal(modalId) {
@@ -1512,31 +854,33 @@
             });
         }
 
-        // Configurar filtro da tabela
+        // Formatação de moeda
+        function formatCurrency(input) {
+            let value = input.value.replace(/\D/g, '');
+            value = (value / 100).toFixed(2) + '';
+            value = value.replace(".", ",");
+            value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+            input.value = value;
+        }
+
+        // Configurações iniciais
         document.addEventListener('DOMContentLoaded', function() {
+            // Configurar filtro da tabela
             filterTable('searchProduto', 'produtosTable');
 
-            // Adicionar animações CSS
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                @keyframes fadeOut {
-                    from { opacity: 1; transform: translateY(0); }
-                    to { opacity: 0; transform: translateY(-10px); }
-                }
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes slideOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
+            // Formatação de campos de moeda
+            const currencyInputs = document.querySelectorAll('input[data-format="currency"]');
+            currencyInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    formatCurrency(this);
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (this.value && !this.value.startsWith('R$ ')) {
+                        this.value = 'R$ ' + this.value;
+                    }
+                });
+            });
 
             // Adicionar efeito de scroll no header
             window.addEventListener('scroll', function() {
@@ -1556,6 +900,103 @@
                     e.target.classList.remove('active');
                 }
             });
+
+            // Adicionar efeitos de hover nas linhas da tabela
+            const tableRows = document.querySelectorAll('#produtosTable tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.transition = 'transform 0.2s ease';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // Validação de arquivo de imagem
+            const fileInput = document.getElementById('fotoProduto');
+            fileInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const fileSize = file.size / 1024 / 1024; // MB
+                    if (fileSize > 5) {
+                        alert('O arquivo deve ter no máximo 5MB');
+                        this.value = '';
+                        return;
+                    }
+                    
+                    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                    if (!allowedTypes.includes(file.type)) {
+                        alert('Apenas arquivos JPG e PNG são permitidos');
+                        this.value = '';
+                        return;
+                    }
+                }
+            });
+
+            // Adicionar contador de caracteres para o campo de ingredientes
+            const ingredientesTextarea = document.getElementById('ingredientesProduto');
+            const editIngredientesTextarea = document.getElementById('editIngredientesProduto');
+            
+            function addCharCounter(textarea) {
+                const maxLength = 200;
+                const counter = document.createElement('small');
+                counter.style.color = '#ccc';
+                counter.style.display = 'block';
+                counter.style.marginTop = '5px';
+                counter.style.textAlign = 'center';
+                
+                textarea.setAttribute('maxlength', maxLength);
+                textarea.parentNode.appendChild(counter);
+                
+                function updateCounter() {
+                    const remaining = maxLength - textarea.value.length;
+                    counter.textContent = `${remaining} caracteres restantes`;
+                    counter.style.color = remaining < 20 ? '#ff6b6b' : '#ccc';
+                }
+                
+                textarea.addEventListener('input', updateCounter);
+                updateCounter();
+            }
+            
+            addCharCounter(ingredientesTextarea);
+            addCharCounter(editIngredientesTextarea);
+
+            console.log('Sistema de Gestão de Produtos carregado com sucesso!');
+        });
+
+        // Função para gerar relatório simples
+        function gerarRelatorio() {
+            const rows = document.querySelectorAll('#produtosTable tbody tr');
+            let produtos = [];
+            
+            rows.forEach(row => {
+                if (row.style.display !== 'none') {
+                    const cells = row.querySelectorAll('td');
+                    produtos.push({
+                        nome: cells[0].textContent,
+                        valor: cells[1].textContent,
+                        promocao: cells[2].textContent.includes('Sim')
+                    });
+                }
+            });
+            
+            const total = produtos.length;
+            const promocoes = produtos.filter(p => p.promocao).length;
+            
+            alert(`Relatório de Produtos:\n\nTotal de produtos: ${total}\nProdutos em promoção: ${promocoes}\nProdutos regulares: ${total - promocoes}`);
+        }
+
+        // Adicionar botão de relatório
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchContainer = document.querySelector('.search-container');
+            const relatorioBtn = document.createElement('button');
+            relatorioBtn.className = 'btn-primary';
+            relatorioBtn.style.marginLeft = '1rem';
+            relatorioBtn.innerHTML = '<i class="fas fa-chart-bar"></i> Relatório';
+            relatorioBtn.onclick = gerarRelatorio;
+            searchContainer.appendChild(relatorioBtn);
         });
     </script>
 </body>
