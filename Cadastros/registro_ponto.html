@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Registro de Ponto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reset e Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d4af37;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 5px #d4af37);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-name {
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .btn-logout {
+            padding: 0.5rem 1rem;
+            border: 2px solid #d4af37;
+            background: transparent;
+            color: #d4af37;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-logout:hover {
+            background: #d4af37;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 100px;
+            min-height: calc(100vh - 100px);
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            padding: 2rem 0;
+        }
+
+        /* Clock Section */
+        .clock-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+        }
+
+        .current-time {
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .current-date {
+            font-size: 1.5rem;
+            color: #ccc;
+            margin-bottom: 2rem;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            border: 2px solid;
+        }
+
+        .status-out {
+            background: transparent;
+            color: #ff4444;
+            border-color: #ff4444;
+        }
+
+        .status-in {
+            background: transparent;
+            color: #44ff44;
+            border-color: #44ff44;
+        }
+
+        /* Punch Buttons */
+        .punch-section {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-punch {
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            border: 2px solid;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .btn-entrada {
+            background: transparent;
+            color: #44ff44;
+            border-color: #44ff44;
+        }
+
+        .btn-entrada:hover {
+            background: #44ff44;
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(68, 255, 68, 0.4);
+        }
+
+        .btn-saida {
+            background: transparent;
+            color: #ff4444;
+            border-color: #ff4444;
+        }
+
+        .btn-saida:hover {
+            background: #ff4444;
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 68, 68, 0.4);
+        }
+
+        .btn-punch:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Today's Summary */
+        .today-summary {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .summary-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .summary-header h2 {
+            color: #d4af37;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .summary-card {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .summary-card h3 {
+            color: #d4af37;
+            margin-bottom: 1rem;
+        }
+
+        .summary-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* History Section */
+        .history-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+        }
+
+        .section-divider {
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            margin: 0 auto 1rem auto;
+        }
+
+        .history-table {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .table-header {
+            background: rgba(212, 175, 55, 0.2);
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+
+        .table-row {
+            padding: 1rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .table-row:hover {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .status-entrada {
+            background: rgba(68, 255, 68, 0.2);
+            color: #44ff44;
+            border: 1px solid #44ff44;
+        }
+
+        .status-saida {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border: 1px solid #ff4444;
+        }
+
+        /* Alert Messages */
+        .alert {
+            position: fixed;
+            top: 120px;
+            right: 2rem;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: bold;
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+
+        .alert.show {
+            transform: translateX(0);
+        }
+
+        .alert-success {
+            background: rgba(68, 255, 68, 0.2);
+            color: #44ff44;
+            border: 2px solid #44ff44;
+        }
+
+        .alert-error {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border: 2px solid #ff4444;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .current-time {
+                font-size: 2.5rem;
+            }
+
+            .punch-section {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-punch {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-header,
+            .table-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .today-summary {
+                padding: 2rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .nav-container {
+                padding: 1rem;
+            }
+
+            .user-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-clock"></i>
+                Sistema de Ponto
+            </a>
+            <div class="user-info">
+                <span class="user-name">João Silva</span>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Clock Section -->
+            <div class="clock-section">
+                <div class="current-time" id="currentTime">--:--:--</div>
+                <div class="current-date" id="currentDate">--/--/----</div>
+                <div class="status-indicator" id="statusIndicator">
+                    <i class="fas fa-clock"></i>
+                    Fora do trabalho
+                </div>
+            </div>
+
+            <!-- Punch Buttons -->
+            <div class="punch-section">
+                <button class="btn-punch btn-entrada" id="btnEntrada" onclick="registrarPonto('entrada')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Registrar Entrada
+                </button>
+                <button class="btn-punch btn-saida" id="btnSaida" onclick="registrarPonto('saida')" disabled>
+                    <i class="fas fa-sign-out-alt"></i>
+                    Registrar Saída
+                </button>
+            </div>
+
+            <!-- Today's Summary -->
+            <div class="today-summary">
+                <div class="summary-header">
+                    <h2>Resumo de Hoje</h2>
+                    <div class="section-divider"></div>
+                </div>
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <h3>Entrada</h3>
+                        <div class="summary-value" id="summaryEntrada">--:--</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Saída</h3>
+                        <div class="summary-value" id="summarySaida">--:--</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Horas Trabalhadas</h3>
+                        <div class="summary-value" id="summaryHoras">--:--</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Status</h3>
+                        <div class="summary-value" id="summaryStatus">Ausente</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Section -->
+            <div class="history-section">
+                <div class="section-header">
+                    <h2>Histórico de Registros</h2>
+                    <div class="section-divider"></div>
+                </div>
+                <div class="history-table">
+                    <div class="table-header">
+                        <div>Data</div>
+                        <div>Horário</div>
+                        <div>Tipo</div>
+                        <div>Status</div>
+                    </div>
+                    <div id="historyContent">
+                        <!-- Registros serão inseridos aqui via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    <div class="alert" id="alertMessage"></div>
+
+    <script>
+        // Estado da aplicação
+        let pontoState = {
+            trabalhando: false,
+            entradaHoje: null,
+            saidaHoje: null,
+            registros: []
+        };
+
+        // Inicializar aplicação
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarDados();
+            iniciarRelogio();
+            atualizarInterface();
+            carregarHistorico();
+        });
+
+        // Relógio em tempo real
+        function iniciarRelogio() {
+            function atualizarRelogio() {
+                const agora = new Date();
+                const tempo = agora.toLocaleTimeString('pt-BR');
+                const data = agora.toLocaleDateString('pt-BR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                document.getElementById('currentTime').textContent = tempo;
+                document.getElementById('currentDate').textContent = data;
+            }
+
+            atualizarRelogio();
+            setInterval(atualizarRelogio, 1000);
+        }
+
+        // Registrar ponto
+        function registrarPonto(tipo) {
+            const agora = new Date();
+            const horario = agora.toLocaleTimeString('pt-BR');
+            const data = agora.toLocaleDateString('pt-BR');
+
+            const registro = {
+                id: Date.now(),
+                data: data,
+                horario: horario,
+                tipo: tipo,
+                timestamp: agora.getTime()
+            };
+
+            pontoState.registros.unshift(registro);
+
+            if (tipo === 'entrada') {
+                pontoState.trabalhando = true;
+                pontoState.entradaHoje = horario;
+                mostrarAlerta('Entrada registrada com sucesso!', 'success');
+            } else {
+                pontoState.trabalhando = false;
+                pontoState.saidaHoje = horario;
+                mostrarAlerta('Saída registrada com sucesso!', 'success');
+            }
+
+            salvarDados();
+            atualizarInterface();
+            atualizarResumo();
+            adicionarLinhaHistorico(registro);
+        }
+
+        // Atualizar interface
+        function atualizarInterface() {
+            const statusIndicator = document.getElementById('statusIndicator');
+            const btnEntrada = document.getElementById('btnEntrada');
+            const btnSaida = document.getElementById('btnSaida');
+
+            if (pontoState.trabalhando) {
+                statusIndicator.innerHTML = '<i class="fas fa-user-check"></i> Trabalhando';
+                statusIndicator.className = 'status-indicator status-in';
+                btnEntrada.disabled = true;
+                btnSaida.disabled = false;
+            } else {
+                statusIndicator.innerHTML = '<i class="fas fa-user-times"></i> Fora do trabalho';
+                statusIndicator.className = 'status-indicator status-out';
+                btnEntrada.disabled = false;
+                btnSaida.disabled = true;
+            }
+        }
+
+        // Atualizar resumo do dia
+        function atualizarResumo() {
+            document.getElementById('summaryEntrada').textContent = pontoState.entradaHoje || '--:--';
+            document.getElementById('summarySaida').textContent = pontoState.saidaHoje || '--:--';
+            
+            const statusElement = document.getElementById('summaryStatus');
+            if (pontoState.trabalhando) {
+                statusElement.textContent = 'Trabalhando';
+                statusElement.style.color = '#44ff44';
+            } else if (pontoState.saidaHoje) {
+                statusElement.textContent = 'Finalizado';
+                statusElement.style.color = '#d4af37';
+            } else {
+                statusElement.textContent = 'Ausente';
+                statusElement.style.color = '#ff4444';
+            }
+
+            // Calcular horas trabalhadas
+            if (pontoState.entradaHoje && pontoState.saidaHoje) {
+                const entrada = new Date(`2000/01/01 ${pontoState.entradaHoje}`);
+                const saida = new Date(`2000/01/01 ${pontoState.saidaHoje}`);
+                const diff = saida - entrada;
+                const horas = Math.floor(diff / (1000 * 60 * 60));
+                const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('summaryHoras').textContent = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
+            } else if (pontoState.entradaHoje && pontoState.trabalhando) {
+                // Calcular tempo atual trabalhado
+                const agora = new Date();
+                const entrada = new Date(`2000/01/01 ${pontoState.entradaHoje}`);
+                const agoraTime = new Date(`2000/01/01 ${agora.toLocaleTimeString('pt-BR')}`);
+                const diff = agoraTime - entrada;
+                const horas = Math.floor(diff / (1000 * 60 * 60));
+                const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('summaryHoras').textContent = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
+            } else {
+                document.getElementById('summaryHoras').textContent = '--:--';
+            }
+        }
+
+        // Carregar histórico
+        function carregarHistorico() {
+            const historyContent = document.getElementById('historyContent');
+            historyContent.innerHTML = '';
+
+            pontoState.registros.slice(0, 20).forEach(registro => {
+                adicionarLinhaHistorico(registro);
+            });
+
+            if (pontoState.registros.length === 0) {
+                historyContent.innerHTML = '<div style="padding: 2rem; text-align: center; color: #999;">Nenhum registro encontrado</div>';
+            }
+        }
+
+        // Adicionar linha ao histórico
+        function adicionarLinhaHistorico(registro) {
+            const historyContent = document.getElementById('historyContent');
+            const novaLinha = document.createElement('div');
+            novaLinha.className = 'table-row';
+            
+            const statusClass = registro.tipo === 'entrada' ? 'status-entrada' : 'status-saida';
+            const statusIcon = registro.tipo === 'entrada' ? 'fa-sign-in-alt' : 'fa-sign-out-alt';
+            
+            novaLinha.innerHTML = `
+                <div>${registro.data}</div>
+                <div>${registro.horario}</div>
+                <div><span class="status-badge ${statusClass}"><i class="fas ${statusIcon}"></i> ${registro.tipo.charAt(0).toUpperCase() + registro.tipo.slice(1)}</span></div>
+                <div><i class="fas fa-check" style="color: #44ff44;"></i> Registrado</div>
+            `;
+
+            if (historyContent.firstChild) {
+                historyContent.insertBefore(novaLinha, historyContent.firstChild);
+            } else {
+                historyContent.appendChild(novaLinha);
+            }
+        }
+
+        // Mostrar alerta
+        function mostrarAlerta(mensagem, tipo) {
+            const alertElement = document.getElementById('alertMessage');
+            alertElement.textContent = mensagem;
+            alertElement.className = `alert alert-${tipo}`;
+            alertElement.classList.add('show');
+
+            setTimeout(() => {
+                alertElement.classList.remove('show');
+            }, 3000);
+        }
+
+        // Salvar dados no localStorage
+        function salvarDados() {
+            const dados = {
+                trabalhando: pontoState.trabalhando,
+                entradaHoje: pontoState.entradaHoje,
+                saidaHoje: pontoState.saidaHoje,
+                registros: pontoState.registros,
+                dataUltimaAtualizacao: new Date().toLocaleDateString('pt-BR')
+            };
+            
+            // Nota: Em um ambiente real, você salvaria em um servidor
+            // Para demonstração, usaríamos localStorage, mas na Claude.ai não é suportado
+            console.log('Dados que seriam salvos:', dados);
+        }
+
+        // Carregar dados
+        function carregarDados() {
+            // Em um ambiente real, você carregaria do servidor
+            // Para demonstração, inicializamos com dados vazios
+            const dataHoje = new Date().toLocaleDateString('pt-BR');
+            
+            // Verificar se é um novo dia
+            // Se for, resetar entrada e saída do dia
+            
+            atualizarResumo();
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Tem certeza que deseja sair do sistema?')) {
+                // Em um ambiente real, você faria logout do servidor
+                alert('Logout realizado com sucesso!');
+                // window.location.href = '/login';
+            }
+        }
+
+        // Atualizar resumo a cada minuto para mostrar tempo trabalhado em tempo real
+        setInterval(atualizarResumo, 60000);
+    </script>
+</body>
+</html>
