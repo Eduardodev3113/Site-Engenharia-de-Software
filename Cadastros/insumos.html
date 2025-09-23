@@ -3,39 +3,600 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Insumos - Vinicius</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Gestão de Insumos - Sistema Restaurante</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reset e Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d4af37;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu li a:hover {
+            color: #000;
+            background: #d4af37;
+            transform: translateY(-2px);
+        }
+
+        .nav-menu li a.active {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 100px;
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .page-header p {
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        .back-button {
+            margin-bottom: 2rem;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #d4af37;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* Grid Layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Form Styles */
+        .form-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            height: fit-content;
+        }
+
+        .form-card h3 {
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .form-control::placeholder {
+            color: #999;
+        }
+
+        /* Buttons */
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: #000;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(255, 193, 7, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(220, 53, 69, 0.4);
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-header h3 {
+            color: #d4af37;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-box {
+            width: 300px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .table th {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            color: #ddd;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .status-ok {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-baixo {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .status-critico {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.2);
+            border-left-color: #dc3545;
+            color: #ff6b7a;
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            border-left-color: #28a745;
+            color: #5dce7a;
+        }
+
+        .alert-info {
+            background: rgba(23, 162, 184, 0.2);
+            border-left-color: #17a2b8;
+            color: #4db8d1;
+        }
+
+        /* Movement Cards */
+        .movement-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .feature-card h4 {
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-card li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            color: #ddd;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-card li:last-child {
+            border-bottom: none;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid #d4af37;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: #d4af37;
+            margin: 0;
+        }
+
+        .close {
+            color: #d4af37;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #ffd700;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .movement-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .table {
+                font-size: 0.9rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .nav-container {
+                padding: 1rem;
+            }
+            
+            .form-card,
+            .table-container,
+            .feature-card {
+                padding: 1rem;
+            }
+        }
+
+        /* Animações */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 3000;
+            animation: slideInRight 0.3s ease;
+            max-width: 400px;
+        }
+
+        .toast-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .toast-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        .toast-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">🍽️ Sistema Restaurante</div>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-utensils"></i>
+                Sistema Restaurante
+            </a>
             <nav>
-                <a href="index.html" class="nav-button">Home</a>
-                <a href="sistema.html" class="nav-button">Sistema</a>
-                <a href="insumos.html" class="nav-button">Insumos</a>
-                <a href="login.html" class="nav-button">Logout</a>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="sistema.html"><i class="fas fa-chart-bar"></i> Sistema</a></li>
+                    <li><a href="insumos.html" class="active"><i class="fas fa-boxes"></i> Insumos</a></li>
+                    <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
             </nav>
-        </header>
+        </div>
+    </header>
 
+    <div class="container">
         <div class="main-content">
+            <!-- Back Button -->
             <div class="back-button">
-                <a href="sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
+                <a href="sistema.html" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar ao Sistema
+                </a>
             </div>
 
-            <div class="welcome-section">
-                <h1>Gestão de Insumos</h1>
+            <!-- Page Header -->
+            <div class="page-header fade-in">
+                <h1>
+                    <i class="fas fa-boxes"></i>
+                    Gestão de Insumos
+                </h1>
                 <p>Desenvolvido por: <strong>Vinicius Fornazier</strong></p>
             </div>
 
-            <div class="row">
+            <!-- Main Content Grid -->
+            <div class="content-grid fade-in">
                 <!-- Formulário de Cadastro -->
-                <div class="col-md-4">
-                    <h3>Cadastro de Insumo</h3>
+                <div class="form-card">
+                    <h3>
+                        <i class="fas fa-plus-circle"></i>
+                        Cadastro de Insumo
+                    </h3>
                     <form id="insumoForm">
                         <div class="form-group">
                             <label for="nomeInsumo">Nome do Insumo *</label>
-                            <input type="text" id="nomeInsumo" name="nome" class="form-control" required>
+                            <input type="text" id="nomeInsumo" name="nome" class="form-control" placeholder="Ex: Filé de Salmão" required>
                         </div>
 
                         <div class="form-group">
@@ -54,12 +615,12 @@
 
                         <div class="form-group">
                             <label for="quantidadeEstoque">Quantidade em Estoque *</label>
-                            <input type="number" id="quantidadeEstoque" name="quantidade" class="form-control" min="0" step="0.01" required>
+                            <input type="number" id="quantidadeEstoque" name="quantidade" class="form-control" min="0" step="0.01" placeholder="0.00" required>
                         </div>
 
                         <div class="form-group">
                             <label for="custoInsumo">Custo (R$) *</label>
-                            <input type="text" id="custoInsumo" name="custo" class="form-control" data-format="currency" required>
+                            <input type="text" id="custoInsumo" name="custo" class="form-control" placeholder="R$ 0,00" required>
                         </div>
 
                         <div class="form-group">
@@ -69,25 +630,28 @@
 
                         <div class="form-group">
                             <label for="estoqueMinimo">Estoque Mínimo *</label>
-                            <input type="number" id="estoqueMinimo" name="minimo" class="form-control" min="0" step="0.01" required>
+                            <input type="number" id="estoqueMinimo" name="minimo" class="form-control" min="0" step="0.01" placeholder="0.00" required>
                         </div>
 
-                        <div class="text-center">
-                            <button type="button" class="btn-success" onclick="InsumoModule.create()">Cadastrar</button>
-                            <button type="button" class="btn-secondary" onclick="clearForm('insumoForm')">Limpar</button>
+                        <div style="text-align: center;">
+                            <button type="button" class="btn-success" onclick="cadastrarInsumo()">
+                                <i class="fas fa-save"></i> Cadastrar
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="limparFormulario()">
+                                <i class="fas fa-eraser"></i> Limpar
+                            </button>
                         </div>
                     </form>
                 </div>
 
                 <!-- Lista de Insumos -->
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h3>Lista de Insumos</h3>
-                        </div>
-                        <div class="col-md-6">
-                            <input type="text" id="searchInsumo" class="form-control" placeholder="Buscar insumo...">
-                        </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>
+                            <i class="fas fa-list"></i>
+                            Lista de Insumos
+                        </h3>
+                        <input type="text" id="searchInsumo" class="form-control search-box" placeholder="🔍 Buscar insumo...">
                     </div>
 
                     <table class="table" id="insumosTable">
@@ -101,72 +665,139 @@
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="insumosTableBody">
                             <tr data-id="1">
                                 <td>Filé de Salmão</td>
                                 <td>5.5</td>
                                 <td>kg</td>
                                 <td>R$ 45,00/kg</td>
-                                <td><span style="color: green;">✓ Ok</span></td>
+                                <td><span class="status-ok"><i class="fas fa-check-circle"></i> Ok</span></td>
                                 <td>
-                                    <button class="btn-warning" onclick="editarInsumo(5)">Editar</button>
-                                    <button class="btn-danger" onclick="InsumoModule.delete(5, 'Picanha')">Excluir</button>
+                                    <button class="btn-warning" onclick="editarInsumo(1)">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn-danger" onclick="excluirInsumo(1, 'Filé de Salmão')">
+                                        <i class="fas fa-trash"></i> Excluir
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr data-id="2">
+                                <td>Arroz Arbóreo</td>
+                                <td>0.8</td>
+                                <td>kg</td>
+                                <td>R$ 12,50/kg</td>
+                                <td><span class="status-baixo"><i class="fas fa-exclamation-triangle"></i> Baixo</span></td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarInsumo(2)">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn-danger" onclick="excluirInsumo(2, 'Arroz Arbóreo')">
+                                        <i class="fas fa-trash"></i> Excluir
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr data-id="3">
+                                <td>Camarão</td>
+                                <td>3.2</td>
+                                <td>kg</td>
+                                <td>R$ 38,90/kg</td>
+                                <td><span class="status-ok"><i class="fas fa-check-circle"></i> Ok</span></td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarInsumo(3)">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn-danger" onclick="excluirInsumo(3, 'Camarão')">
+                                        <i class="fas fa-trash"></i> Excluir
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr data-id="4">
+                                <td>Vinho Branco</td>
+                                <td>2</td>
+                                <td>un</td>
+                                <td>R$ 35,00/un</td>
+                                <td><span class="status-ok"><i class="fas fa-check-circle"></i> Ok</span></td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarInsumo(4)">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn-danger" onclick="excluirInsumo(4, 'Vinho Branco')">
+                                        <i class="fas fa-trash"></i> Excluir
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr data-id="5">
+                                <td>Picanha</td>
+                                <td>0.5</td>
+                                <td>kg</td>
+                                <td>R$ 55,00/kg</td>
+                                <td><span class="status-critico"><i class="fas fa-times-circle"></i> Crítico</span></td>
+                                <td>
+                                    <button class="btn-warning" onclick="editarInsumo(5)">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn-danger" onclick="excluirInsumo(5, 'Picanha')">
+                                        <i class="fas fa-trash"></i> Excluir
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
 
                     <!-- Alertas de Estoque -->
-                    <div class="mt-3">
-                        <div class="alert alert-danger">
-                            <strong>Alertas de Estoque Baixo:</strong>
-                            <ul style="margin: 0; padding-left: 20px;">
-                                <li>Arroz Arbóreo: 0.8kg (mínimo: 2kg)</li>
-                                <li>Picanha: 0.5kg (mínimo: 2kg)</li>
-                            </ul>
-                        </div>
+                    <div class="alert alert-danger">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Alertas de Estoque Baixo:</strong>
+                        <ul style="margin: 10px 0 0 20px;">
+                            <li>Arroz Arbóreo: 0.8kg (mínimo: 2kg)</li>
+                            <li>Picanha: 0.5kg (mínimo: 2kg)</li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
             <!-- Movimentação de Estoque -->
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <div class="feature-card">
-                        <h4>Entrada de Estoque</h4>
-                        <form id="entradaForm">
-                            <div class="form-group">
-                                <label for="insumoEntrada">Insumo:</label>
-                                <select id="insumoEntrada" class="form-control" required>
-                                    <option value="">Selecione o insumo</option>
-                                    <option value="1">Filé de Salmão</option>
-                                    <option value="2">Arroz Arbóreo</option>
-                                    <option value="3">Camarão</option>
-                                    <option value="4">Vinho Branco</option>
-                                    <option value="5">Picanha</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="quantidadeEntrada">Quantidade:</label>
-                                <input type="number" id="quantidadeEntrada" class="form-control" min="0.01" step="0.01" required>
-                            </div>
-                            <div class="text-center">
-                                <button type="button" class="btn-success" onclick="registrarEntrada()">Registrar Entrada</button>
-                            </div>
-                        </form>
-                    </div>
+            <div class="movement-grid fade-in">
+                <div class="feature-card">
+                    <h4>
+                        <i class="fas fa-arrow-up"></i>
+                        Entrada de Estoque
+                    </h4>
+                    <form id="entradaForm">
+                        <div class="form-group">
+                            <label for="insumoEntrada">Insumo:</label>
+                            <select id="insumoEntrada" class="form-control" required>
+                                <option value="">Selecione o insumo</option>
+                                <option value="1">Filé de Salmão</option>
+                                <option value="2">Arroz Arbóreo</option>
+                                <option value="3">Camarão</option>
+                                <option value="4">Vinho Branco</option>
+                                <option value="5">Picanha</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantidadeEntrada">Quantidade:</label>
+                            <input type="number" id="quantidadeEntrada" class="form-control" min="0.01" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div style="text-align: center;">
+                            <button type="button" class="btn-success" onclick="registrarEntrada()">
+                                <i class="fas fa-plus"></i> Registrar Entrada
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="col-md-6">
-                    <div class="feature-card">
-                        <h4>Últimas Movimentações</h4>
-                        <ul>
-                            <li>15/01 - Entrada: Salmão +2kg</li>
-                            <li>14/01 - Saída: Arroz -1.5kg (Pedido #123)</li>
-                            <li>14/01 - Entrada: Camarão +5kg</li>
-                            <li>13/01 - Saída: Picanha -2kg (Pedido #122)</li>
-                            <li>13/01 - Entrada: Vinho +6un</li>
-                        </ul>
-                    </div>
+
+                <div class="feature-card">
+                    <h4>
+                        <i class="fas fa-history"></i>
+                        Últimas Movimentações
+                    </h4>
+                    <ul id="movimentacoesList">
+                        <li><i class="fas fa-arrow-up" style="color: #28a745;"></i> 15/01 - Entrada: Salmão +2kg</li>
+                        <li><i class="fas fa-arrow-down" style="color: #dc3545;"></i> 14/01 - Saída: Arroz -1.5kg (Pedido #123)</li>
+                        <li><i class="fas fa-arrow-up" style="color: #28a745;"></i> 14/01 - Entrada: Camarão +5kg</li>
+                        <li><i class="fas fa-arrow-down" style="color: #dc3545;"></i> 13/01 - Saída: Picanha -2kg (Pedido #122)</li>
+                        <li><i class="fas fa-arrow-up" style="color: #28a745;"></i> 13/01 - Entrada: Vinho +6un</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -175,142 +806,24 @@
     <!-- Modal de Edição -->
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('editModal')">&times;</span>
-            <h3>Editar Insumo</h3>
-            <form id="editInsumoForm">
-                <div class="form-group">
-                    <label for="editNomeInsumo">Nome do Insumo *</label>
-                    <input type="text" id="editNomeInsumo" class="form-control" required>
-                </div>
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Editar Insumo</h3>
+                <span class="close" onclick="fecharModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editInsumoForm">
+                    <div class="form-group">
+                        <label for="editNomeInsumo">Nome do Insumo *</label>
+                        <input type="text" id="editNomeInsumo" class="form-control" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="editUnidadeMedida">Unidade de Medida *</label>
-                    <select id="editUnidadeMedida" class="form-control" required>
-                        <option value="">Selecione</option>
-                        <option value="kg">Quilograma (kg)</option>
-                        <option value="g">Grama (g)</option>
-                        <option value="l">Litro (l)</option>
-                        <option value="ml">Mililitro (ml)</option>
-                        <option value="un">Unidade (un)</option>
-                        <option value="pacote">Pacote</option>
-                        <option value="caixa">Caixa</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="editQuantidadeEstoque">Quantidade em Estoque *</label>
-                    <input type="number" id="editQuantidadeEstoque" class="form-control" min="0" step="0.01" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="editCustoInsumo">Custo (R$) *</label>
-                    <input type="text" id="editCustoInsumo" class="form-control" data-format="currency" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="editDataValidade">Data de Validade</label>
-                    <input type="date" id="editDataValidade" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="editEstoqueMinimo">Estoque Mínimo *</label>
-                    <input type="number" id="editEstoqueMinimo" class="form-control" min="0" step="0.01" required>
-                </div>
-
-                <div class="text-center">
-                    <button type="button" class="btn-success" onclick="salvarEdicaoInsumo()">Salvar</button>
-                    <button type="button" class="btn-secondary" onclick="closeModal('editModal')">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            filterTable('searchInsumo', 'insumosTable');
-        });
-
-        function editarInsumo(id) {
-            document.getElementById('editNomeInsumo').value = 'Insumo ' + id;
-            document.getElementById('editUnidadeMedida').value = 'kg';
-            document.getElementById('editQuantidadeEstoque').value = '5';
-            document.getElementById('editCustoInsumo').value = 'R$ 25,00';
-            document.getElementById('editDataValidade').value = '2024-12-31';
-            document.getElementById('editEstoqueMinimo').value = '2';
-            
-            openModal('editModal');
-        }
-
-        function salvarEdicaoInsumo() {
-            if (validateForm('editInsumoForm')) {
-                if (simulateUpdate('insumo')) {
-                    closeModal('editModal');
-                }
-            }
-        }
-
-        function registrarEntrada() {
-            const insumo = document.getElementById('insumoEntrada').value;
-            const quantidade = document.getElementById('quantidadeEntrada').value;
-
-            if (!insumo || !quantidade) {
-                showAlert('Por favor, preencha todos os campos', 'danger');
-                return;
-            }
-
-            showAlert(`Entrada de ${quantidade} unidades registrada com sucesso!`, 'success');
-            clearForm('entradaForm');
-            
-            // Simular atualização da tabela
-            setTimeout(() => {
-                showAlert('Estoque atualizado!', 'info');
-            }, 1000);
-        }
-    </script>
-</body>
-</html>warning" onclick="editarInsumo(1)">Editar</button>
-                                    <button class="btn-danger" onclick="InsumoModule.delete(1, 'Filé de Salmão')">Excluir</button>
-                                </td>
-                            </tr>
-                            <tr data-id="2">
-                                <td>Arroz Arbóreo</td>
-                                <td>0.8</td>
-                                <td>kg</td>
-                                <td>R$ 12,50/kg</td>
-                                <td><span style="color: red;">⚠ Baixo</span></td>
-                                <td>
-                                    <button class="btn-warning" onclick="editarInsumo(2)">Editar</button>
-                                    <button class="btn-danger" onclick="InsumoModule.delete(2, 'Arroz Arbóreo')">Excluir</button>
-                                </td>
-                            </tr>
-                            <tr data-id="3">
-                                <td>Camarão</td>
-                                <td>3.2</td>
-                                <td>kg</td>
-                                <td>R$ 38,90/kg</td>
-                                <td><span style="color: green;">✓ Ok</span></td>
-                                <td>
-                                    <button class="btn-warning" onclick="editarInsumo(3)">Editar</button>
-                                    <button class="btn-danger" onclick="InsumoModule.delete(3, 'Camarão')">Excluir</button>
-                                </td>
-                            </tr>
-                            <tr data-id="4">
-                                <td>Vinho Branco</td>
-                                <td>2</td>
-                                <td>un</td>
-                                <td>R$ 35,00/un</td>
-                                <td><span style="color: green;">✓ Ok</span></td>
-                                <td>
-                                    <button class="btn-warning" onclick="editarInsumo(4)">Editar</button>
-                                    <button class="btn-danger" onclick="InsumoModule.delete(4, 'Vinho Branco')">Excluir</button>
-                                </td>
-                            </tr>
-                            <tr data-id="5">
-                                <td>Picanha</td>
-                                <td>0.5</td>
-                                <td>kg</td>
-                                <td>R$ 55,00/kg</td>
-                                <td><span style="color: red;">⚠ Crítico</span></td>
-                                <td>
-                                    <button class="btn-
+                    <div class="form-group">
+                        <label for="editUnidadeMedida">Unidade de Medida *</label>
+                        <select id="editUnidadeMedida" class="form-control" required>
+                            <option value="">Selecione</option>
+                            <option value="kg">Quilograma (kg)</option>
+                            <option value="g">Grama (g)</option>
+                            <option value="l">Litro (l)</option>
+                            <option value="ml">Mililitro (ml)</option>
+                            <option value="un">Unidade (un)</option>
+                            <option value="pacote">Pacote</option>
