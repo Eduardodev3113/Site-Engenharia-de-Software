@@ -3,51 +3,646 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório de Reservas - Mariana</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Relatório de Reservas - Covil Restaurante</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        /* Reset e Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            background: rgba(0, 0, 0, 0.98);
+            box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d4af37;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-button {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-button:hover {
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .nav-button::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: #d4af37;
+            transition: width 0.3s ease;
+        }
+
+        .nav-button:hover::after {
+            width: 70%;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+
+        .back-button {
+            margin-bottom: 2rem;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #d4af37;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+        }
+
+        .welcome-section h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .welcome-section p {
+            font-size: 1.2rem;
+            color: #ccc;
+        }
+
+        .welcome-section strong {
+            color: #d4af37;
+        }
+
+        /* Layout */
+        .row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .row.filter-row {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .col-md-3, .col-md-6, .col-12 {
+            width: 100%;
+        }
+
+        .col-12 {
+            grid-column: 1 / -1;
+        }
+
+        .mb-4 {
+            margin-bottom: 3rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 2rem;
+        }
+
+        .mt-4 {
+            margin-top: 3rem;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            margin-bottom: 3rem;
+        }
+
+        .form-container h3 {
+            color: #d4af37;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .form-container h3::before {
+            content: '\f0b0';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-control::placeholder {
+            color: #999;
+        }
+
+        select.form-control option {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        /* Buttons */
+        .text-center {
+            text-align: center;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn-primary, .btn-success {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover, .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-primary::before {
+            content: '\f0b0';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+
+        .btn-success::before {
+            content: '\f1c1';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+
+        /* Feature Cards */
+        .feature-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #d4af37;
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .feature-card h4 {
+            color: #d4af37;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h2 {
+            color: #d4af37;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .feature-card ul li {
+            margin-bottom: 0.8rem;
+            color: #ddd;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .feature-card ul li::before {
+            content: '\f2bb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #d4af37;
+            font-size: 0.9rem;
+        }
+
+        /* Table */
+        .table-section {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .table-section h3 {
+            color: #d4af37;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-section h3::before {
+            content: '\f0ce';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .table th {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+
+        .table tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tr:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .table td {
+            color: #ddd;
+        }
+
+        /* Status indicators */
+        .status-confirmada {
+            color: #4CAF50 !important;
+        }
+
+        .status-cancelada {
+            color: #f44336 !important;
+        }
+
+        .status-finalizada {
+            color: #2196F3 !important;
+        }
+
+        /* Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Notification */
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 9999;
+            animation: slideInRight 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert.success {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border-left: 4px solid #2e7d32;
+        }
+
+        .alert.info {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            border-left: 4px solid #0d47a1;
+        }
+
+        .alert.warning {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            border-left: 4px solid #e65100;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            border-top-color: #d4af37;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .welcome-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-container {
+                padding: 2rem;
+            }
+
+            .text-center {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .table {
+                font-size: 0.9rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            header {
+                padding: 1rem;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+
+            .table {
+                font-size: 0.8rem;
+            }
+
+            .feature-card h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ffd700, #d4af37);
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="header">
         <header>
-            <div class="logo">🍽️ Sistema Restaurante</div>
-            <nav>
-                <a href="index.html" class="nav-button">Home</a>
-                <a href="sistema.html" class="nav-button">Sistema</a>
-                <a href="clientes.html" class="nav-button">Clientes</a>
-                <a href="login.html" class="nav-button">Logout</a>
-            </nav>
+            <div class="logo">
+                <i class="fas fa-crown"></i>
+                Covil Restaurante
+            </div>
         </header>
+    </div>
 
-        <div class="main-content">
-            <div class="back-button">
-                <a href="sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
+    <div class="main-content">
+        <div class="container">
+            <div class="back-button fade-in">
+                <a href="../restaurante-sistema/sistema.html" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar ao Sistema
+                </a>
             </div>
 
-            <div class="welcome-section">
+            <div class="welcome-section fade-in">
                 <h1>Relatório de Reservas</h1>
-                <p>Desenvolvido por: <strong>Mariana Borges</strong></p>
+                <p>Sistema de relatórios - <strong>Covil Restaurante</strong></p>
             </div>
 
             <!-- Filtros -->
-            <div class="form-container mb-4">
-                <h3>Filtros de Consulta</h3>
+            <div class="form-container fade-in">
+                <h3>
+                    <i class="fas fa-calendar-check"></i>
+                    Filtros de Consulta
+                </h3>
                 <form id="filtroReservasForm">
-                    <div class="row">
+                    <div class="row filter-row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="dataInicioReserva">Data Início:</label>
+                                <label for="dataInicioReserva">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Data Início:
+                                </label>
                                 <input type="date" id="dataInicioReserva" class="form-control" value="2024-01-01">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="dataFimReserva">Data Fim:</label>
+                                <label for="dataFimReserva">
+                                    <i class="fas fa-calendar-check"></i>
+                                    Data Fim:
+                                </label>
                                 <input type="date" id="dataFimReserva" class="form-control" value="2024-01-31">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="statusReserva">Status:</label>
+                                <label for="statusReserva">
+                                    <i class="fas fa-check-circle"></i>
+                                    Status:
+                                </label>
                                 <select id="statusReserva" class="form-control">
                                     <option value="">Todos</option>
                                     <option value="confirmada">Confirmada</option>
@@ -58,7 +653,10 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="horarioReserva">Horário:</label>
+                                <label for="horarioReserva">
+                                    <i class="fas fa-clock"></i>
+                                    Horário:
+                                </label>
                                 <select id="horarioReserva" class="form-control">
                                     <option value="">Todos</option>
                                     <option value="almoco">Almoço (11h-15h)</option>
@@ -70,103 +668,148 @@
                     <div class="text-center">
                         <button type="button" class="btn-primary" onclick="filtrarReservas()">Filtrar</button>
                         <button type="button" class="btn-success" onclick="exportarReservas()">Exportar PDF</button>
-                        <button type="button" class="btn-secondary" onclick="limparFiltrosReservas()">Limpar</button>
+                        <button type="button" class="btn-secondary" onclick="limparFiltrosReservas()">
+                            <i class="fas fa-eraser"></i>
+                            Limpar
+                        </button>
                     </div>
                 </form>
             </div>
 
             <!-- Resumo -->
-            <div class="row mb-4">
+            <div class="row mb-4 fade-in">
                 <div class="col-md-3">
                     <div class="feature-card">
+                        <i class="fas fa-calendar-plus" style="color: #d4af37; font-size: 2rem; margin-bottom: 1rem;"></i>
                         <h4>Total de Reservas</h4>
-                        <h2 style="color: white;">156</h2>
+                        <h2 id="totalReservas">156</h2>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="feature-card">
+                        <i class="fas fa-check-circle" style="color: #d4af37; font-size: 2rem; margin-bottom: 1rem;"></i>
                         <h4>Confirmadas</h4>
-                        <h2 style="color: white;">142</h2>
+                        <h2 id="reservasConfirmadas">142</h2>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="feature-card">
+                        <i class="fas fa-times-circle" style="color: #d4af37; font-size: 2rem; margin-bottom: 1rem;"></i>
                         <h4>Canceladas</h4>
-                        <h2 style="color: white;">14</h2>
+                        <h2 id="reservasCanceladas">14</h2>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="feature-card">
+                        <i class="fas fa-percentage" style="color: #d4af37; font-size: 2rem; margin-bottom: 1rem;"></i>
                         <h4>Taxa de Ocupação</h4>
-                        <h2 style="color: white;">87%</h2>
+                        <h2 id="taxaOcupacao">87%</h2>
                     </div>
                 </div>
             </div>
 
             <!-- Detalhamento das Reservas -->
-            <div class="row">
+            <div class="row fade-in">
                 <div class="col-12">
-                    <h3>Detalhamento das Reservas - Janeiro 2024</h3>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <input type="text" id="searchReserva" class="form-control" placeholder="Buscar reserva...">
+                    <div class="table-section">
+                        <h3>
+                            <i class="fas fa-table"></i>
+                            Detalhamento das Reservas
+                        </h3>
+                        <div class="search-container">
+                            <input type="text" id="searchReserva" class="form-control" placeholder="🔍 Buscar reserva..." style="max-width: 400px;">
                         </div>
-                    </div>
 
-                    <table class="table" id="reservasTable">
-                        <thead>
-                            <tr>
-                                <th>Data/Hora</th>
-                                <th>Cliente</th>
-                                <th>Mesa</th>
-                                <th>Pessoas</th>
-                                <th>Status</th>
-                                <th>Observações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>15/01/2024 19:30</td>
-                                <td>João Silva</td>
-                                <td>Mesa 5</td>
-                                <td>2</td>
-                                <td><span style="color: green;">Confirmada</span></td>
-                                <td>Aniversário</td>
-                            </tr>
-                            <tr>
-                                <td>15/01/2024 20:00</td>
-                                <td>Maria Santos</td>
-                                <td>Mesa 8</td>
-                                <td>4</td>
-                                <td><span style="color: green;">Confirmada</span></td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>15/01/2024 20:30</td>
-                                <td>Carlos Pereira</td>
-                                <td>Mesa 12</td>
-                                <td>6</td>
-                                <td><span style="color: red;">Cancelada</span></td>
-                                <td>Cliente cancelou</td>
-                            </tr>
-                            <tr>
-                                <td>16/01/2024 12:30</td>
-                                <td>Ana Costa</td>
-                                <td>Mesa 3</td>
-                                <td>3</td>
-                                <td><span style="color: blue;">Finalizada</span></td>
-                                <td>Almoço executivo</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <table class="table" id="reservasTable">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-calendar"></i> Data/Hora</th>
+                                    <th><i class="fas fa-user"></i> Cliente</th>
+                                    <th><i class="fas fa-chair"></i> Mesa</th>
+                                    <th><i class="fas fa-users"></i> Pessoas</th>
+                                    <th><i class="fas fa-check-circle"></i> Status</th>
+                                    <th><i class="fas fa-comment"></i> Observações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>15/01/2024 19:30</td>
+                                    <td>João Silva</td>
+                                    <td>Mesa 5</td>
+                                    <td>2</td>
+                                    <td><span class="status-confirmada">✓ Confirmada</span></td>
+                                    <td>Aniversário</td>
+                                </tr>
+                                <tr>
+                                    <td>15/01/2024 20:00</td>
+                                    <td>Maria Santos</td>
+                                    <td>Mesa 8</td>
+                                    <td>4</td>
+                                    <td><span class="status-confirmada">✓ Confirmada</span></td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>15/01/2024 20:30</td>
+                                    <td>Carlos Pereira</td>
+                                    <td>Mesa 12</td>
+                                    <td>6</td>
+                                    <td><span class="status-cancelada">✗ Cancelada</span></td>
+                                    <td>Cliente cancelou</td>
+                                </tr>
+                                <tr>
+                                    <td>16/01/2024 12:30</td>
+                                    <td>Ana Costa</td>
+                                    <td>Mesa 3</td>
+                                    <td>3</td>
+                                    <td><span class="status-finalizada">◉ Finalizada</span></td>
+                                    <td>Almoço executivo</td>
+                                </tr>
+                                <tr>
+                                    <td>16/01/2024 19:00</td>
+                                    <td>Pedro Oliveira</td>
+                                    <td>Mesa 1</td>
+                                    <td>2</td>
+                                    <td><span class="status-confirmada">✓ Confirmada</span></td>
+                                    <td>Mesa próxima à janela</td>
+                                </tr>
+                                <tr>
+                                    <td>17/01/2024 13:00</td>
+                                    <td>Lucia Ferreira</td>
+                                    <td>Mesa 10</td>
+                                    <td>5</td>
+                                    <td><span class="status-finalizada">◉ Finalizada</span></td>
+                                    <td>Almoço corporativo</td>
+                                </tr>
+                                <tr>
+                                    <td>17/01/2024 21:00</td>
+                                    <td>Roberto Lima</td>
+                                    <td>Mesa 7</td>
+                                    <td>3</td>
+                                    <td><span class="status-cancelada">✗ Cancelada</span></td>
+                                    <td>Cancelamento por chuva</td>
+                                </tr>
+                                <tr>
+                                    <td>18/01/2024 20:15</td>
+                                    <td>Fernanda Souza</td>
+                                    <td>Mesa 6</td>
+                                    <td>4</td>
+                                    <td><span class="status-confirmada">✓ Confirmada</span></td>
+                                    <td>Comemoração</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <!-- Análises -->
-            <div class="row mt-4">
+            <div class="row mt-4 fade-in">
                 <div class="col-md-6">
                     <div class="feature-card">
-                        <h4>Horários Mais Reservados</h4>
+                        <h4>
+                            <i class="fas fa-clock"></i>
+                            Horários Mais Reservados
+                        </h4>
                         <ul>
                             <li>20:00 - 20:30: 35 reservas</li>
                             <li>19:30 - 20:00: 28 reservas</li>
@@ -178,7 +821,10 @@
                 </div>
                 <div class="col-md-6">
                     <div class="feature-card">
-                        <h4>Dias da Semana</h4>
+                        <h4>
+                            <i class="fas fa-calendar-week"></i>
+                            Dias da Semana
+                        </h4>
                         <ul>
                             <li>Sábado: 28 reservas</li>
                             <li>Sexta: 25 reservas</li>
@@ -192,30 +838,262 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
     <script>
+        // Dados de reservas (simulados)
+        const reservasOriginais = [
+            { data: '15/01/2024', hora: '19:30', cliente: 'João Silva', mesa: 'Mesa 5', pessoas: 2, status: 'confirmada', obs: 'Aniversário' },
+            { data: '15/01/2024', hora: '20:00', cliente: 'Maria Santos', mesa: 'Mesa 8', pessoas: 4, status: 'confirmada', obs: '-' },
+            { data: '15/01/2024', hora: '20:30', cliente: 'Carlos Pereira', mesa: 'Mesa 12', pessoas: 6, status: 'cancelada', obs: 'Cliente cancelou' },
+            { data: '16/01/2024', hora: '12:30', cliente: 'Ana Costa', mesa: 'Mesa 3', pessoas: 3, status: 'finalizada', obs: 'Almoço executivo' },
+            { data: '16/01/2024', hora: '19:00', cliente: 'Pedro Oliveira', mesa: 'Mesa 1', pessoas: 2, status: 'confirmada', obs: 'Mesa próxima à janela' },
+            { data: '17/01/2024', hora: '13:00', cliente: 'Lucia Ferreira', mesa: 'Mesa 10', pessoas: 5, status: 'finalizada', obs: 'Almoço corporativo' },
+            { data: '17/01/2024', hora: '21:00', cliente: 'Roberto Lima', mesa: 'Mesa 7', pessoas: 3, status: 'cancelada', obs: 'Cancelamento por chuva' },
+            { data: '18/01/2024', hora: '20:15', cliente: 'Fernanda Souza', mesa: 'Mesa 6', pessoas: 4, status: 'confirmada', obs: 'Comemoração' },
+            { data: '18/01/2024', hora: '12:00', cliente: 'Eduardo Martins', mesa: 'Mesa 4', pessoas: 2, status: 'finalizada', obs: 'Almoço de negócios' },
+            { data: '19/01/2024', hora: '19:45', cliente: 'Camila Rocha', mesa: 'Mesa 9', pessoas: 3, status: 'confirmada', obs: 'Primeira vez no restaurante' },
+            { data: '19/01/2024', hora: '21:30', cliente: 'Alexandre Santos', mesa: 'Mesa 11', pessoas: 6, status: 'cancelada', obs: 'Problema familiar' },
+            { data: '20/01/2024', hora: '13:15', cliente: 'Juliana Costa', mesa: 'Mesa 2', pessoas: 4, status: 'finalizada', obs: 'Reunião familiar' },
+            { data: '20/01/2024', hora: '20:00', cliente: 'Ricardo Silva', mesa: 'Mesa 14', pessoas: 2, status: 'confirmada', obs: 'Jantar romântico' },
+            { data: '21/01/2024', hora: '12:45', cliente: 'Patricia Lima', mesa: 'Mesa 13', pessoas: 5, status: 'finalizada', obs: 'Celebração de contrato' }
+        ];
+
+        let reservas = [...reservasOriginais];
+        let reservasFiltradas = [...reservas];
+
+        // Função para filtrar reservas
+        function filtrarReservas() {
+            const dataInicio = document.getElementById('dataInicioReserva').value;
+            const dataFim = document.getElementById('dataFimReserva').value;
+            const status = document.getElementById('statusReserva').value;
+            const horario = document.getElementById('horarioReserva').value;
+
+            reservasFiltradas = reservasOriginais.filter(reserva => {
+                // Converter data para formato de comparação
+                const dataReserva = converterData(reserva.data);
+                const inicio = dataInicio ? new Date(dataInicio) : null;
+                const fim = dataFim ? new Date(dataFim) : null;
+
+                // Filtro por data
+                if (inicio && dataReserva < inicio) return false;
+                if (fim && dataReserva > fim) return false;
+
+                // Filtro por status
+                if (status && reserva.status !== status) return false;
+
+                // Filtro por horário
+                if (horario) {
+                    const horaReserva = parseInt(reserva.hora.split(':')[0]);
+                    if (horario === 'almoco' && (horaReserva < 11 || horaReserva > 15)) return false;
+                    if (horario === 'jantar' && (horaReserva < 18 || horaReserva > 22)) return false;
+                }
+
+                return true;
+            });
+
+            atualizarTabelaReservas();
+            atualizarResumoReservas();
+            mostrarNotificacao('Filtros aplicados com sucesso!', 'success');
+        }
+
+        // Função para converter data do formato brasileiro para Date
+        function converterData(dataStr) {
+            const [dia, mes, ano] = dataStr.split('/');
+            return new Date(ano, mes - 1, dia);
+        }
+
+        // Função para limpar filtros
+        function limparFiltrosReservas() {
+            document.getElementById('dataInicioReserva').value = '2024-01-01';
+            document.getElementById('dataFimReserva').value = '2024-01-31';
+            document.getElementById('statusReserva').value = '';
+            document.getElementById('horarioReserva').value = '';
+            
+            reservasFiltradas = [...reservasOriginais];
+            atualizarTabelaReservas();
+            atualizarResumoReservas();
+            mostrarNotificacao('Filtros removidos!', 'info');
+        }
+
+        // Função para atualizar tabela de reservas
+        function atualizarTabelaReservas() {
+            const tbody = document.querySelector('#reservasTable tbody');
+            tbody.innerHTML = '';
+
+            reservasFiltradas.forEach(reserva => {
+                const tr = document.createElement('tr');
+                const statusClass = `status-${reserva.status}`;
+                const statusIcon = reserva.status === 'confirmada' ? '✓' : 
+                                 reserva.status === 'cancelada' ? '✗' : '◉';
+                const statusText = reserva.status.charAt(0).toUpperCase() + reserva.status.slice(1);
+
+                tr.innerHTML = `
+                    <td>${reserva.data} ${reserva.hora}</td>
+                    <td>${reserva.cliente}</td>
+                    <td>${reserva.mesa}</td>
+                    <td>${reserva.pessoas}</td>
+                    <td><span class="${statusClass}">${statusIcon} ${statusText}</span></td>
+                    <td>${reserva.obs}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Função para atualizar resumo de reservas
+        function atualizarResumoReservas() {
+            const totalReservas = reservasFiltradas.length;
+            const confirmadas = reservasFiltradas.filter(r => r.status === 'confirmada').length;
+            const canceladas = reservasFiltradas.filter(r => r.status === 'cancelada').length;
+            const finalizadas = reservasFiltradas.filter(r => r.status === 'finalizada').length;
+            
+            const taxaOcupacao = totalReservas > 0 ? 
+                ((confirmadas + finalizadas) / totalReservas * 100).toFixed(0) : 0;
+
+            document.getElementById('totalReservas').textContent = totalReservas;
+            document.getElementById('reservasConfirmadas').textContent = confirmadas;
+            document.getElementById('reservasCanceladas').textContent = canceladas;
+            document.getElementById('taxaOcupacao').textContent = `${taxaOcupacao}%`;
+        }
+
+        // Função para buscar reservas
+        function buscarReservas() {
+            const termo = document.getElementById('searchReserva').value.toLowerCase();
+            const linhas = document.querySelectorAll('#reservasTable tbody tr');
+
+            linhas.forEach(linha => {
+                const texto = linha.textContent.toLowerCase();
+                linha.style.display = texto.includes(termo) ? '' : 'none';
+            });
+        }
+
+        // Função para exportar relatório de reservas em PDF
+        function exportarReservas() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Configurações do documento
+            doc.setFontSize(20);
+            doc.setTextColor(212, 175, 55);
+            doc.text('Covil Restaurante', 20, 20);
+            
+            doc.setFontSize(16);
+            doc.setTextColor(0, 0, 0);
+            doc.text('Relatório de Reservas', 20, 35);
+
+            // Data do relatório
+            const hoje = new Date().toLocaleDateString('pt-BR');
+            doc.setFontSize(12);
+            doc.text(`Gerado em: ${hoje}`, 20, 45);
+
+            // Período do relatório
+            const dataInicio = document.getElementById('dataInicioReserva').value;
+            const dataFim = document.getElementById('dataFimReserva').value;
+            doc.text(`Período: ${dataInicio || 'Início'} até ${dataFim || 'Fim'}`, 20, 55);
+
+            // Resumo
+            const totalReservas = document.getElementById('totalReservas').textContent;
+            const confirmadas = document.getElementById('reservasConfirmadas').textContent;
+            const canceladas = document.getElementById('reservasCanceladas').textContent;
+            const taxaOcupacao = document.getElementById('taxaOcupacao').textContent;
+
+            doc.setFontSize(14);
+            doc.text('Resumo:', 20, 70);
+            doc.setFontSize(12);
+            doc.text(`Total de Reservas: ${totalReservas}`, 20, 80);
+            doc.text(`Reservas Confirmadas: ${confirmadas}`, 20, 90);
+            doc.text(`Reservas Canceladas: ${canceladas}`, 20, 100);
+            doc.text(`Taxa de Ocupação: ${taxaOcupacao}`, 20, 110);
+
+            // Tabela de reservas
+            const colunas = ['Data/Hora', 'Cliente', 'Mesa', 'Pessoas', 'Status', 'Observações'];
+            const linhas = reservasFiltradas.map(reserva => [
+                `${reserva.data} ${reserva.hora}`,
+                reserva.cliente,
+                reserva.mesa,
+                reserva.pessoas.toString(),
+                reserva.status.charAt(0).toUpperCase() + reserva.status.slice(1),
+                reserva.obs
+            ]);
+
+            doc.autoTable({
+                head: [colunas],
+                body: linhas,
+                startY: 125,
+                styles: {
+                    fontSize: 10,
+                    cellPadding: 3
+                },
+                headStyles: {
+                    fillColor: [212, 175, 55],
+                    textColor: [0, 0, 0]
+                },
+                alternateRowStyles: {
+                    fillColor: [245, 245, 245]
+                }
+            });
+
+            // Salvar o PDF
+            doc.save('relatorio-reservas-covil.pdf');
+            mostrarNotificacao('Relatório de reservas exportado com sucesso!', 'success');
+        }
+
+        // Função para mostrar notificação
+        function mostrarNotificacao(mensagem, tipo = 'info') {
+            const alert = document.createElement('div');
+            alert.className = `alert ${tipo}`;
+            alert.innerHTML = `
+                <i class="fas fa-${tipo === 'success' ? 'check-circle' : tipo === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                ${mensagem}
+            `;
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        // Função para scroll do header
+        function handleScroll() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+
+        // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
-            filterTable('searchReserva', 'reservasTable');
+            // Inicializar dados
+            atualizarTabelaReservas();
+            atualizarResumoReservas();
+
+            // Busca em tempo real
+            document.getElementById('searchReserva').addEventListener('input', buscarReservas);
+
+            // Scroll do header
+            window.addEventListener('scroll', handleScroll);
+
+            // Animação dos cards
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.feature-card, .form-container, .table-section').forEach(el => {
+                observer.observe(el);
+            });
         });
 
-        function filtrarReservas() {
-            showAlert('Filtrando relatório de reservas...', 'info');
-            setTimeout(() => {
-                showAlert('Relatório filtrado com sucesso!', 'success');
-            }, 1500);
-        }
-
-        function exportarReservas() {
-            showAlert('Exportando relatório de reservas...', 'info');
-            setTimeout(() => {
-                showAlert('Relatório exportado com sucesso!', 'success');
-            }, 2000);
-        }
-
-        function limparFiltrosReservas() {
-            document.getElementById('filtroReservasForm').reset();
-            showAlert('Filtros limpos!', 'info');
-        }
+        // Tecla Enter para filtrar
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.target.closest('.form-container')) {
+                filtrarReservas();
+            }
+        });
     </script>
 </body>
 </html>

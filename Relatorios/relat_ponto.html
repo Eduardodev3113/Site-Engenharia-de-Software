@@ -48,6 +48,12 @@
             margin: 0 auto;
         }
 
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
@@ -61,6 +67,27 @@
         .logo i {
             font-size: 2rem;
             filter: drop-shadow(0 0 5px #d4af37);
+        }
+
+        .btn-voltar {
+            padding: 0.5rem 1rem;
+            border: 2px solid #d4af37;
+            background: transparent;
+            color: #d4af37;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-voltar:hover {
+            background: #d4af37;
+            color: #000;
+            transform: translateY(-2px);
         }
 
         .nav-menu {
@@ -499,10 +526,35 @@
             color: #fff;
         }
 
+        .no-records {
+            text-align: center;
+            padding: 3rem;
+            color: #ccc;
+        }
+
+        .no-records i {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
+            .nav-left {
+                gap: 1rem;
+            }
+
             .nav-menu {
                 display: none;
+            }
+
+            .btn-voltar {
+                font-size: 0.9rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
             }
 
             .page-title {
@@ -535,6 +587,21 @@
                 padding: 0 1rem;
             }
 
+            .nav-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .btn-voltar {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
@@ -543,48 +610,21 @@
                 flex-direction: column;
             }
         }
-
-        /* Loading Animation */
-        .loading {
-            text-align: center;
-            padding: 3rem;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(212, 175, 55, 0.3);
-            border-top: 4px solid #d4af37;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <div class="header">
         <div class="nav-container">
-            <a href="#" class="logo">
-                <i class="fas fa-chart-line"></i>
-                Relatórios de Ponto
-            </a>
-            <div class="nav-menu">
-                <a href="#" onclick="goToPage('dashboard')">Dashboard</a>
-                <a href="#" class="active">Relatórios</a>
-                <a href="#" onclick="goToPage('usuarios')">Usuários</a>
-            </div>
-            <div class="user-info">
-                <span class="user-name">Admin</span>
-                <button class="btn-logout" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Sair
-                </button>
+            <div class="nav-left">
+                <a href="../restaurante-sistema/sistema.html" class="btn-voltar">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar ao Sistema
+                </a>
+                <a href="#" class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    Relatórios de Ponto
+                </a>
             </div>
         </div>
     </div>
@@ -695,10 +735,7 @@
                         <div>Ações</div>
                     </div>
                     <div id="tableContent">
-                        <div class="loading">
-                            <div class="loading-spinner"></div>
-                            <p>Carregando registros...</p>
-                        </div>
+                        <!-- Conteúdo da tabela será inserido aqui pelo JavaScript -->
                     </div>
                 </div>
 
@@ -917,3 +954,208 @@
             document.getElementById('registrosTotal').textContent = totalRegistros;
             document.getElementById('mediaHoras').textContent = `${mediaHoras}h`;
         }
+
+        // Renderizar tabela
+        function renderizarTabela() {
+            const tableContent = document.getElementById('tableContent');
+            const recordsCount = document.getElementById('recordsCount');
+            
+            // Calcular paginação
+            const totalRecords = relatorioState.filteredRegistros.length;
+            const startIndex = (relatorioState.currentPage - 1) * relatorioState.recordsPerPage;
+            const endIndex = Math.min(startIndex + relatorioState.recordsPerPage, totalRecords);
+            const recordsToShow = relatorioState.filteredRegistros.slice(startIndex, endIndex);
+
+            recordsCount.textContent = `${totalRecords} registro${totalRecords !== 1 ? 's' : ''} encontrado${totalRecords !== 1 ? 's' : ''}`;
+
+            if (recordsToShow.length === 0) {
+                tableContent.innerHTML = `
+                    <div class="no-records">
+                        <i class="fas fa-inbox"></i>
+                        <p>Nenhum registro encontrado</p>
+                        <small>Tente ajustar os filtros de busca</small>
+                    </div>
+                `;
+            } else {
+                tableContent.innerHTML = recordsToShow.map(registro => `
+                    <div class="table-row">
+                        <div>
+                            <span class="user-avatar">${registro.usuario.charAt(0)}</span>
+                            ${registro.usuario}
+                        </div>
+                        <div>${formatarData(registro.data)}</div>
+                        <div>${registro.horario}</div>
+                        <div>
+                            <span class="status-badge status-${registro.tipo}">
+                                ${registro.tipo === 'entrada' ? 'Entrada' : 'Saída'}
+                            </span>
+                        </div>
+                        <div>
+                            ${registro.duracao ? `<span class="status-badge duration-badge">${registro.duracao}</span>` : '-'}
+                        </div>
+                        <div>${registro.localizacao}</div>
+                        <div>
+                            <button class="action-btn btn-view" onclick="verDetalhes(${registro.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            renderizarPaginacao();
+        }
+
+        // Renderizar paginação
+        function renderizarPaginacao() {
+            const pagination = document.getElementById('pagination');
+            const totalRecords = relatorioState.filteredRegistros.length;
+            const totalPages = Math.ceil(totalRecords / relatorioState.recordsPerPage);
+
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '';
+
+            // Botão anterior
+            paginationHTML += `
+                <button ${relatorioState.currentPage === 1 ? 'disabled' : ''} onclick="mudarPagina(${relatorioState.currentPage - 1})">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            `;
+
+            // Páginas
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === relatorioState.currentPage) {
+                    paginationHTML += `<button class="active">${i}</button>`;
+                } else if (i === 1 || i === totalPages || (i >= relatorioState.currentPage - 1 && i <= relatorioState.currentPage + 1)) {
+                    paginationHTML += `<button onclick="mudarPagina(${i})">${i}</button>`;
+                } else if (i === relatorioState.currentPage - 2 || i === relatorioState.currentPage + 2) {
+                    paginationHTML += `<span>...</span>`;
+                }
+            }
+
+            // Botão próximo
+            paginationHTML += `
+                <button ${relatorioState.currentPage === totalPages ? 'disabled' : ''} onclick="mudarPagina(${relatorioState.currentPage + 1})">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+
+            pagination.innerHTML = paginationHTML;
+        }
+
+        // Mudar página
+        function mudarPagina(page) {
+            relatorioState.currentPage = page;
+            renderizarTabela();
+        }
+
+        // Formatar data
+        function formatarData(data) {
+            const [ano, mes, dia] = data.split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        // Ver detalhes do registro
+        function verDetalhes(id) {
+            const registro = relatorioState.registros.find(r => r.id === id);
+            if (!registro) return;
+
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="detail-item">
+                    <span class="detail-label">ID do Registro:</span>
+                    <span class="detail-value">#${registro.id}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Usuário:</span>
+                    <span class="detail-value">${registro.usuario}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Data:</span>
+                    <span class="detail-value">${formatarData(registro.data)}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Horário:</span>
+                    <span class="detail-value">${registro.horario}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Tipo:</span>
+                    <span class="detail-value">
+                        <span class="status-badge status-${registro.tipo}">
+                            ${registro.tipo === 'entrada' ? 'Entrada' : 'Saída'}
+                        </span>
+                    </span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Duração:</span>
+                    <span class="detail-value">${registro.duracao || 'N/A'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Localização:</span>
+                    <span class="detail-value">${registro.localizacao}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Timestamp:</span>
+                    <span class="detail-value">${new Date(registro.timestamp).toLocaleString('pt-BR')}</span>
+                </div>
+            `;
+
+            document.getElementById('detailModal').classList.add('show');
+        }
+
+        // Fechar modal
+        function fecharModal() {
+            document.getElementById('detailModal').classList.remove('show');
+        }
+
+        // Exportar relatório
+        function exportarRelatorio() {
+            if (relatorioState.filteredRegistros.length === 0) {
+                alert('Não há registros para exportar!');
+                return;
+            }
+
+            // Cabeçalho do CSV
+            const headers = ['ID', 'Usuário', 'Data', 'Horário', 'Tipo', 'Duração', 'Localização'];
+            let csvContent = headers.join(',') + '\n';
+
+            // Dados
+            relatorioState.filteredRegistros.forEach(registro => {
+                const row = [
+                    registro.id,
+                    `"${registro.usuario}"`,
+                    registro.data,
+                    registro.horario,
+                    registro.tipo,
+                    registro.duracao || '',
+                    `"${registro.localizacao}"`
+                ];
+                csvContent += row.join(',') + '\n';
+            });
+
+            // Download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `relatorio_ponto_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target === modal) {
+                fecharModal();
+            }
+        }
+    </script>
+</body>
+</html>

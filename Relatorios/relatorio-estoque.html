@@ -3,140 +3,988 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório de Estoque - Vinicius</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Relatório de Estoque - Covil Restaurante</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset e Base - Estilo Covil Restaurante */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d4af37;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 5px #d4af37);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-menu li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu li a:hover {
+            color: #d4af37;
+        }
+
+        .nav-menu li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #d4af37;
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu li a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            margin-top: 100px;
+            min-height: calc(100vh - 100px);
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            padding: 2rem 0;
+        }
+
+        /* Back Section */
+        .back-section {
+            margin-bottom: 2rem;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: #d4af37;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .page-header p {
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        /* Section Headers */
+        .section-header-small {
+            margin-bottom: 2rem;
+        }
+
+        .section-header-small h3 {
+            font-size: 1.8rem;
+            color: #d4af37;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .filters-form {
+            margin-top: 1rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #d4af37;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control {
+            padding: 0.8rem 1rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .form-control option {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .filters-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn-primary, .btn-success, .btn-secondary {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+        }
+
+        .btn-secondary:hover {
+            background: #d4af37;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* Summary Section */
+        .summary-section {
+            margin-bottom: 3rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            border-color: #d4af37;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .summary-card.alert-danger {
+            border-color: rgba(220, 53, 69, 0.5);
+            background: linear-gradient(135deg, #2a1a1a, #1a1010);
+        }
+
+        .summary-card.alert-danger:hover {
+            border-color: #dc3545;
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.2);
+        }
+
+        .summary-card.alert-warning {
+            border-color: rgba(255, 193, 7, 0.5);
+            background: linear-gradient(135deg, #2a2a1a, #1a1a10);
+        }
+
+        .summary-card.alert-warning:hover {
+            border-color: #ffc107;
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.2);
+        }
+
+        .summary-icon {
+            font-size: 3rem;
+            color: #d4af37;
+            min-width: 60px;
+        }
+
+        .summary-card.alert-danger .summary-icon {
+            color: #dc3545;
+        }
+
+        .summary-card.alert-warning .summary-icon {
+            color: #ffc107;
+        }
+
+        .summary-info h4 {
+            color: #ccc;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-info h2 {
+            color: #d4af37;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .summary-card.alert-danger .summary-info h2 {
+            color: #dc3545;
+        }
+
+        .summary-card.alert-warning .summary-info h2 {
+            color: #ffc107;
+        }
+
+        /* Search Section */
+        .search-container {
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 400px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #d4af37;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .search-box input::placeholder {
+            color: #999;
+        }
+
+        /* Table Section */
+        .table-section {
+            margin-bottom: 3rem;
+        }
+
+        .table-container {
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: transparent;
+        }
+
+        .custom-table thead {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+        }
+
+        .custom-table thead th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+            color: #000;
+            border: none;
+        }
+
+        .custom-table tbody tr {
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .custom-table tbody tr:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .custom-table tbody td {
+            padding: 1rem;
+            color: #ddd;
+            border: none;
+        }
+
+        /* Row Alert Styles */
+        .row-alert-low {
+            background: rgba(255, 193, 7, 0.1) !important;
+        }
+
+        .row-alert-critical {
+            background: rgba(220, 53, 69, 0.1) !important;
+        }
+
+        .row-alert-expiring {
+            background: rgba(255, 152, 0, 0.1) !important;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .status-ok {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+
+        .status-low {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .status-critical {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        .status-expiring {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ff9800;
+            border: 1px solid #ff9800;
+        }
+
+        /* Analysis Section */
+        .analysis-section {
+            margin-bottom: 3rem;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .analysis-card {
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            padding: 1.5rem;
+            color: #000;
+        }
+
+        .card-header h4 {
+            margin: 0;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        /* Category Items */
+        .category-item {
+            margin-bottom: 1rem;
+        }
+
+        .category-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-name {
+            color: #ddd;
+            font-weight: 500;
+        }
+
+        .category-value {
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .category-bar {
+            position: relative;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .percentage {
+            position: absolute;
+            right: 10px;
+            font-size: 0.8rem;
+            color: #000;
+            font-weight: bold;
+        }
+
+        /* Rotation Items */
+        .rotation-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .rotation-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .rotation-rank {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .rotation-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-name {
+            color: #ddd;
+            font-weight: 500;
+        }
+
+        .rotation-count {
+            color: #d4af37;
+            font-size: 0.9rem;
+        }
+
+        /* Alerts Section */
+        .alerts-section {
+            margin-bottom: 3rem;
+        }
+
+        .alert-card {
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 2px solid;
+        }
+
+        .alert-card.alert-danger {
+            border-color: rgba(220, 53, 69, 0.5);
+        }
+
+        .alert-card.alert-warning {
+            border-color: rgba(255, 193, 7, 0.5);
+        }
+
+        .alert-header {
+            padding: 1.5rem;
+            color: #fff;
+        }
+
+        .alert-card.alert-danger .alert-header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        .alert-card.alert-warning .alert-header {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: #000;
+        }
+
+        .alert-header h4 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-content {
+            padding: 1.5rem;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .alert-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-item i {
+            margin-top: 0.2rem;
+            font-size: 1.2rem;
+        }
+
+        .alert-card.alert-danger .alert-item i {
+            color: #dc3545;
+        }
+
+        .alert-card.alert-warning .alert-item i {
+            color: #ffc107;
+        }
+
+        .alert-info {
+            color: #ddd;
+            line-height: 1.5;
+        }
+
+        .alert-info strong {
+            color: #d4af37;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .nav-container {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-menu {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+            
+            .custom-table {
+                min-width: 800px;
+            }
+            
+            .custom-table thead th {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .custom-table tbody td {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-wrapper {
+                padding: 1rem 0;
+            }
+            
+            .filters-section {
+                padding: 1rem;
+            }
+            
+            .alert-item {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .category-info {
+                flex-direction: column;
+                gap: 0.2rem;
+            }
+            
+            .rotation-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .summary-card,
+        .analysis-card,
+        .alert-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .summary-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .summary-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .summary-card:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        /* Smooth transitions */
+        * {
+            transition: color 0.3s ease, background 0.3s ease, border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">🍽️ Sistema Restaurante</div>
-            <nav>
-                <a href="index.html" class="nav-button">Home</a>
-                <a href="sistema.html" class="nav-button">Sistema</a>
-                <a href="insumos.html" class="nav-button">Insumos</a>
-                <a href="login.html" class="nav-button">Logout</a>
-            </nav>
-        </header>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-crown"></i>
+                Covil Restaurante
+            </a>
+        </div>
+    </header>
 
-        <div class="main-content">
-            <div class="back-button">
-                <a href="sistema.html" class="btn-secondary">← Voltar ao Sistema</a>
+    <div class="main-wrapper">
+        <div class="container">
+            <!-- Back Button -->
+            <div class="back-section">
+                <a href="../restaurante-sistema/sistema.html" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar ao Sistema
+                </a>
             </div>
 
-            <div class="welcome-section">
-                <h1>Relatório de Estoque</h1>
-                <p>Desenvolvido por: <strong>Vinicius Fornazier</strong></p>
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>
+                    <i class="fas fa-chart-bar"></i>
+                    Relatório de Estoque
+                </h1>
             </div>
 
             <!-- Filtros -->
-            <div class="form-container mb-4">
-                <h3>Filtros de Consulta</h3>
-                <form id="filtroEstoqueForm">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="categoriaFiltro">Categoria:</label>
-                                <select id="categoriaFiltro" class="form-control">
-                                    <option value="">Todas</option>
-                                    <option value="carnes">Carnes</option>
-                                    <option value="frutos_mar">Frutos do Mar</option>
-                                    <option value="graos">Grãos e Cereais</option>
-                                    <option value="bebidas">Bebidas</option>
-                                    <option value="temperos">Temperos</option>
-                                    <option value="laticinios">Laticínios</option>
-                                </select>
-                            </div>
+            <section class="filters-section">
+                <div class="section-header-small">
+                    <h3><i class="fas fa-filter"></i> Filtros de Consulta</h3>
+                </div>
+                <form id="filtroEstoqueForm" class="filters-form">
+                    <div class="filters-grid">
+                        <div class="form-group">
+                            <label for="categoriaFiltro">
+                                <i class="fas fa-tags"></i> Categoria:
+                            </label>
+                            <select id="categoriaFiltro" class="form-control">
+                                <option value="">Todas</option>
+                                <option value="carnes">Carnes</option>
+                                <option value="frutos_mar">Frutos do Mar</option>
+                                <option value="graos">Grãos e Cereais</option>
+                                <option value="bebidas">Bebidas</option>
+                                <option value="temperos">Temperos</option>
+                                <option value="laticinios">Laticínios</option>
+                            </select>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="statusEstoque">Status:</label>
-                                <select id="statusEstoque" class="form-control">
-                                    <option value="">Todos</option>
-                                    <option value="ok">Estoque OK</option>
-                                    <option value="baixo">Estoque Baixo</option>
-                                    <option value="critico">Estoque Crítico</option>
-                                    <option value="vencimento">Próximo ao Vencimento</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label for="statusEstoque">
+                                <i class="fas fa-info-circle"></i> Status:
+                            </label>
+                            <select id="statusEstoque" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="ok">Estoque OK</option>
+                                <option value="baixo">Estoque Baixo</option>
+                                <option value="critico">Estoque Crítico</option>
+                                <option value="vencimento">Próximo ao Vencimento</option>
+                            </select>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="ordenarPor">Ordenar por:</label>
-                                <select id="ordenarPor" class="form-control">
-                                    <option value="nome">Nome</option>
-                                    <option value="quantidade">Quantidade</option>
-                                    <option value="valor">Valor</option>
-                                    <option value="validade">Data de Validade</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label for="ordenarPor">
+                                <i class="fas fa-sort"></i> Ordenar por:
+                            </label>
+                            <select id="ordenarPor" class="form-control">
+                                <option value="nome">Nome</option>
+                                <option value="quantidade">Quantidade</option>
+                                <option value="valor">Valor</option>
+                                <option value="validade">Data de Validade</option>
+                            </select>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="tipoRelatorio">Tipo de Relatório:</label>
-                                <select id="tipoRelatorio" class="form-control">
-                                    <option value="semanal">Semanal</option>
-                                    <option value="mensal">Mensal</option>
-                                    <option value="customizado">Período Customizado</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label for="tipoRelatorio">
+                                <i class="fas fa-calendar"></i> Tipo de Relatório:
+                            </label>
+                            <select id="tipoRelatorio" class="form-control">
+                                <option value="semanal">Semanal</option>
+                                <option value="mensal">Mensal</option>
+                                <option value="customizado">Período Customizado</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="text-center">
-                        <button type="button" class="btn-primary" onclick="filtrarEstoque()">Filtrar</button>
-                        <button type="button" class="btn-success" onclick="exportarEstoque()">Exportar PDF</button>
-                        <button type="button" class="btn-secondary" onclick="limparFiltrosEstoque()">Limpar</button>
+                    <div class="filters-buttons">
+                        <button type="button" class="btn-primary" onclick="filtrarEstoque()">
+                            <i class="fas fa-search"></i> Filtrar
+                        </button>
+                        <button type="button" class="btn-success" onclick="exportarEstoque()">
+                            <i class="fas fa-file-pdf"></i> Exportar PDF
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="limparFiltrosEstoque()">
+                            <i class="fas fa-eraser"></i> Limpar
+                        </button>
                     </div>
                 </form>
-            </div>
+            </section>
 
             <!-- Resumo do Estoque -->
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="feature-card">
-                        <h4>Total de Insumos</h4>
-                        <h2 style="color: white;">127</h2>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="feature-card">
-                        <h4>Valor Total</h4>
-                        <h2 style="color: white;">R$ 12.450,80</h2>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="feature-card">
-                        <h4>Itens em Falta</h4>
-                        <h2 style="color: white;">8</h2>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="feature-card">
-                        <h4>Próximos ao Vencimento</h4>
-                        <h2 style="color: white;">5</h2>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Detalhamento do Estoque -->
-            <div class="row">
-                <div class="col-12">
-                    <h3>Relatório Detalhado - Semana Atual</h3>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <input type="text" id="searchEstoque" class="form-control" placeholder="Buscar insumo...">
+            <section class="summary-section">
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h4>Total de Insumos</h4>
+                            <h2>127</h2>
                         </div>
                     </div>
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h4>Valor Total</h4>
+                            <h2>R$ 12.450,80</h2>
+                        </div>
+                    </div>
+                    <div class="summary-card alert-danger">
+                        <div class="summary-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h4>Itens em Falta</h4>
+                            <h2>8</h2>
+                        </div>
+                    </div>
+                    <div class="summary-card alert-warning">
+                        <div class="summary-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h4>Próximos ao Vencimento</h4>
+                            <h2>5</h2>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                    <table class="table" id="estoqueTable">
+            <!-- Detalhamento do Estoque -->
+            <section class="table-section">
+                <div class="section-header-small">
+                    <h3><i class="fas fa-list"></i> Relatório Detalhado - Semana Atual</h3>
+                </div>
+                
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchEstoque" placeholder="Buscar insumo...">
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="custom-table" id="estoqueTable">
                         <thead>
                             <tr>
-                                <th>Nome do Insumo</th>
-                                <th>Quantidade Disponível</th>
-                                <th>Unidade</th>
-                                <th>Preço de Compra</th>
-                                <th>Preço de Venda</th>
-                                <th>Validade</th>
-                                <th>Status</th>
+                                <th><i class="fas fa-tag"></i> Nome do Insumo</th>
+                                <th><i class="fas fa-weight"></i> Quantidade</th>
+                                <th><i class="fas fa-ruler"></i> Unidade</th>
+                                <th><i class="fas fa-shopping-cart"></i> Preço Compra</th>
+                                <th><i class="fas fa-hand-holding-usd"></i> Preço Venda</th>
+                                <th><i class="fas fa-calendar-times"></i> Validade</th>
+                                <th><i class="fas fa-traffic-light"></i> Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -147,16 +995,16 @@
                                 <td>R$ 45,00/kg</td>
                                 <td>R$ 80,00/kg</td>
                                 <td>20/02/2024</td>
-                                <td><span style="color: green;">✓ OK</span></td>
+                                <td><span class="status-badge status-ok"><i class="fas fa-check"></i> OK</span></td>
                             </tr>
-                            <tr style="background-color: #ffeeee;">
+                            <tr class="row-alert-low">
                                 <td>Arroz Arbóreo</td>
                                 <td>0.8</td>
                                 <td>kg</td>
                                 <td>R$ 12,50/kg</td>
                                 <td>R$ 25,00/kg</td>
                                 <td>30/06/2024</td>
-                                <td><span style="color: red;">⚠ Baixo</span></td>
+                                <td><span class="status-badge status-low"><i class="fas fa-exclamation-triangle"></i> Baixo</span></td>
                             </tr>
                             <tr>
                                 <td>Camarão Grande</td>
@@ -165,7 +1013,7 @@
                                 <td>R$ 38,90/kg</td>
                                 <td>R$ 75,00/kg</td>
                                 <td>25/01/2024</td>
-                                <td><span style="color: green;">✓ OK</span></td>
+                                <td><span class="status-badge status-ok"><i class="fas fa-check"></i> OK</span></td>
                             </tr>
                             <tr>
                                 <td>Vinho Branco Seco</td>
@@ -174,16 +1022,16 @@
                                 <td>R$ 35,00/un</td>
                                 <td>R$ 85,00/un</td>
                                 <td>15/12/2025</td>
-                                <td><span style="color: green;">✓ OK</span></td>
+                                <td><span class="status-badge status-ok"><i class="fas fa-check"></i> OK</span></td>
                             </tr>
-                            <tr style="background-color: #ffcccc;">
+                            <tr class="row-alert-critical">
                                 <td>Picanha Argentina</td>
                                 <td>0.5</td>
                                 <td>kg</td>
                                 <td>R$ 55,00/kg</td>
                                 <td>R$ 120,00/kg</td>
                                 <td>18/01/2024</td>
-                                <td><span style="color: darkred;">🚨 Crítico</span></td>
+                                <td><span class="status-badge status-critical"><i class="fas fa-times-circle"></i> Crítico</span></td>
                             </tr>
                             <tr>
                                 <td>Azeite Extra Virgem</td>
@@ -192,16 +1040,16 @@
                                 <td>R$ 25,00/l</td>
                                 <td>R$ 8,00/dose</td>
                                 <td>10/08/2024</td>
-                                <td><span style="color: green;">✓ OK</span></td>
+                                <td><span class="status-badge status-ok"><i class="fas fa-check"></i> OK</span></td>
                             </tr>
-                            <tr style="background-color: #fff3cd;">
+                            <tr class="row-alert-expiring">
                                 <td>Queijo Parmesão</td>
                                 <td>1.8</td>
                                 <td>kg</td>
                                 <td>R$ 42,00/kg</td>
                                 <td>R$ 15,00/porção</td>
                                 <td>25/01/2024</td>
-                                <td><span style="color: orange;">⏰ Vence em 10 dias</span></td>
+                                <td><span class="status-badge status-expiring"><i class="fas fa-clock"></i> Vence em 10 dias</span></td>
                             </tr>
                             <tr>
                                 <td>Limão Tahiti</td>
@@ -210,7 +1058,7 @@
                                 <td>R$ 3,50/kg</td>
                                 <td>R$ 2,00/un</td>
                                 <td>30/01/2024</td>
-                                <td><span style="color: green;">✓ OK</span></td>
+                                <td><span class="status-badge status-ok"><i class="fas fa-check"></i> OK</span></td>
                             </tr>
                             <tr>
                                 <td>Manjericão Fresco</td>
@@ -219,96 +1067,419 @@
                                 <td>R$ 18,00/kg</td>
                                 <td>R$ 3,00/porção</td>
                                 <td>20/01/2024</td>
-                                <td><span style="color: green;">✓ OK</span></td>
+                                <td><span class="status-badge status-ok"><i class="fas fa-check"></i> OK</span></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </section>
 
             <!-- Análises e Gráficos -->
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <div class="feature-card">
-                        <h4>Categorias com Maior Valor</h4>
-                        <ul>
-                            <li>Carnes: R$ 4.850,00 (38.9%)</li>
-                            <li>Frutos do Mar: R$ 2.967,50 (23.8%)</li>
-                            <li>Bebidas: R$ 1.890,30 (15.2%)</li>
-                            <li>Laticínios: R$ 1.456,00 (11.7%)</li>
-                            <li>Grãos: R$ 987,00 (7.9%)</li>
-                            <li>Temperos: R$ 300,00 (2.4%)</li>
-                        </ul>
+            <section class="analysis-section">
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-chart-pie"></i> Categorias com Maior Valor</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-name">Carnes</span>
+                                    <span class="category-value">R$ 4.850,00</span>
+                                </div>
+                                <div class="category-bar">
+                                    <div class="bar-fill" style="width: 38.9%"></div>
+                                    <span class="percentage">38.9%</span>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-name">Frutos do Mar</span>
+                                    <span class="category-value">R$ 2.967,50</span>
+                                </div>
+                                <div class="category-bar">
+                                    <div class="bar-fill" style="width: 23.8%"></div>
+                                    <span class="percentage">23.8%</span>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-name">Bebidas</span>
+                                    <span class="category-value">R$ 1.890,30</span>
+                                </div>
+                                <div class="category-bar">
+                                    <div class="bar-fill" style="width: 15.2%"></div>
+                                    <span class="percentage">15.2%</span>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-name">Laticínios</span>
+                                    <span class="category-value">R$ 1.456,00</span>
+                                </div>
+                                <div class="category-bar">
+                                    <div class="bar-fill" style="width: 11.7%"></div>
+                                    <span class="percentage">11.7%</span>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-name">Grãos</span>
+                                    <span class="category-value">R$ 987,00</span>
+                                </div>
+                                <div class="category-bar">
+                                    <div class="bar-fill" style="width: 7.9%"></div>
+                                    <span class="percentage">7.9%</span>
+                                </div>
+                            </div>
+                            <div class="category-item">
+                                <div class="category-info">
+                                    <span class="category-name">Temperos</span>
+                                    <span class="category-value">R$ 300,00</span>
+                                </div>
+                                <div class="category-bar">
+                                    <div class="bar-fill" style="width: 2.4%"></div>
+                                    <span class="percentage">2.4%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-sync-alt"></i> Itens com Maior Rotatividade</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="rotation-item">
+                                <div class="rotation-rank">1º</div>
+                                <div class="rotation-info">
+                                    <span class="item-name">Filé de Salmão</span>
+                                    <span class="rotation-count">15 saídas/semana</span>
+                                </div>
+                            </div>
+                            <div class="rotation-item">
+                                <div class="rotation-rank">2º</div>
+                                <div class="rotation-info">
+                                    <span class="item-name">Picanha</span>
+                                    <span class="rotation-count">12 saídas/semana</span>
+                                </div>
+                            </div>
+                            <div class="rotation-item">
+                                <div class="rotation-rank">3º</div>
+                                <div class="rotation-info">
+                                    <span class="item-name">Camarão</span>
+                                    <span class="rotation-count">10 saídas/semana</span>
+                                </div>
+                            </div>
+                            <div class="rotation-item">
+                                <div class="rotation-rank">4º</div>
+                                <div class="rotation-info">
+                                    <span class="item-name">Arroz Arbóreo</span>
+                                    <span class="rotation-count">8 saídas/semana</span>
+                                </div>
+                            </div>
+                            <div class="rotation-item">
+                                <div class="rotation-rank">5º</div>
+                                <div class="rotation-info">
+                                    <span class="item-name">Azeite</span>
+                                    <span class="rotation-count">6 saídas/semana</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="feature-card">
-                        <h4>Itens com Maior Rotatividade</h4>
-                        <ul>
-                            <li>Filé de Salmão - 15 saídas/semana</li>
-                            <li>Picanha - 12 saídas/semana</li>
-                            <li>Camarão - 10 saídas/semana</li>
-                            <li>Arroz Arbóreo - 8 saídas/semana</li>
-                            <li>Azeite - 6 saídas/semana</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            </section>
 
             <!-- Alertas de Estoque -->
-            <div class="row mt-4">
-                <div class="col-12">
-                    <div class="alert alert-danger">
-                        <h4>🚨 Alertas Críticos</h4>
-                        <ul>
-                            <li><strong>Picanha Argentina:</strong> Apenas 0.5kg em estoque (mínimo: 2kg)</li>
-                            <li><strong>Arroz Arbóreo:</strong> Apenas 0.8kg em estoque (mínimo: 2kg)</li>
-                        </ul>
+            <section class="alerts-section">
+                <div class="alert-card alert-danger">
+                    <div class="alert-header">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Alertas Críticos</h4>
                     </div>
-                    
-                    <div class="alert alert-info">
-                        <h4>⏰ Próximos ao Vencimento (próximos 15 dias)</h4>
-                        <ul>
-                            <li><strong>Queijo Parmesão:</strong> Vence em 10 dias (25/01/2024)</li>
-                            <li><strong>Manjericão Fresco:</strong> Vence em 5 dias (20/01/2024)</li>
-                            <li><strong>Picanha Argentina:</strong> Vence em 3 dias (18/01/2024)</li>
-                        </ul>
+                    <div class="alert-content">
+                        <div class="alert-item">
+                            <i class="fas fa-times-circle"></i>
+                            <div class="alert-info">
+                                <strong>Picanha Argentina:</strong> Apenas 0.5kg em estoque (mínimo: 2kg)
+                            </div>
+                        </div>
+                        <div class="alert-item">
+                            <i class="fas fa-times-circle"></i>
+                            <div class="alert-info">
+                                <strong>Arroz Arbóreo:</strong> Apenas 0.8kg em estoque (mínimo: 2kg)
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+                
+                <div class="alert-card alert-warning">
+                    <div class="alert-header">
+                        <h4><i class="fas fa-clock"></i> Próximos ao Vencimento (próximos 15 dias)</h4>
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-item">
+                            <i class="fas fa-clock"></i>
+                            <div class="alert-info">
+                                <strong>Queijo Parmesão:</strong> Vence em 10 dias (25/01/2024)
+                            </div>
+                        </div>
+                        <div class="alert-item">
+                            <i class="fas fa-clock"></i>
+                            <div class="alert-info">
+                                <strong>Manjericão Fresco:</strong> Vence em 5 dias (20/01/2024)
+                            </div>
+                        </div>
+                        <div class="alert-item">
+                            <i class="fas fa-clock"></i>
+                            <div class="alert-info">
+                                <strong>Picanha Argentina:</strong> Vence em 3 dias (18/01/2024)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 
-    <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            filterTable('searchEstoque', 'estoqueTable');
+            initializeSearch();
+            initializeAnimations();
         });
 
+        // Função de busca na tabela
+        function initializeSearch() {
+            const searchInput = document.getElementById('searchEstoque');
+            const table = document.getElementById('estoqueTable');
+            const tbody = table.getElementsByTagName('tbody')[0];
+            const rows = tbody.getElementsByTagName('tr');
+
+            searchInput.addEventListener('keyup', function() {
+                const filter = this.value.toLowerCase();
+                
+                for (let i = 0; i < rows.length; i++) {
+                    const cells = rows[i].getElementsByTagName('td');
+                    let found = false;
+                    
+                    for (let j = 0; j < cells.length; j++) {
+                        if (cells[j].textContent.toLowerCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    
+                    rows[i].style.display = found ? '' : 'none';
+                }
+            });
+        }
+
+        // Inicializar animações
+        function initializeAnimations() {
+            // Observador de interseção para animações
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observar elementos para animação
+            document.querySelectorAll('.summary-card, .analysis-card, .alert-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                observer.observe(card);
+            });
+
+            // Animar barras de progresso
+            setTimeout(() => {
+                document.querySelectorAll('.bar-fill').forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 500);
+                });
+            }, 1000);
+        }
+
+        // Função para filtrar estoque
         function filtrarEstoque() {
             const categoria = document.getElementById('categoriaFiltro').value;
             const status = document.getElementById('statusEstoque').value;
             const ordenar = document.getElementById('ordenarPor').value;
             const tipo = document.getElementById('tipoRelatorio').value;
 
-            showAlert(`Filtrando relatório de estoque...`, 'info');
+            // Simular carregamento
+            showAlert('Filtrando relatório de estoque...', 'info');
             
             setTimeout(() => {
+                // Aqui seria implementada a lógica real de filtros
                 showAlert('Relatório de estoque filtrado com sucesso!', 'success');
+                
+                // Reordenar tabela baseado no filtro (simulação)
+                if (ordenar) {
+                    sortTable(ordenar);
+                }
             }, 1500);
         }
 
+        // Função para exportar PDF
         function exportarEstoque() {
             showAlert('Gerando PDF do relatório de estoque...', 'info');
+            
             setTimeout(() => {
+                // Simular download do PDF
                 showAlert('Relatório de estoque exportado com sucesso!', 'success');
+                
+                // Criar elemento de download simulado
+                const link = document.createElement('a');
+                link.href = '#';
+                link.download = 'relatorio-estoque-' + new Date().toISOString().split('T')[0] + '.pdf';
+                document.body.appendChild(link);
+                // link.click(); // Descomentaria para download real
+                document.body.removeChild(link);
             }, 2000);
         }
 
+        // Função para limpar filtros
         function limparFiltrosEstoque() {
             document.getElementById('filtroEstoqueForm').reset();
             showAlert('Filtros limpos!', 'info');
+            
+            // Mostrar todas as linhas da tabela
+            const rows = document.querySelectorAll('#estoqueTable tbody tr');
+            rows.forEach(row => {
+                row.style.display = '';
+            });
         }
+
+        // Função para ordenar tabela
+        function sortTable(column) {
+            const table = document.getElementById('estoqueTable');
+            const tbody = table.getElementsByTagName('tbody')[0];
+            const rows = Array.from(tbody.getElementsByTagName('tr'));
+            
+            let columnIndex;
+            switch(column) {
+                case 'nome': columnIndex = 0; break;
+                case 'quantidade': columnIndex = 1; break;
+                case 'valor': columnIndex = 3; break;
+                case 'validade': columnIndex = 5; break;
+                default: columnIndex = 0;
+            }
+            
+            rows.sort((a, b) => {
+                const aValue = a.getElementsByTagName('td')[columnIndex].textContent.trim();
+                const bValue = b.getElementsByTagName('td')[columnIndex].textContent.trim();
+                
+                if (column === 'quantidade') {
+                    return parseFloat(aValue) - parseFloat(bValue);
+                } else if (column === 'valor') {
+                    const aPrice = parseFloat(aValue.replace(/[^\d,]/g, '').replace(',', '.'));
+                    const bPrice = parseFloat(bValue.replace(/[^\d,]/g, '').replace(',', '.'));
+                    return aPrice - bPrice;
+                } else {
+                    return aValue.localeCompare(bValue);
+                }
+            });
+            
+            // Reordenar elementos na tabela
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Sistema de alertas
+        function showAlert(message, type) {
+            // Remover alertas existentes
+            const existingAlerts = document.querySelectorAll('.toast-alert');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            // Criar novo alerta
+            const alert = document.createElement('div');
+            alert.className = `toast-alert toast-${type}`;
+            alert.style.cssText = `
+                position: fixed;
+                top: 120px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                color: white;
+                font-weight: 500;
+                z-index: 9999;
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+                max-width: 350px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            `;
+            
+            // Definir cores baseado no tipo
+            switch(type) {
+                case 'success':
+                    alert.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+                    break;
+                case 'danger':
+                    alert.style.background = 'linear-gradient(135deg, #dc3545, #c82333)';
+                    break;
+                case 'warning':
+                    alert.style.background = 'linear-gradient(135deg, #ffc107, #e0a800)';
+                    alert.style.color = '#000';
+                    break;
+                default:
+                    alert.style.background = 'linear-gradient(135deg, #17a2b8, #138496)';
+            }
+            
+            alert.textContent = message;
+            document.body.appendChild(alert);
+            
+            // Animar entrada
+            setTimeout(() => {
+                alert.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remover após 4 segundos
+            setTimeout(() => {
+                alert.style.transform = 'translateX(400px)';
+                setTimeout(() => alert.remove(), 300);
+            }, 4000);
+            
+            // Log no console também
+            console.log(`${type.toUpperCase()}: ${message}`);
+        }
+
+        // Efeitos de hover interativos
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efeito de hover nos cards de resumo
+            const summaryCards = document.querySelectorAll('.summary-card');
+            summaryCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(-5px) scale(1)';
+                });
+            });
+
+            // Efeito de hover nas linhas da tabela
+            const tableRows = document.querySelectorAll('#estoqueTable tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                    this.style.boxShadow = '0 5px 15px rgba(212, 175, 55, 0.2)';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                    this.style.boxShadow = 'none';
+                });
+            });
+        });
     </script>
 </body>
 </html>
