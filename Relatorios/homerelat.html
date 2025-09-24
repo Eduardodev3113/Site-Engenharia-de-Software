@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Relatórios</title>
+  <title>Painel de Relatórios - Restaurante Elegante</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <style>
     /* Reset e base */
     * {
@@ -12,16 +13,44 @@
       padding: 0;
       box-sizing: border-box;
     }
+    
     body {
       font-family: 'Arial', sans-serif;
       background-color: #0a0a0a;
       color: #fff;
       line-height: 1.6;
+      overflow-x: hidden;
     }
+    
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 0 5%;
+    }
+
+    /* Botão Voltar */
+    .btn-back {
+      background: transparent;
+      color: #d4af37;
+      border: 2px solid #d4af37;
+      padding: 0.5rem 1.5rem;
+      border-radius: 25px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      z-index: 1000;
+      font-weight: 500;
+    }
+
+    .btn-back:hover {
+      background: #d4af37;
+      color: #000;
+      transform: translateY(-2px);
     }
 
     /* Header */
@@ -31,27 +60,85 @@
       text-align: center;
       border-bottom: 3px solid #d4af37;
       margin-bottom: 3rem;
+      margin-top: 5rem;
     }
+    
     .header h1 {
-      font-size: 2.5rem;
+      font-size: 3rem;
       color: #d4af37;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 1rem;
+      margin-bottom: 0.5rem;
     }
+    
     .header p {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       color: #ccc;
       margin-top: 0.5rem;
+    }
+
+    /* Stats Cards */
+    .stats-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(135deg, #d4af37, #ffd700);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      border-color: #d4af37;
+    }
+
+    .stat-icon {
+      font-size: 2rem;
+      color: #d4af37;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #d4af37;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #ccc;
     }
 
     /* Grid de relatórios */
     .reports-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 2rem;
+      margin-bottom: 3rem;
     }
+    
     .report-card {
       background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
       border-radius: 20px;
@@ -62,12 +149,16 @@
       cursor: pointer;
       position: relative;
       overflow: hidden;
+      text-decoration: none;
+      color: inherit;
     }
+    
     .report-card:hover {
       transform: translateY(-5px);
       border-color: #d4af37;
       box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
     }
+    
     .report-card::before {
       content: '';
       position: absolute;
@@ -77,28 +168,224 @@
       height: 4px;
       background: linear-gradient(135deg, #d4af37, #ffd700);
     }
+    
     .report-icon {
       font-size: 3rem;
       color: #d4af37;
       margin-bottom: 1rem;
       filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
     }
+    
     .report-title {
       font-size: 1.4rem;
       font-weight: bold;
       color: #fff;
       margin-bottom: 0.5rem;
     }
+    
     .report-desc {
       font-size: 0.95rem;
       color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    .report-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      font-size: 0.85rem;
+      color: #999;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      border-radius: 20px;
+      max-width: 90%;
+      width: 800px;
+      max-height: 90vh;
+      border: 2px solid #d4af37;
+      animation: modalSlideIn 0.3s ease;
+      overflow-y: auto;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      padding: 2rem 2rem 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .modal-header h2 {
+      color: #d4af37;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .close {
+      color: #d4af37;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .close:hover {
+      color: #ffd700;
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 400px;
+      margin: 2rem 0;
+    }
+
+    .report-filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid #d4af37;
+      color: #d4af37;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: #d4af37;
+      color: #000;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .data-table th {
+      background: rgba(212, 175, 55, 0.1);
+      color: #d4af37;
+      font-weight: bold;
+    }
+
+    .data-table tbody tr:hover {
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    /* Notificações */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      border-radius: 10px;
+      border-left: 4px solid #2e7d32;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 3000;
+      animation: slideInRight 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
 
     /* Responsivo */
     @media (max-width: 768px) {
+      .btn-back {
+        top: 1rem;
+        left: 1rem;
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .header {
+        margin-top: 4rem;
+      }
+
       .header h1 {
         font-size: 2rem;
         flex-direction: column;
+      }
+
+      .reports-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-section {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .modal-content {
+        width: 95%;
+        max-height: 95vh;
+      }
+
+      .report-filters {
+        justify-content: center;
       }
     }
 
@@ -108,63 +395,662 @@
       transform: translateY(20px);
       animation: fadeInUp 0.6s ease forwards;
     }
+    
     @keyframes fadeInUp {
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
+    
     .report-card:nth-child(1) { animation-delay: 0.1s; }
     .report-card:nth-child(2) { animation-delay: 0.2s; }
     .report-card:nth-child(3) { animation-delay: 0.3s; }
     .report-card:nth-child(4) { animation-delay: 0.4s; }
     .report-card:nth-child(5) { animation-delay: 0.5s; }
+    .report-card:nth-child(6) { animation-delay: 0.6s; }
   </style>
 </head>
 <body>
 
+  <!-- Botão Voltar -->
+  <a href="#" class="btn-back" onclick="goBackToSystem()">
+    <i class="fas fa-arrow-left"></i>
+    Voltar ao Sistema
+  </a>
+
   <!-- Header -->
   <header class="header">
     <div class="container">
-      <h1><i class="fas fa-file-alt"></i> Painel de Relatórios</h1>
-      <p>Selecione um relatório para visualizar os detalhes</p>
+      <h1><i class="fas fa-chart-bar"></i> Painel de Relatórios</h1>
+      <p>Análises detalhadas do desempenho do restaurante</p>
     </div>
   </header>
+
+  <!-- Estatísticas Rápidas -->
+  <section class="container">
+    <div class="stats-section fade-in">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-value" id="totalRevenue">R$ 24.580</div>
+        <div class="stat-label">Receita Mensal</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-utensils"></i></div>
+        <div class="stat-value" id="totalOrders">1.247</div>
+        <div class="stat-label">Pedidos do Mês</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-value" id="totalCustomers">486</div>
+        <div class="stat-label">Clientes Ativos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-star"></i></div>
+        <div class="stat-value" id="avgRating">4.8</div>
+        <div class="stat-label">Avaliação Média</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-receipt"></i></div>
+        <div class="stat-value" id="totalExpenses">R$ 8.920</div>
+        <div class="stat-label">Gastos do Mês</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-percentage"></i></div>
+        <div class="stat-value" id="profitMargin">63.7%</div>
+        <div class="stat-label">Margem de Lucro</div>
+      </div>
+    </div>
+  </section>
 
   <!-- Lista de Relatórios -->
   <main class="container">
     <div class="reports-grid">
-      <a href="#" class="report-card fade-in">
+      <div class="report-card fade-in" onclick="openReport('vendas')">
         <div class="report-icon"><i class="fas fa-chart-line"></i></div>
-        <div class="report-title">Nome do Relatório 1</div>
-        <div class="report-desc">Descrição curta do relatório.</div>
-      </a>
+        <div class="report-title">Relatório de Vendas</div>
+        <div class="report-desc">Análise detalhada das vendas por período, produtos mais vendidos e performance geral.</div>
+        <div class="report-meta">
+          <span><i class="fas fa-clock"></i> Atualizado há 2h</span>
+          <span><i class="fas fa-eye"></i> Visualizar</span>
+        </div>
+      </div>
 
-      <a href="#" class="report-card fade-in">
+      <div class="report-card fade-in" onclick="openReport('cardapio')">
         <div class="report-icon"><i class="fas fa-utensils"></i></div>
-        <div class="report-title">Nome do Relatório 2</div>
-        <div class="report-desc">Descrição curta do relatório.</div>
-      </a>
+        <div class="report-title">Performance do Cardápio</div>
+        <div class="report-desc">Análise dos pratos mais pedidos, margem de contribuição e sugestões de otimização.</div>
+        <div class="report-meta">
+          <span><i class="fas fa-clock"></i> Atualizado há 1h</span>
+          <span><i class="fas fa-eye"></i> Visualizar</span>
+        </div>
+      </div>
 
-      <a href="#" class="report-card fade-in">
-        <div class="report-icon"><i class="fas fa-calendar-check"></i></div>
-        <div class="report-title">Nome do Relatório 3</div>
-        <div class="report-desc">Descrição curta do relatório.</div>
-      </a>
+      <div class="report-card fade-in" onclick="openReport('gastos')">
+        <div class="report-icon"><i class="fas fa-receipt"></i></div>
+        <div class="report-title">Controle de Gastos</div>
+        <div class="report-desc">Relatório detalhado de gastos operacionais, categorias e comparativo mensal.</div>
+        <div class="report-meta">
+          <span><i class="fas fa-clock"></i> Atualizado há 30min</span>
+          <span><i class="fas fa-eye"></i> Visualizar</span>
+        </div>
+      </div>
 
-      <a href="#" class="report-card fade-in">
-        <div class="report-icon"><i class="fas fa-leaf"></i></div>
-        <div class="report-title">Nome do Relatório 4</div>
-        <div class="report-desc">Descrição curta do relatório.</div>
-      </a>
+      <div class="report-card fade-in" onclick="openReport('clientes')">
+        <div class="report-icon"><i class="fas fa-users"></i></div>
+        <div class="report-title">Análise de Clientes</div>
+        <div class="report-desc">Perfil dos clientes, frequência de visitas, ticket médio e satisfação.</div>
+        <div class="report-meta">
+          <span><i class="fas fa-clock"></i> Atualizado há 4h</span>
+          <span><i class="fas fa-eye"></i> Visualizar</span>
+        </div>
+      </div>
 
-      <a href="#" class="report-card fade-in">
+      <div class="report-card fade-in" onclick="openReport('financeiro')">
         <div class="report-icon"><i class="fas fa-coins"></i></div>
-        <div class="report-title">Nome do Relatório 5</div>
-        <div class="report-desc">Descrição curta do relatório.</div>
-      </a>
+        <div class="report-title">Resumo Financeiro</div>
+        <div class="report-desc">Fluxo de caixa, rentabilidade, custos e projeções financeiras mensais.</div>
+        <div class="report-meta">
+          <span><i class="fas fa-clock"></i> Atualizado há 1h</span>
+          <span><i class="fas fa-eye"></i> Visualizar</span>
+        </div>
+      </div>
+
+      <div class="report-card fade-in" onclick="openReport('operacional')">
+        <div class="report-icon"><i class="fas fa-cogs"></i></div>
+        <div class="report-title">Performance Operacional</div>
+        <div class="report-desc">Tempo de preparo, eficiência da cozinha, turnover de mesas e otimizações.</div>
+        <div class="report-meta">
+          <span><i class="fas fa-clock"></i> Atualizado há 3h</span>
+          <span><i class="fas fa-eye"></i> Visualizar</span>
+        </div>
+      </div>
     </div>
   </main>
+
+  <!-- Modal para exibir relatórios -->
+  <div id="reportModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">
+          <i class="fas fa-chart-bar"></i>
+          Relatório
+        </h2>
+        <span class="close" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="report-filters">
+          <button class="filter-btn active" onclick="setFilter('7days')">7 Dias</button>
+          <button class="filter-btn" onclick="setFilter('30days')">30 Dias</button>
+          <button class="filter-btn" onclick="setFilter('90days')">90 Dias</button>
+          <button class="filter-btn" onclick="setFilter('year')">Ano</button>
+        </div>
+        
+        <div class="chart-container">
+          <canvas id="reportChart"></canvas>
+        </div>
+        
+        <div id="reportContent">
+          <!-- Conteúdo dinâmico do relatório será inserido aqui -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentChart = null;
+
+    // Dados simulados para os relatórios
+    const reportData = {
+      vendas: {
+        title: 'Relatório de Vendas',
+        icon: 'fas fa-chart-line',
+        data: {
+          labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
+          datasets: [{
+            label: 'Vendas (R$)',
+            data: [12000, 15000, 18000, 16000, 22000, 25000, 24580],
+            borderColor: '#d4af37',
+            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+            tension: 0.4
+          }]
+        },
+        tableData: [
+          ['Janeiro', 'R$ 12.000', '320 pedidos', 'R$ 37,50'],
+          ['Fevereiro', 'R$ 15.000', '380 pedidos', 'R$ 39,47'],
+          ['Março', 'R$ 18.000', '425 pedidos', 'R$ 42,35'],
+          ['Abril', 'R$ 16.000', '390 pedidos', 'R$ 41,03'],
+          ['Maio', 'R$ 22.000', '520 pedidos', 'R$ 42,31'],
+          ['Junho', 'R$ 25.000', '580 pedidos', 'R$ 43,10'],
+          ['Julho', 'R$ 24.580', '570 pedidos', 'R$ 43,12']
+        ]
+      },
+      cardapio: {
+        title: 'Performance do Cardápio',
+        icon: 'fas fa-utensils',
+        data: {
+          labels: ['Hambúrguer Especial', 'Pizza Margherita', 'Salada Caesar', 'Risotto Funghi', 'Salmão Grelhado'],
+          datasets: [{
+            label: 'Pedidos',
+            data: [150, 120, 85, 95, 75],
+            backgroundColor: [
+              'rgba(212, 175, 55, 0.8)',
+              'rgba(255, 215, 0, 0.8)',
+              'rgba(218, 165, 32, 0.8)',
+              'rgba(184, 134, 11, 0.8)',
+              'rgba(255, 193, 7, 0.8)'
+            ]
+          }]
+        },
+        tableData: [
+          ['Hambúrguer Especial', '150 pedidos', 'R$ 28,00', '68% margem'],
+          ['Pizza Margherita', '120 pedidos', 'R$ 32,00', '72% margem'],
+          ['Salada Caesar', '85 pedidos', 'R$ 22,00', '75% margem'],
+          ['Risotto Funghi', '95 pedidos', 'R$ 38,00', '65% margem'],
+          ['Salmão Grelhado', '75 pedidos', 'R$ 45,00', '58% margem']
+        ]
+      },
+      gastos: {
+        title: 'Controle de Gastos',
+        icon: 'fas fa-receipt',
+        data: {
+          labels: ['Insumos', 'Funcionários', 'Contas', 'Manutenção', 'Marketing', 'Outros'],
+          datasets: [{
+            label: 'Gastos (R$)',
+            data: [3500, 2800, 1200, 650, 420, 350],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)',
+              'rgba(255, 205, 86, 0.8)',
+              'rgba(75, 192, 192, 0.8)',
+              'rgba(153, 102, 255, 0.8)',
+              'rgba(255, 159, 64, 0.8)'
+            ]
+          }]
+        },
+        tableData: [
+          ['Insumos e Ingredientes', 'R$ 3.500', '39.2%', '↑ 5%'],
+          ['Funcionários', 'R$ 2.800', '31.4%', '↑ 2%'],
+          ['Contas (Luz, Água, Gás)', 'R$ 1.200', '13.5%', '↑ 8%'],
+          ['Manutenção', 'R$ 650', '7.3%', '↓ 12%'],
+          ['Marketing', 'R$ 420', '4.7%', '↑ 15%'],
+          ['Outros', 'R$ 350', '3.9%', '→ 0%']
+        ]
+      },
+      clientes: {
+        title: 'Análise de Clientes',
+        icon: 'fas fa-users',
+        data: {
+          labels: ['Novos', 'Recorrentes', 'VIP', 'Inativos'],
+          datasets: [{
+            label: 'Clientes',
+            data: [120, 280, 65, 21],
+            backgroundColor: [
+              'rgba(75, 192, 192, 0.8)',
+              'rgba(212, 175, 55, 0.8)',
+              'rgba(255, 215, 0, 0.8)',
+              'rgba(255, 99, 132, 0.8)'
+            ]
+          }]
+        },
+        tableData: [
+          ['Clientes Novos', '120', 'R$ 35,20', '24.7%'],
+          ['Clientes Recorrentes', '280', 'R$ 42,80', '57.6%'],
+          ['Clientes VIP', '65', 'R$ 65,40', '13.4%'],
+          ['Clientes Inativos', '21', 'R$ 28,90', '4.3%']
+        ]
+      },
+      financeiro: {
+        title: 'Resumo Financeiro',
+        icon: 'fas fa-coins',
+        data: {
+          labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
+          datasets: [
+            {
+              label: 'Receita',
+              data: [12000, 15000, 18000, 16000, 22000, 25000, 24580],
+              borderColor: '#4CAF50',
+              backgroundColor: 'rgba(76, 175, 80, 0.1)'
+            },
+            {
+              label: 'Gastos',
+              data: [4500, 5800, 6200, 5900, 7800, 8500, 8920],
+              borderColor: '#f44336',
+              backgroundColor: 'rgba(244, 67, 54, 0.1)'
+            }
+          ]
+        },
+        tableData: [
+          ['Janeiro', 'R$ 12.000', 'R$ 4.500', 'R$ 7.500', '62.5%'],
+          ['Fevereiro', 'R$ 15.000', 'R$ 5.800', 'R$ 9.200', '61.3%'],
+          ['Março', 'R$ 18.000', 'R$ 6.200', 'R$ 11.800', '65.6%'],
+          ['Abril', 'R$ 16.000', 'R$ 5.900', 'R$ 10.100', '63.1%'],
+          ['Maio', 'R$ 22.000', 'R$ 7.800', 'R$ 14.200', '64.5%'],
+          ['Junho', 'R$ 25.000', 'R$ 8.500', 'R$ 16.500', '66.0%'],
+          ['Julho', 'R$ 24.580', 'R$ 8.920', 'R$ 15.660', '63.7%']
+        ]
+      },
+      operacional: {
+        title: 'Performance Operacional',
+        icon: 'fas fa-cogs',
+        data: {
+          labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+          datasets: [{
+            label: 'Tempo Médio de Preparo (min)',
+            data: [18, 16, 17, 19, 22, 25, 20],
+            borderColor: '#FF9800',
+            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+            yAxisID: 'y'
+          }, {
+            label: 'Turnover de Mesas',
+            data: [2.1, 2.3, 2.2, 2.0, 1.8, 1.5, 1.9],
+            borderColor: '#9C27B0',
+            backgroundColor: 'rgba(156, 39, 176, 0.1)',
+            yAxisID: 'y1'
+          }]
+        },
+        tableData: [
+          ['Segunda', '18 min', '2.1x', '85%', 'Bom'],
+          ['Terça', '16 min', '2.3x', '88%', 'Ótimo'],
+          ['Quarta', '17 min', '2.2x', '87%', 'Bom'],
+          ['Quinta', '19 min', '2.0x', '82%', 'Regular'],
+          ['Sexta', '22 min', '1.8x', '78%', 'Regular'],
+          ['Sábado', '25 min', '1.5x', '72%', 'Atenção'],
+          ['Domingo', '20 min', '1.9x', '80%', 'Bom']
+        ]
+      }
+    };
+
+    // Função para voltar ao sistema
+    function goBackToSystem() {
+      showNotification('Redirecionando para o sistema principal...');
+      setTimeout(() => {
+        console.log('Redirecionando para o sistema principal...');
+      }, 1500);
+    }
+
+    // Função para mostrar notificação
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        ${message}
+      `;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
+    // Função para abrir relatório
+    function openReport(reportType) {
+      const report = reportData[reportType];
+      if (!report) return;
+
+      document.getElementById('modalTitle').innerHTML = `
+        <i class="${report.icon}"></i>
+        ${report.title}
+      `;
+
+      // Limpar filtros ativos
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector('.filter-btn').classList.add('active');
+
+      // Mostrar modal
+      document.getElementById('reportModal').classList.add('active');
+
+      // Gerar gráfico
+      generateChart(reportType, report.data);
+
+      // Gerar tabela de dados
+      generateReportTable(report.tableData, reportType);
+
+      showNotification(`Relatório "${report.title}" carregado com sucesso!`);
+    }
+
+    // Função para gerar gráfico
+    function generateChart(reportType, data) {
+      const ctx = document.getElementById('reportChart').getContext('2d');
+      
+      // Destruir gráfico anterior se existir
+      if (currentChart) {
+        currentChart.destroy();
+      }
+
+      let chartConfig = {
+        data: data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                color: '#fff'
+              }
+            }
+          },
+          scales: {
+            y: {
+              grid: {
+                color: 'rgba(212, 175, 55, 0.2)'
+              },
+              ticks: {
+                color: '#ccc'
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(212, 175, 55, 0.2)'
+              },
+              ticks: {
+                color: '#ccc'
+              }
+            }
+          }
+        }
+      };
+
+      // Definir tipo de gráfico baseado no relatório
+      switch (reportType) {
+        case 'vendas':
+        case 'financeiro':
+          chartConfig.type = 'line';
+          break;
+        case 'cardapio':
+        case 'gastos':
+        case 'clientes':
+          chartConfig.type = 'doughnut';
+          chartConfig.options.scales = {}; // Remove escalas para gráficos de pizza
+          break;
+        case 'operacional':
+          chartConfig.type = 'line';
+          chartConfig.options.scales.y1 = {
+            type: 'linear',
+            display: true,
+            position: 'right',
+            grid: {
+              drawOnChartArea: false,
+            },
+            ticks: {
+              color: '#ccc'
+            }
+          };
+          break;
+        default:
+          chartConfig.type = 'bar';
+      }
+
+      currentChart = new Chart(ctx, chartConfig);
+    }
+
+    // Função para gerar tabela de relatório
+    function generateReportTable(tableData, reportType) {
+      const headers = getTableHeaders(reportType);
+      
+      const tableHTML = `
+        <table class="data-table">
+          <thead>
+            <tr>
+              ${headers.map(header => `<th>${header}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${tableData.map(row => `
+              <tr>
+                ${row.map(cell => `<td>${cell}</td>`).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      document.getElementById('reportContent').innerHTML = tableHTML;
+    }
+
+    // Função para obter cabeçalhos da tabela
+    function getTableHeaders(reportType) {
+      const headers = {
+        vendas: ['Período', 'Faturamento', 'Pedidos', 'Ticket Médio'],
+        cardapio: ['Prato', 'Pedidos', 'Preço', 'Margem'],
+        gastos: ['Categoria', 'Valor', 'Percentual', 'Variação'],
+        clientes: ['Tipo', 'Quantidade', 'Ticket Médio', 'Participação'],
+        financeiro: ['Período', 'Receita', 'Gastos', 'Lucro', 'Margem'],
+        operacional: ['Dia', 'Tempo Preparo', 'Turnover', 'Eficiência', 'Status']
+      };
+      return headers[reportType] || ['Dados'];
+    }
+
+    // Função para definir filtro
+    function setFilter(period) {
+      // Atualizar botões ativos
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      showNotification(`Filtro aplicado: ${getFilterLabel(period)}`);
+    }
+
+    // Função para obter label do filtro
+    function getFilterLabel(period) {
+      const labels = {
+        '7days': 'Últimos 7 dias',
+        '30days': 'Últimos 30 dias',
+        '90days': 'Últimos 90 dias',
+        'year': 'Último ano'
+      };
+      return labels[period] || period;
+    }
+
+    // Função para fechar modal
+    function closeModal() {
+      document.getElementById('reportModal').classList.remove('active');
+      if (currentChart) {
+        currentChart.destroy();
+        currentChart = null;
+      }
+    }
+
+    // Fechar modal ao clicar fora
+    document.getElementById('reportModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Atalhos do teclado
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // Função para exportar relatório
+    function exportReport() {
+      showNotification('Função de exportação será implementada em breve!');
+    }
+
+    // Função para atualizar estatísticas
+    function updateStats() {
+      // Simular atualização de dados
+      const stats = {
+        totalRevenue: (Math.random() * 5000 + 20000).toFixed(0),
+        totalOrders: Math.floor(Math.random() * 200 + 1000),
+        totalCustomers: Math.floor(Math.random() * 100 + 400),
+        avgRating: (Math.random() * 0.5 + 4.5).toFixed(1),
+        totalExpenses: (Math.random() * 2000 + 7000).toFixed(0),
+        profitMargin: (Math.random() * 10 + 60).toFixed(1)
+      };
+
+      // Atualizar elementos
+      document.getElementById('totalRevenue').textContent = `R$ ${parseInt(stats.totalRevenue).toLocaleString()}`;
+      document.getElementById('totalOrders').textContent = stats.totalOrders.toLocaleString();
+      document.getElementById('totalCustomers').textContent = stats.totalCustomers;
+      document.getElementById('avgRating').textContent = stats.avgRating;
+      document.getElementById('totalExpenses').textContent = `R$ ${parseInt(stats.totalExpenses).toLocaleString()}`;
+      document.getElementById('profitMargin').textContent = `${stats.profitMargin}%`;
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animação fade-in
+      const elements = document.querySelectorAll('.fade-in');
+      elements.forEach((el, index) => {
+        setTimeout(() => {
+          el.style.animationDelay = `${index * 0.1}s`;
+        }, 100);
+      });
+
+      // Atualizar estatísticas a cada 30 segundos (simulação)
+      setInterval(updateStats, 30000);
+    });
+
+    // Adicionar botão de exportar no modal
+    function addExportButton() {
+      const modalBody = document.querySelector('.modal-body');
+      const exportBtn = document.createElement('button');
+      exportBtn.innerHTML = '<i class="fas fa-download"></i> Exportar Relatório';
+      exportBtn.className = 'filter-btn';
+      exportBtn.style.position = 'absolute';
+      exportBtn.style.top = '1rem';
+      exportBtn.style.right = '1rem';
+      exportBtn.onclick = exportReport;
+      modalBody.style.position = 'relative';
+      modalBody.appendChild(exportBtn);
+    }
+
+    // Adicionar funcionalidades extras
+    setTimeout(addExportButton, 1000);
+
+    // Função para gerar insights automáticos
+    function generateInsights(reportType) {
+      const insights = {
+        vendas: [
+          '📈 Vendas cresceram 15% comparado ao mês anterior',
+          '🎯 Meta mensal atingida em 98.3%',
+          '⭐ Melhor dia: Sábado com R$ 4.250'
+        ],
+        cardapio: [
+          '🍔 Hambúrguer Especial é o item mais popular',
+          '💰 Salada Caesar tem a melhor margem (75%)',
+          '📊 5 itens representam 80% das vendas'
+        ],
+        gastos: [
+          '📉 Gastos com insumos aumentaram 5% este mês',
+          '⚡ Contas de energia subiram 8%',
+          '🔧 Economia de 12% em manutenção'
+        ],
+        clientes: [
+          '👥 120 novos clientes este mês',
+          '💎 Clientes VIP gastam 52% mais',
+          '🔄 Taxa de retenção de 87%'
+        ],
+        financeiro: [
+          '💵 Margem de lucro estável em 63.7%',
+          '📈 Crescimento de 8% na receita',
+          '🎯 ROI de 245% este trimestre'
+        ],
+        operacional: [
+          '⏱️ Tempo médio de preparo: 19.6 min',
+          '🔄 Turnover de mesas otimizado',
+          '📅 Sábados necessitam mais staff'
+        ]
+      };
+
+      return insights[reportType] || [];
+    }
+
+    // Adicionar seção de insights ao modal
+    function addInsightsSection(reportType) {
+      const insights = generateInsights(reportType);
+      if (insights.length === 0) return;
+
+      const insightsHTML = `
+        <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(212, 175, 55, 0.1); border-radius: 10px; border-left: 4px solid #d4af37;">
+          <h3 style="color: #d4af37; margin-bottom: 1rem;">
+            <i class="fas fa-lightbulb"></i> Insights Automáticos
+          </h3>
+          <ul style="list-style: none; padding: 0;">
+            ${insights.map(insight => `
+              <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                ${insight}
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      `;
+
+      document.getElementById('reportContent').innerHTML += insightsHTML;
+    }
+
+    // Atualizar função openReport para incluir insights
+    const originalOpenReport = openReport;
+    openReport = function(reportType) {
+      originalOpenReport(reportType);
+      setTimeout(() => addInsightsSection(reportType), 500);
+    };
+  </script>
 
 </body>
 </html>

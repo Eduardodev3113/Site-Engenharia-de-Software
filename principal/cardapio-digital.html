@@ -207,24 +207,28 @@
             font-weight: bold;
         }
 
-        .back-button {
+        .btn-secondary {
+            background: transparent;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             position: fixed;
             top: 2rem;
             left: 2rem;
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-            color: #000;
-            padding: 1rem;
-            border-radius: 50%;
-            text-decoration: none;
-            font-size: 1.5rem;
             z-index: 1000;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+            font-weight: 500;
         }
 
-        .back-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        .btn-secondary:hover {
+            background: #d4af37;
+            color: #000;
+            transform: translateY(-2px);
         }
 
         .qr-info {
@@ -259,7 +263,8 @@
             .back-button {
                 top: 1rem;
                 left: 1rem;
-                padding: 0.8rem;
+                padding: 0.6rem 1rem;
+                font-size: 1rem;
             }
             
             .logo {
@@ -273,8 +278,9 @@
     </style>
 </head>
 <body>
-    <a href="../restaurante-sistema/index.html" class="back-button" title="Voltar">
+    <a href="../restaurante-sistema/sistema.html" class="btn-secondary" title="Voltar ao Sistema">
         <i class="fas fa-arrow-left"></i>
+        Voltar ao Sistema
     </a>
 
     <div class="container">

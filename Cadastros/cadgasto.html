@@ -28,6 +28,31 @@
             padding: 0 5%;
         }
 
+        /* Botão Voltar ao Sistema */
+        .btn-secondary {
+            background: transparent;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            font-weight: 500;
+        }
+
+        .btn-secondary:hover {
+            background: #d4af37;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
         /* Header */
         .header {
             background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
@@ -35,6 +60,7 @@
             text-align: center;
             border-bottom: 3px solid #d4af37;
             margin-bottom: 3rem;
+            margin-top: 5rem;
         }
 
         .header h1 {
@@ -457,6 +483,17 @@
 
         /* Responsivo */
         @media (max-width: 768px) {
+            .btn-secondary {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.4rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .header {
+                margin-top: 4rem;
+            }
+
             .header h1 {
                 font-size: 2rem;
                 flex-direction: column;
@@ -550,6 +587,12 @@
     </style>
 </head>
 <body>
+    <!-- Botão Voltar ao Sistema -->
+    <a href="../restaurante-sistema/sistema.html" class="btn-secondary" onclick="goBackToSystem()">
+        <i class="fas fa-arrow-left"></i>
+        Voltar ao Sistema
+    </a>
+
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -582,7 +625,7 @@
                 <div class="summary-icon">
                     <i class="fas fa-dollar-sign"></i>
                 </div>
-                <div class="summary-value" id="totalExpenses">R$ 15.240,00</div>
+                <div class="summary-value" id="totalExpenses">R$ 0,00</div>
                 <div class="summary-label">Total do Mês</div>
             </div>
 
@@ -590,7 +633,7 @@
                 <div class="summary-icon">
                     <i class="fas fa-calendar-day"></i>
                 </div>
-                <div class="summary-value" id="todayExpenses">R$ 680,00</div>
+                <div class="summary-value" id="todayExpenses">R$ 0,00</div>
                 <div class="summary-label">Gastos Hoje</div>
             </div>
 
@@ -598,7 +641,7 @@
                 <div class="summary-icon">
                     <i class="fas fa-tags"></i>
                 </div>
-                <div class="summary-value" id="topCategory">Insumos</div>
+                <div class="summary-value" id="topCategory">-</div>
                 <div class="summary-label">Categoria Principal</div>
             </div>
 
@@ -606,7 +649,7 @@
                 <div class="summary-icon">
                     <i class="fas fa-list"></i>
                 </div>
-                <div class="summary-value" id="totalItems">47</div>
+                <div class="summary-value" id="totalItems">0</div>
                 <div class="summary-label">Total de Itens</div>
             </div>
         </section>
@@ -779,8 +822,8 @@
     </div>
 
     <script>
-        // Sistema de armazenamento local dos gastos
-        let expenses = JSON.parse(localStorage.getItem('restaurantExpenses')) || [
+        // Sistema de armazenamento em memória
+        let expenses = [
             {
                 id: 1,
                 description: 'Compra de carnes variadas',
@@ -816,10 +859,21 @@
             }
         ];
 
-        // Função para salvar no localStorage
-        function saveExpenses() {
-            localStorage.setItem('restaurantExpenses', JSON.stringify(expenses));
-            updateSummary();
+        let nextId = 4;
+
+        // Função para voltar ao sistema
+        function goBackToSystem() {
+            // Aqui você pode adicionar a lógica para navegar para a página principal
+            // Por exemplo, redirecionar para uma URL específica
+            // window.location.href = 'sistema-principal.html';
+            
+            // Para demonstração, vamos apenas mostrar um alerta
+            
+            // Simular redirecionamento após um tempo
+            setTimeout(() => {
+                // window.location.href = '/sistema-principal';
+                console.log('Redirecionando para o sistema principal...');
+            }, 1500);
         }
 
         // Função para definir data atual
@@ -888,7 +942,7 @@
             e.preventDefault();
             
             const newExpense = {
-                id: Date.now(),
+                id: nextId++,
                 description: document.getElementById('description').value,
                 category: document.getElementById('category').value,
                 value: parseFloat(document.getElementById('value').value),
@@ -898,14 +952,318 @@
                 receiptNumber: document.getElementById('receiptNumber').value,
                 observations: document.getElementById('observations').value
             };
-            
-            expenses.unshift(newExpense);
-            saveExpenses();
-            loadExpenses();
+
+            expenses.push(newExpense);
             
             // Limpar formulário
-            this.reset();
+            document.getElementById('expenseForm').reset();
             setCurrentDate();
+            
+            // Atualizar displays
+            loadExpenses();
+            updateSummary();
             
             showNotification('Gasto cadastrado com sucesso!');
         });
+
+        // Função para carregar gastos na lista
+        function loadExpenses(filter = 'all') {
+            const expensesList = document.getElementById('expensesList');
+            const today = new Date().toISOString().split('T')[0];
+            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+            let filteredExpenses = expenses;
+
+            // Aplicar filtros
+            switch (filter) {
+                case 'today':
+                    filteredExpenses = expenses.filter(expense => expense.date === today);
+                    break;
+                case 'week':
+                    filteredExpenses = expenses.filter(expense => expense.date >= weekAgo);
+                    break;
+                case 'month':
+                    filteredExpenses = expenses.filter(expense => expense.date >= monthAgo);
+                    break;
+            }
+
+            // Ordenar por data (mais recente primeiro)
+            filteredExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (filteredExpenses.length === 0) {
+                expensesList.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #999;">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>Nenhum gasto encontrado para este período.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const expensesHTML = filteredExpenses.map(expense => `
+                <div class="expense-item">
+                    <div class="expense-info">
+                        <div class="expense-title">
+                            <i class="${getCategoryIcon(expense.category)}"></i>
+                            ${expense.description}
+                        </div>
+                        <div class="expense-details">
+                            <span><i class="fas fa-calendar"></i> ${new Date(expense.date).toLocaleDateString('pt-BR')}</span>
+                            <span><i class="fas fa-credit-card"></i> ${expense.paymentMethod}</span>
+                            ${expense.supplier ? `<span><i class="fas fa-building"></i> ${expense.supplier}</span>` : ''}
+                            ${expense.receiptNumber ? `<span><i class="fas fa-file-alt"></i> ${expense.receiptNumber}</span>` : ''}
+                        </div>
+                        ${expense.observations ? `<div style="margin-top: 0.5rem; color: #aaa; font-size: 0.9rem;"><i class="fas fa-comment"></i> ${expense.observations}</div>` : ''}
+                    </div>
+                    <div class="expense-value">
+                        ${formatCurrency(expense.value)}
+                        <div class="expense-category">${getCategoryName(expense.category)}</div>
+                    </div>
+                    <div class="expense-actions">
+                        <button class="btn-action" onclick="editExpense(${expense.id})" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-action delete" onclick="deleteExpense(${expense.id})" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            expensesList.innerHTML = expensesHTML;
+        }
+
+        // Função para atualizar resumo
+        function updateSummary() {
+            const today = new Date().toISOString().split('T')[0];
+            const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+
+            // Total do mês
+            const monthTotal = expenses
+                .filter(expense => expense.date >= monthStart)
+                .reduce((sum, expense) => sum + expense.value, 0);
+
+            // Total hoje
+            const todayTotal = expenses
+                .filter(expense => expense.date === today)
+                .reduce((sum, expense) => sum + expense.value, 0);
+
+            // Categoria principal
+            const categoryTotals = {};
+            expenses.forEach(expense => {
+                categoryTotals[expense.category] = (categoryTotals[expense.category] || 0) + expense.value;
+            });
+
+            const topCategory = Object.keys(categoryTotals).reduce((a, b) => 
+                categoryTotals[a] > categoryTotals[b] ? a : b, Object.keys(categoryTotals)[0]
+            );
+
+            // Atualizar elementos
+            document.getElementById('totalExpenses').textContent = formatCurrency(monthTotal);
+            document.getElementById('todayExpenses').textContent = formatCurrency(todayTotal);
+            document.getElementById('topCategory').textContent = topCategory ? getCategoryName(topCategory) : '-';
+            document.getElementById('totalItems').textContent = expenses.length;
+        }
+
+        // Função para filtrar gastos
+        function filterExpenses(filter) {
+            // Atualizar botões ativos
+            document.querySelectorAll('.btn-filter').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            loadExpenses(filter);
+        }
+
+        // Função para editar gasto
+        function editExpense(id) {
+            const expense = expenses.find(e => e.id === id);
+            if (!expense) return;
+
+            document.getElementById('editId').value = expense.id;
+            document.getElementById('editDescription').value = expense.description;
+            document.getElementById('editValue').value = expense.value;
+            document.getElementById('editCategory').value = expense.category;
+
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        // Função para salvar edição
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const id = parseInt(document.getElementById('editId').value);
+            const expenseIndex = expenses.findIndex(e => e.id === id);
+
+            if (expenseIndex !== -1) {
+                expenses[expenseIndex].description = document.getElementById('editDescription').value;
+                expenses[expenseIndex].value = parseFloat(document.getElementById('editValue').value);
+                expenses[expenseIndex].category = document.getElementById('editCategory').value;
+
+                loadExpenses();
+                updateSummary();
+                closeModal();
+                showNotification('Gasto atualizado com sucesso!');
+            }
+        });
+
+        // Função para deletar gasto
+        function deleteExpense(id) {
+            if (confirm('Tem certeza que deseja excluir este gasto?')) {
+                expenses = expenses.filter(e => e.id !== id);
+                loadExpenses();
+                updateSummary();
+                showNotification('Gasto excluído com sucesso!');
+            }
+        }
+
+        // Função para fechar modal
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        // Fechar modal ao clicar fora
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDate();
+            loadExpenses();
+            updateSummary();
+
+            // Animação fade-in
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.animationDelay = `${index * 0.1}s`;
+                }, 100);
+            });
+        });
+
+        // Formatação automática do valor
+        document.getElementById('value').addEventListener('input', function(e) {
+            let value = e.target.value;
+            if (value && !isNaN(value)) {
+                // Remover formatação anterior
+                value = value.replace(/[^\d.,]/g, '');
+                e.target.value = value;
+            }
+        });
+
+        // Validação em tempo real
+        document.getElementById('description').addEventListener('input', function(e) {
+            const submitBtn = document.querySelector('.btn-submit');
+            const isValid = e.target.value.trim().length >= 3;
+            
+            if (!isValid) {
+                e.target.style.borderColor = '#f44336';
+            } else {
+                e.target.style.borderColor = 'rgba(212, 175, 55, 0.3)';
+            }
+        });
+
+        // Atalhos do teclado
+        document.addEventListener('keydown', function(e) {
+            // Ctrl + N para novo gasto
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                document.getElementById('description').focus();
+            }
+            
+            // ESC para fechar modal
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Exportar dados (simulado)
+        function exportData() {
+            const data = JSON.stringify(expenses, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `gastos-restaurante-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            showNotification('Dados exportados com sucesso!');
+        }
+
+        // Adicionar botão de exportar (opcional)
+        const exportButton = document.createElement('button');
+        exportButton.innerHTML = '<i class="fas fa-download"></i> Exportar Dados';
+        exportButton.className = 'btn-nav';
+        exportButton.style.position = 'fixed';
+        exportButton.style.bottom = '2rem';
+        exportButton.style.right = '2rem';
+        exportButton.style.zIndex = '1000';
+        exportButton.onclick = exportData;
+        document.body.appendChild(exportButton);
+
+        // Função para calcular estatísticas avançadas
+        function getAdvancedStats() {
+            const today = new Date();
+            const thisMonth = today.getMonth();
+            const thisYear = today.getFullYear();
+            
+            const thisMonthExpenses = expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getMonth() === thisMonth && expenseDate.getFullYear() === thisYear;
+            });
+            
+            const lastMonth = thisMonth === 0 ? 11 : thisMonth - 1;
+            const lastMonthYear = thisMonth === 0 ? thisYear - 1 : thisYear;
+            
+            const lastMonthExpenses = expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getMonth() === lastMonth && expenseDate.getFullYear() === lastMonthYear;
+            });
+            
+            const thisMonthTotal = thisMonthExpenses.reduce((sum, expense) => sum + expense.value, 0);
+            const lastMonthTotal = lastMonthExpenses.reduce((sum, expense) => sum + expense.value, 0);
+            
+            const difference = thisMonthTotal - lastMonthTotal;
+            const percentageChange = lastMonthTotal > 0 ? ((difference / lastMonthTotal) * 100).toFixed(1) : 0;
+            
+            return {
+                thisMonthTotal,
+                lastMonthTotal,
+                difference,
+                percentageChange,
+                trend: difference > 0 ? 'up' : 'down'
+            };
+        }
+
+        // Atualizar resumo com estatísticas avançadas
+        function updateAdvancedSummary() {
+            const stats = getAdvancedStats();
+            const totalCard = document.querySelector('.summary-card .summary-value');
+            
+            if (totalCard && stats.percentageChange !== 0) {
+                const trendIcon = stats.trend === 'up' ? 'fa-arrow-up' : 'fa-arrow-down';
+                const trendColor = stats.trend === 'up' ? '#f44336' : '#4CAF50';
+                
+                totalCard.innerHTML = `
+                    ${formatCurrency(stats.thisMonthTotal)}
+                    <div style="font-size: 0.6rem; margin-top: 0.2rem; color: ${trendColor};">
+                        <i class="fas ${trendIcon}"></i> ${Math.abs(stats.percentageChange)}% vs mês anterior
+                    </div>
+                `;
+            }
+        }
+
+        // Atualizar a função updateSummary para incluir estatísticas avançadas
+        const originalUpdateSummary = updateSummary;
+        updateSummary = function() {
+            originalUpdateSummary();
+            updateAdvancedSummary();
+        };
+    </script>
+</body>
+</html>
