@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Mesas - Covil Restaurante</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reset e Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            background: rgba(0, 0, 0, 0.98);
+            box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d4af37;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-button {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-button:hover {
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .nav-button::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: #d4af37;
+            transition: width 0.3s ease;
+        }
+
+        .nav-button:hover::after {
+            width: 70%;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+
+        .back-button {
+            margin-bottom: 2rem;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #d4af37;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+        }
+
+        .welcome-section h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .welcome-section p {
+            font-size: 1.2rem;
+            color: #ccc;
+        }
+
+        .welcome-section strong {
+            color: #d4af37;
+        }
+
+        /* Layout */
+        .row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .col-md-6 {
+            width: 100%;
+        }
+
+        .col-12 {
+            grid-column: 1 / -1;
+        }
+
+        .mb-4 {
+            margin-bottom: 3rem;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            margin-bottom: 3rem;
+        }
+
+        .form-container h3 {
+            color: #d4af37;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-control::placeholder {
+            color: #999;
+        }
+
+        select.form-control option {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Buttons */
+        .text-center {
+            text-align: center;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: #fff;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        /* Mesa Cards */
+        .mesa-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mesa-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+        }
+
+        .mesa-card:hover {
+            transform: translateY(-5px);
+            border-color: #d4af37;
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .mesa-card.disponivel {
+            border-color: rgba(76, 175, 80, 0.5);
+        }
+
+        .mesa-card.ocupada {
+            border-color: rgba(244, 67, 54, 0.5);
+        }
+
+        .mesa-card.manutencao {
+            border-color: rgba(255, 193, 7, 0.5);
+        }
+
+        .mesa-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .mesa-numero {
+            font-size: 1.8rem;
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .mesa-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-disponivel {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .status-ocupada {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        .status-manutencao {
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+        }
+
+        .mesa-info {
+            color: #ddd;
+        }
+
+        .mesa-info p {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mesa-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #0056b3;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .table-section h3 {
+            color: #d4af37;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Mesas Grid */
+        .mesas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Search */
+        .search-container {
+            margin-bottom: 2rem;
+        }
+
+        /* Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            margin: 5% auto;
+            padding: 2rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .modal-title {
+            color: #d4af37;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #d4af37;
+        }
+
+        /* Notification */
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 9999;
+            animation: slideInRight 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert.success {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border-left: 4px solid #2e7d32;
+        }
+
+        .alert.error {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            border-left: 4px solid #c62828;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .welcome-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .form-container {
+                padding: 2rem;
+            }
+
+            .mesas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mesa-actions {
+                justify-content: center;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            header {
+                padding: 1rem;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ffd700, #d4af37);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <header>
+            <div class="logo">
+                <i class="fas fa-crown"></i>
+                Covil Restaurante
+            </div>
+            <nav>
+                <a href="index.html" class="nav-button">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a href="sistema.html" class="nav-button">
+                    <i class="fas fa-cogs"></i>
+                    Sistema
+                </a>
+                <a href="produtos.html" class="nav-button">
+                    <i class="fas fa-box"></i>
+                    Produtos
+                </a>
+                <a href="login.html" class="nav-button">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </nav>
+        </header>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="back-button fade-in">
+                <a href="../restaurante-sistema/sistema.html" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar ao Sistema
+                </a>
+            </div>
+
+            <div class="welcome-section fade-in">
+                <h1>Gerenciamento de Mesas</h1>
+                <p>Sistema de cadastro e gerenciamento - <strong>Covil Restaurante</strong></p>
+            </div>
+
+            <!-- Formulário de Nova Mesa -->
+            <div class="form-container fade-in">
+                <h3>
+                    <i class="fas fa-plus-circle"></i>
+                    Nova Mesa
+                </h3>
+                <form id="novaMesaForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="numeroMesa">
+                                    <i class="fas fa-hashtag"></i>
+                                    Número da Mesa:
+                                </label>
+                                <input type="number" id="numeroMesa" class="form-control" placeholder="Ex: 1, 2, 3..." min="1" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="capacidadeMesa">
+                                    <i class="fas fa-users"></i>
+                                    Capacidade:
+                                </label>
+                                <select id="capacidadeMesa" class="form-control" required>
+                                    <option value="">Selecione a capacidade</option>
+                                    <option value="2">2 pessoas</option>
+                                    <option value="4">4 pessoas</option>
+                                    <option value="6">6 pessoas</option>
+                                    <option value="8">8 pessoas</option>
+                                    <option value="10">10 pessoas</option>
+                                    <option value="12">12 pessoas</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="localizacaoMesa">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Localização:
+                                </label>
+                                <select id="localizacaoMesa" class="form-control" required>
+                                    <option value="">Selecione a localização</option>
+                                    <option value="sala-principal">Sala Principal</option>
+                                    <option value="varanda">Varanda</option>
+                                    <option value="area-vip">Área VIP</option>
+                                    <option value="area-externa">Área Externa</option>
+                                    <option value="mezanino">Mezanino</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="tipoMesa">
+                                    <i class="fas fa-shapes"></i>
+                                    Tipo de Mesa:
+                                </label>
+                                <select id="tipoMesa" class="form-control" required>
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="redonda">Redonda</option>
+                                    <option value="quadrada">Quadrada</option>
+                                    <option value="retangular">Retangular</option>
+                                    <option value="alta">Mesa Alta (Balcão)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="observacoesMesa">
+                            <i class="fas fa-comment-alt"></i>
+                            Observações:
+                        </label>
+                        <textarea id="observacoesMesa" class="form-control" placeholder="Características especiais, vista, acessibilidade, etc."></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i>
+                            Cadastrar Mesa
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="limparFormulario()">
+                            <i class="fas fa-eraser"></i>
+                            Limpar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Lista de Mesas -->
+            <div class="table-section fade-in">
+                <h3>
+                    <i class="fas fa-chair"></i>
+                    Mesas Cadastradas
+                </h3>
+                <div class="search-container">
+                    <input type="text" id="searchMesa" class="form-control" placeholder="🔍 Buscar mesa por número, localização ou capacidade..." style="max-width: 400px;">
+                </div>
+
+                <div class="mesas-grid" id="mesasGrid">
+                    <!-- Mesas serão inseridas aqui dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-edit"></i>
+                    Editar Mesa
+                </h2>
+                <span class="close" onclick="fecharModal()">&times;</span>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="editNumero">
+                                <i class="fas fa-hashtag"></i>
+                                Número da Mesa:
+                            </label>
+                            <input type="number" id="editNumero" class="form-control" min="1" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="editCapacidade">
+                                <i class="fas fa-users"></i>
+                                Capacidade:
+                            </label>
+                            <select id="editCapacidade" class="form-control" required>
+                                <option value="2">2 pessoas</option>
+                                <option value="4">4 pessoas</option>
+                                <option value="6">6 pessoas</option>
+                                <option value="8">8 pessoas</option>
+                                <option value="10">10 pessoas</option>
+                                <option value="12">12 pessoas</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="editLocalizacao">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Localização:
+                            </label>
+                            <select id="editLocalizacao" class="form-control" required>
+                                <option value="sala-principal">Sala Principal</option>
+                                <option value="varanda">Varanda</option>
+                                <option value="area-vip">Área VIP</option>
+                                <option value="area-externa">Área Externa</option>
+                                <option value="mezanino">Mezanino</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="editTipo">
+                                <i class="fas fa-shapes"></i>
+                                Tipo de Mesa:
+                            </label>
+                            <select id="editTipo" class="form-control" required>
+                                <option value="redonda">Redonda</option>
+                                <option value="quadrada">Quadrada</option>
+                                <option value="retangular">Retangular</option>
+                                <option value="alta">Mesa Alta (Balcão)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="editStatus">
+                                <i class="fas fa-check-circle"></i>
+                                Status:
+                            </label>
+                            <select id="editStatus" class="form-control" required>
+                                <option value="disponivel">Disponível</option>
+                                <option value="ocupada">Ocupada</option>
+                                <option value="manutencao">Manutenção</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editObservacoes">
+                        <i class="fas fa-comment-alt"></i>
+                        Observações:
+                    </label>
+                    <textarea id="editObservacoes" class="form-control"></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar Alterações
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="fecharModal()">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Array para armazenar as mesas
+        let mesas = [
+            {
+                id: 1,
+                numero: 1,
+                capacidade: 4,
+                localizacao: 'sala-principal',
+                tipo: 'redonda',
+                status: 'disponivel',
+                observacoes: 'Mesa próxima à janela'
+            },
+            {
+                id: 2,
+                numero: 2,
+                capacidade: 2,
+                localizacao: 'varanda',
+                tipo: 'quadrada',
+                status: 'ocupada',
+                observacoes: 'Vista para o jardim'
+            },
+            {
+                id: 3,
+                numero: 3,
+                capacidade: 6,
+                localizacao: 'area-vip',
+                tipo: 'retangular',
+                status: 'disponivel',
+                observacoes: 'Mesa reservada para grupos especiais'
+            },
+            {
+                id: 4,
+                numero: 4,
+                capacidade: 8,
+                localizacao: 'sala-principal',
+                tipo: 'retangular',
+                status: 'manutencao',
+                observacoes: 'Aguardando reparo na cadeira'
+            }
+        ];
+
+        let proximoId = 5;
+
+        // Função para renderizar as mesas
+        function renderizarMesas() {
+            const container = document.getElementById('mesasGrid');
+            container.innerHTML = '';
+
+            mesas.forEach(mesa => {
+                const statusClass = `status-${mesa.status}`;
+                const statusText = {
+                    'disponivel': 'Disponível',
+                    'ocupada': 'Ocupada',
+                    'manutencao': 'Manutenção'
+                };
+
+                const localizacaoText = {
+                    'sala-principal': 'Sala Principal',
+                    'varanda': 'Varanda',
+                    'area-vip': 'Área VIP',
+                    'area-externa': 'Área Externa',
+                    'mezanino': 'Mezanino'
+                };
+
+                const tipoText = {
+                    'redonda': 'Redonda',
+                    'quadrada': 'Quadrada',
+                    'retangular': 'Retangular',
+                    'alta': 'Mesa Alta'
+                };
+
+                const mesaCard = document.createElement('div');
+                mesaCard.className = `mesa-card ${mesa.status}`;
+                mesaCard.innerHTML = `
+                    <div class="mesa-header">
+                        <div class="mesa-numero">Mesa ${mesa.numero}</div>
+                        <span class="mesa-status ${statusClass}">${statusText[mesa.status]}</span>
+                    </div>
+                    <div class="mesa-info">
+                        <p><i class="fas fa-users"></i> ${mesa.capacidade} pessoas</p>
+                        <p><i class="fas fa-map-marker-alt"></i> ${localizacaoText[mesa.localizacao]}</p>
+                        <p><i class="fas fa-shapes"></i> ${tipoText[mesa.tipo]}</p>
+                        <p><i class="fas fa-comment-alt"></i> ${mesa.observacoes || 'Sem observações'}</p>
+                    </div>
+                    <div class="mesa-actions">
+                        <button class="btn-sm btn-edit" onclick="editarMesa(${mesa.id})">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button class="btn-sm btn-delete" onclick="excluirMesa(${mesa.id})">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </div>
+                `;
+                container.appendChild(mesaCard);
+            });
+        }
+
+        // Função para cadastrar nova mesa
+        function cadastrarMesa(event) {
+            event.preventDefault();
+            
+            const numero = parseInt(document.getElementById('numeroMesa').value);
+            const capacidade = parseInt(document.getElementById('capacidadeMesa').value);
+            const localizacao = document.getElementById('localizacaoMesa').value;
+            const tipo = document.getElementById('tipoMesa').value;
+            const observacoes = document.getElementById('observacoesMesa').value;
+
+            // Verificar se o número da mesa já existe
+            if (mesas.find(mesa => mesa.numero === numero)) {
+                mostrarNotificacao('Já existe uma mesa com este número!', 'error');
+                return;
+            }
+
+            // Criar nova mesa
+            const novaMesa = {
+                id: proximoId++,
+                numero: numero,
+                capacidade: capacidade,
+                localizacao: localizacao,
+                tipo: tipo,
+                status: 'disponivel',
+                observacoes: observacoes
+            };
+
+            mesas.push(novaMesa);
+            renderizarMesas();
+            limparFormulario();
+            mostrarNotificacao('Mesa cadastrada com sucesso!', 'success');
+        }
+
+        // Função para limpar formulário
+        function limparFormulario() {
+            document.getElementById('novaMesaForm').reset();
+        }
+
+        // Função para editar mesa
+        function editarMesa(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            document.getElementById('editId').value = mesa.id;
+            document.getElementById('editNumero').value = mesa.numero;
+            document.getElementById('editCapacidade').value = mesa.capacidade;
+            document.getElementById('editLocalizacao').value = mesa.localizacao;
+            document.getElementById('editTipo').value = mesa.tipo;
+            document.getElementById('editStatus').value = mesa.status;
+            document.getElementById('editObservacoes').value = mesa.observacoes;
+
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        // Função para salvar edição
+        function salvarEdicao(event) {
+            event.preventDefault();
+            
+            const id = parseInt(document.getElementById('editId').value);
+            const numero = parseInt(document.getElementById('editNumero').value);
+            
+            // Verificar se o novo número não conflita com outra mesa
+            const mesaExistente = mesas.find(mesa => mesa.numero === numero && mesa.id !== id);
+            if (mesaExistente) {
+                mostrarNotificacao('Já existe uma mesa com este número!', 'error');
+                return;
+            }
+
+            const mesaIndex = mesas.findIndex(m => m.id === id);
+            if (mesaIndex !== -1) {
+                mesas[mesaIndex] = {
+                    ...mesas[mesaIndex],
+                    numero: numero,
+                    capacidade: parseInt(document.getElementById('editCapacidade').value),
+                    localizacao: document.getElementById('editLocalizacao').value,
+                    tipo: document.getElementById('editTipo').value,
+                    status: document.getElementById('editStatus').value,
+                    observacoes: document.getElementById('editObservacoes').value
+                };
+
+                renderizarMesas();
+                fecharModal();
+                mostrarNotificacao('Mesa atualizada com sucesso!', 'success');
+            }
+        }
+
+        // Função para excluir mesa
+        function excluirMesa(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            if (confirm(`Deseja realmente excluir a Mesa ${mesa.numero}?`)) {
+                mesas = mesas.filter(m => m.id !== id);
+                renderizarMesas();
+                mostrarNotificacao('Mesa excluída com sucesso!', 'success');
+            }
+        }
+
+        // Função para fechar modal
+        function fecharModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Função para buscar mesas
+        function buscarMesas() {
+            const termo = document.getElementById('searchMesa').value.toLowerCase();
+            const cards = document.querySelectorAll('.mesa-card');
+
+            cards.forEach(card => {
+                const texto = card.textContent.toLowerCase();
+                card.style.display = texto.includes(termo) ? 'block' : 'none';
+            });
+        }
+
+        // Função para mostrar notificação
+        function mostrarNotificacao(mensagem, tipo = 'success') {
+            const alert = document.createElement('div');
+            alert.className = `alert ${tipo}`;
+            alert.innerHTML = `
+                <i class="fas fa-${tipo === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
+                ${mensagem}
+            `;
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        // Função para scroll do header
+        function handleScroll() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Renderizar mesas iniciais
+            renderizarMesas();
+
+            // Form de nova mesa
+            document.getElementById('novaMesaForm').addEventListener('submit', cadastrarMesa);
+
+            // Form de edição
+            document.getElementById('editForm').addEventListener('submit', salvarEdicao);
+
+            // Busca em tempo real
+            document.getElementById('searchMesa').addEventListener('input', buscarMesas);
+
+            // Scroll do header
+            window.addEventListener('scroll', handleScroll);
+
+            // Fechar modal clicando fora dele
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('editModal');
+                if (event.target === modal) {
+                    fecharModal();
+                }
+            });
+
+            // Animação dos elementos
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.mesa-card, .form-container, .table-section').forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+        // Fechar modal com tecla ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                fecharModal();
+            }
+        });
+    </script>
+</body>
+</html>

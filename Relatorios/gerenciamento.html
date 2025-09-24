@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório Mensal - Restaurante Elegante</title>
+    <title>Gerenciar Mesas - Covil Restaurante</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         /* Reset e Base */
         * {
@@ -30,251 +29,211 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-            padding: 2rem 0;
-            text-align: center;
-            border-bottom: 3px solid #d4af37;
-            margin-bottom: 3rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
 
-        .header h1 {
-            font-size: 3rem;
+        .header.scrolled {
+            background: rgba(0, 0, 0, 0.98);
+            box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
             color: #d4af37;
-            margin-bottom: 0.5rem;
+            text-decoration: none;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 1rem;
+            gap: 10px;
         }
 
-        .header .subtitle {
-            font-size: 1.2rem;
-            color: #ccc;
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-button {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-button:hover {
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .nav-button::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: #d4af37;
+            transition: width 0.3s ease;
+        }
+
+        .nav-button:hover::after {
+            width: 70%;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+
+        .back-button {
+            margin-bottom: 2rem;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #d4af37;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+        }
+
+        .welcome-section h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
             margin-bottom: 1rem;
         }
 
-        .period-selector {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1.5rem;
+        .welcome-section p {
+            font-size: 1.2rem;
+            color: #ccc;
         }
 
-        .btn-period {
-            padding: 0.5rem 1.5rem;
-            background: transparent;
-            border: 2px solid #d4af37;
+        .welcome-section strong {
             color: #d4af37;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
         }
 
-        .btn-period.active,
-        .btn-period:hover {
-            background: #d4af37;
-            color: #000;
-        }
-
-        /* Stats Grid */
-        .stats-overview {
+        /* Layout */
+        .row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
-            margin-bottom: 4rem;
+            margin-bottom: 2rem;
         }
 
-        .stat-card {
-            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+        .col-12 {
+            grid-column: 1 / -1;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: #d4af37;
-            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-        }
-
-        .stat-icon {
-            font-size: 3rem;
-            color: #d4af37;
-            margin-bottom: 1rem;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #d4af37;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: #ccc;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-change {
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.3rem;
-        }
-
-        .stat-change.positive {
-            color: #4CAF50;
-        }
-
-        .stat-change.negative {
-            color: #f44336;
-        }
-
-        /* Charts Grid */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 2rem;
+        .mb-4 {
             margin-bottom: 3rem;
         }
 
-        .chart-card {
+        /* Controles */
+        .controls-container {
             background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-            border-radius: 20px;
             padding: 2rem;
+            border-radius: 20px;
             border: 2px solid rgba(212, 175, 55, 0.3);
-            transition: all 0.3s ease;
+            margin-bottom: 3rem;
         }
 
-        .chart-card:hover {
+        .controls-container h3 {
+            color: #d4af37;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-group, .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control {
+            padding: 0.8rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
             border-color: #d4af37;
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        .chart-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        .form-control::placeholder {
+            color: #999;
         }
 
-        .chart-header h3 {
-            color: #d4af37;
-            font-size: 1.5rem;
+        select.form-control option {
+            background: #1a1a1a;
+            color: #fff;
         }
 
-        .chart-header i {
-            font-size: 1.8rem;
-            color: #d4af37;
-        }
-
-        .chart-container {
-            position: relative;
-            height: 350px;
-            margin: 1rem 0;
-        }
-
-        /* Tables */
-        .table-card {
-            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            margin-bottom: 2rem;
-            overflow-x: auto;
-        }
-
-        .table-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .table-header h3 {
-            color: #d4af37;
-            font-size: 1.5rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
-
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        th {
-            background: rgba(212, 175, 55, 0.2);
-            color: #d4af37;
-            font-weight: bold;
-            position: sticky;
-            top: 0;
-        }
-
-        tr {
-            transition: all 0.3s ease;
-        }
-
-        tr:hover {
-            background: rgba(212, 175, 55, 0.1);
-            transform: scale(1.01);
-        }
-
-        .status-confirmed {
-            color: #4CAF50;
-            font-weight: bold;
-        }
-
-        .status-pending {
-            color: #FF9800;
-            font-weight: bold;
-        }
-
-        .status-cancelled {
-            color: #f44336;
-            font-weight: bold;
-        }
-
-        /* Export Button */
-        .export-section {
-            text-align: center;
-            margin: 3rem 0;
-        }
-
-        .btn-export {
-            padding: 1rem 2rem;
+        /* Buttons */
+        .btn-primary {
             background: linear-gradient(135deg, #d4af37, #ffd700);
             color: #000;
             border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -283,49 +242,267 @@
             gap: 0.5rem;
         }
 
-        .btn-export:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4);
         }
 
-        /* Responsivo */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .period-selector {
-                flex-wrap: wrap;
-            }
-
-            .stats-overview {
-                grid-template-columns: 1fr;
-            }
-
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .chart-container {
-                height: 300px;
-            }
-
-            table {
-                font-size: 0.9rem;
-            }
-
-            th, td {
-                padding: 0.5rem;
-            }
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        /* Animações */
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107, #ff8c00);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 193, 7, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        /* Mesa Cards */
+        .mesa-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .mesa-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+        }
+
+        .mesa-card:hover {
+            transform: translateY(-8px);
+            border-color: #d4af37;
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
+        }
+
+        .mesa-card.disponivel {
+            border-color: rgba(76, 175, 80, 0.6);
+        }
+
+        .mesa-card.disponivel::before {
+            background: linear-gradient(135deg, #4CAF50, #81C784);
+        }
+
+        .mesa-card.ocupada {
+            border-color: rgba(244, 67, 54, 0.6);
+        }
+
+        .mesa-card.ocupada::before {
+            background: linear-gradient(135deg, #f44336, #ef5350);
+        }
+
+        .mesa-card.manutencao {
+            border-color: rgba(255, 193, 7, 0.6);
+        }
+
+        .mesa-card.manutencao::before {
+            background: linear-gradient(135deg, #FFC107, #FFEB3B);
+        }
+
+        .mesa-card.reservada {
+            border-color: rgba(33, 150, 243, 0.6);
+        }
+
+        .mesa-card.reservada::before {
+            background: linear-gradient(135deg, #2196F3, #42A5F5);
+        }
+
+        .mesa-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .mesa-numero {
+            font-size: 2.5rem;
+            color: #d4af37;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mesa-status {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-disponivel {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+
+        .status-ocupada {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid #f44336;
+        }
+
+        .status-reservada {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196F3;
+            border: 1px solid #2196F3;
+        }
+
+        .status-manutencao {
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+            border: 1px solid #FFC107;
+        }
+
+        .mesa-info {
+            color: #ddd;
+            margin-bottom: 2rem;
+        }
+
+        .mesa-info p {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .mesa-info i {
+            width: 20px;
+            color: #d4af37;
+        }
+
+        .mesa-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .action-btn {
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+        }
+
+        /* Status Summary */
+        .status-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            border-color: #d4af37;
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .summary-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .summary-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-label {
+            color: #ccc;
+            font-size: 1rem;
+        }
+
+        /* Mesas Grid */
+        .mesas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Animation */
         .fade-in {
             opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s ease forwards;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+            animation: fadeInUp 0.8s ease forwards;
         }
 
         @keyframes fadeInUp {
@@ -335,273 +512,714 @@
             }
         }
 
-        .stat-card:nth-child(1) { animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { animation-delay: 0.2s; }
-        .stat-card:nth-child(3) { animation-delay: 0.3s; }
-        .stat-card:nth-child(4) { animation-delay: 0.4s; }
-        .stat-card:nth-child(5) { animation-delay: 0.5s; }
+        /* Notification */
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 9999;
+            animation: slideInRight 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            max-width: 400px;
+        }
+
+        .alert.success {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border-left: 4px solid #2e7d32;
+        }
+
+        .alert.warning {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            border-left: 4px solid #e65100;
+        }
+
+        .alert.error {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            border-left: 4px solid #c62828;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .welcome-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-group, .filter-group {
+                flex-direction: column;
+            }
+
+            .mesas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mesa-actions {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            header {
+                padding: 1rem;
+            }
+
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+
+            .mesa-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ffd700, #d4af37);
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
+    <div class="header">
+        <header>
+            <div class="logo">
+                <i class="fas fa-crown"></i>
+                Covil Restaurante
+            </div>
+        </header>
+    </div>
+
+    <div class="main-content">
         <div class="container">
-            <h1>
-                <i class="fas fa-chart-line"></i>
-                Relatório de Gerenciamento
-            </h1>
-            <p class="subtitle">Análise completa de desempenho do restaurante</p>
-            <div class="period-selector">
-                <button class="btn-period" onclick="changePeriod('week')">Semana</button>
-                <button class="btn-period active" onclick="changePeriod('month')">Mês</button>
-                <button class="btn-period" onclick="changePeriod('quarter')">Trimestre</button>
-                <button class="btn-period" onclick="changePeriod('year')">Ano</button>
+            <div class="back-button fade-in">
+                <a href="../restaurante-sistema/sistema.html" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar ao Sistema
+                </a>
+            </div>
+
+            <div class="welcome-section fade-in">
+                <h1>Gerenciar Mesas</h1>
+                <p>Controle operacional em tempo real - <strong>Covil Restaurante</strong></p>
+            </div>
+
+            <!-- Resumo de Status -->
+            <div class="status-summary fade-in">
+                <div class="summary-card">
+                    <div class="summary-icon" style="color: #4CAF50;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="summary-number" style="color: #4CAF50;" id="totalDisponivel">12</div>
+                    <div class="summary-label">Disponíveis</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon" style="color: #f44336;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="summary-number" style="color: #f44336;" id="totalOcupada">8</div>
+                    <div class="summary-label">Ocupadas</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon" style="color: #2196F3;">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="summary-number" style="color: #2196F3;" id="totalReservada">5</div>
+                    <div class="summary-label">Reservadas</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon" style="color: #FFC107;">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="summary-number" style="color: #FFC107;" id="totalManutencao">2</div>
+                    <div class="summary-label">Manutenção</div>
+                </div>
+            </div>
+
+            <!-- Controles -->
+            <div class="controls-container fade-in">
+                <h3>
+                    <i class="fas fa-sliders-h"></i>
+                    Controles de Gestão
+                </h3>
+                <div class="controls-row">
+                    <div class="search-group">
+                        <label for="searchMesas">
+                            <i class="fas fa-search"></i>
+                        </label>
+                        <input type="text" id="searchMesas" class="form-control" placeholder="Buscar mesa..." style="width: 250px;">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterStatus">
+                            <i class="fas fa-filter"></i>
+                        </label>
+                        <select id="filterStatus" class="form-control" style="width: 200px;">
+                            <option value="">Todos os Status</option>
+                            <option value="disponivel">Disponível</option>
+                            <option value="ocupada">Ocupada</option>
+                            <option value="reservada">Reservada</option>
+                            <option value="manutencao">Manutenção</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterCapacidade">
+                            <i class="fas fa-users"></i>
+                        </label>
+                        <select id="filterCapacidade" class="form-control" style="width: 200px;">
+                            <option value="">Todas Capacidades</option>
+                            <option value="2">2 pessoas</option>
+                            <option value="4">4 pessoas</option>
+                            <option value="6">6 pessoas</option>
+                            <option value="8">8+ pessoas</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="limparFiltros()">
+                        <i class="fas fa-eraser"></i>
+                        Limpar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grid de Mesas -->
+            <div class="mesas-grid fade-in" id="mesasContainer">
+                <!-- Mesas serão inseridas aqui dinamicamente -->
             </div>
         </div>
-    </header>
-
-    <!-- Stats Overview -->
-    <section class="container">
-        <div class="stats-overview">
-            <div class="stat-card fade-in">
-                <div class="stat-icon">
-                    <i class="fas fa-percentage"></i>
-                </div>
-                <div class="stat-value" id="occupancyRate">73.2%</div>
-                <div class="stat-label">Ocupação Média</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i>
-                    +5.3% vs mês anterior
-                </div>
-            </div>
-
-            <div class="stat-card fade-in">
-                <div class="stat-icon">
-                    <i class="fas fa-utensils"></i>
-                </div>
-                <div class="stat-value" id="popularDish">Risotto</div>
-                <div class="stat-label">Prato Mais Popular</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-fire"></i>
-                    78 pedidos este mês
-                </div>
-            </div>
-
-            <div class="stat-card fade-in">
-                <div class="stat-icon">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div class="stat-value" id="totalReservations">124</div>
-                <div class="stat-label">Total de Reservas</div>
-                <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i>
-                    +12% vs mês anterior
-                </div>
-            </div>
-
-            <div class="stat-card fade-in">
-                <div class="stat-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="stat-value" id="peakHour">19:00</div>
-                <div class="stat-label">Horário de Pico</div>
-                <div class="stat-change">
-                    <i class="fas fa-users"></i>
-                    35% das reservas
-                </div>
-            </div>
-
-            <div class="stat-card fade-in">
-                <div class="stat-icon">
-                    <i class="fas fa-box"></i>
-                </div>
-                <div class="stat-value" id="topIngredient">Tomate</div>
-                <div class="stat-label">Insumo Mais Usado</div>
-                <div class="stat-change negative">
-                    <i class="fas fa-arrow-down"></i>
-                    -8% no estoque
-                </div>
-            </div>
-        </div>
-
-        <!-- Charts Grid -->
-        <div class="charts-grid">
-            <!-- Gráfico de Pratos Mais Populares -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <i class="fas fa-trophy"></i>
-                    <h3>Pratos Mais Populares</h3>
-                </div>
-                <div class="chart-container">
-                    <canvas id="dishesChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Gráfico de Insumos -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <i class="fas fa-leaf"></i>
-                    <h3>Insumos Mais Utilizados</h3>
-                </div>
-                <div class="chart-container">
-                    <canvas id="ingredientsChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Gráfico de Horários de Pico -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <i class="fas fa-clock"></i>
-                    <h3>Horários de Pico</h3>
-                </div>
-                <div class="chart-container">
-                    <canvas id="peakHoursChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Gráfico de Frequência de Reservas -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <i class="fas fa-chart-area"></i>
-                    <h3>Frequência de Reservas</h3>
-                </div>
-                <div class="chart-container">
-                    <canvas id="reservationsChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Gráfico de Ocupação por Dia da Semana -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h3>Ocupação por Dia da Semana</h3>
-                </div>
-                <div class="chart-container">
-                    <canvas id="weeklyOccupancyChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Gráfico de Revenue por Mesa -->
-            <div class="chart-card fade-in">
-                <div class="chart-header">
-                    <i class="fas fa-coins"></i>
-                    <h3>Faturamento por Mesa</h3>
-                </div>
-                <div class="chart-container">
-                    <canvas id="tableRevenueChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tabela de Reservas Detalhadas -->
-        <div class="table-card fade-in">
-            <div class="table-header">
-                <i class="fas fa-table"></i>
-                <h3>Detalhamento de Reservas do Mês</h3>
-            </div>
-            <table id="reservationsTable">
-                <thead>
-                    <tr>
-                        <th><i class="fas fa-calendar"></i> Data</th>
-                        <th><i class="fas fa-clock"></i> Horário</th>
-                        <th><i class="fas fa-users"></i> Convidados</th>
-                        <th><i class="fas fa-chair"></i> Mesa</th>
-                        <th><i class="fas fa-user"></i> Cliente</th>
-                        <th><i class="fas fa-info-circle"></i> Status</th>
-                        <th><i class="fas fa-dollar-sign"></i> Valor</th>
-                    </tr>
-                </thead>
-                <tbody id="reservationsTableBody">
-                    <!-- Dados serão inseridos via JavaScript -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Export Section -->
-        <div class="export-section">
-            <button class="btn-export" onclick="exportReport()">
-                <i class="fas fa-download"></i>
-                Exportar Relatório PDF
-            </button>
-        </div>
-    </section>
+    </div>
 
     <script>
-        // Dados simulados do restaurante
-        const restaurantData = {
-            dishes: [
-                { name: 'Risotto de Camarão', orders: 78, revenue: 15600 },
-                { name: 'Filé à Parmegiana', orders: 65, revenue: 13000 },
-                { name: 'Salmão Grelhado', orders: 52, revenue: 12480 },
-                { name: 'Lasanha da Casa', orders: 48, revenue: 9600 },
-                { name: 'Picanha Angus', orders: 43, revenue: 12900 },
-                { name: 'Pasta Carbonara', orders: 38, revenue: 7600 }
-            ],
-            ingredients: [
-                { name: 'Tomate', usage: 45, cost: 2250 },
-                { name: 'Carne Bovina', usage: 38, cost: 5700 },
-                { name: 'Queijo', usage: 35, cost: 3500 },
-                { name: 'Alface', usage: 32, cost: 960 },
-                { name: 'Cebola', usage: 28, cost: 840 },
-                { name: 'Frango', usage: 25, cost: 2500 },
-                { name: 'Massa', usage: 22, cost: 1100 },
-                { name: 'Azeite', usage: 20, cost: 800 }
-            ],
-            reservations: [
-                { date: '2024-09-01', time: '19:00', guests: 4, table: 1, client: 'João Silva', status: 'confirmed', value: 480 },
-                { date: '2024-09-01', time: '20:00', guests: 2, table: 3, client: 'Maria Santos', status: 'confirmed', value: 240 },
-                { date: '2024-09-02', time: '18:30', guests: 6, table: 5, client: 'Carlos Oliveira', status: 'confirmed', value: 720 },
-                { date: '2024-09-02', time: '19:30', guests: 3, table: 2, client: 'Ana Costa', status: 'pending', value: 360 },
-                { date: '2024-09-03', time: '20:30', guests: 4, table: 4, client: 'Pedro Souza', status: 'confirmed', value: 480 },
-                { date: '2024-09-04', time: '19:00', guests: 5, table: 6, client: 'Lucia Fernandes', status: 'confirmed', value: 600 },
-                { date: '2024-09-05', time: '18:00', guests: 2, table: 1, client: 'Roberto Lima', status: 'cancelled', value: 0 },
-                { date: '2024-09-05', time: '21:00', guests: 8, table: 7, client: 'Família Ribeiro', status: 'confirmed', value: 960 },
-                { date: '2024-09-06', time: '19:30', guests: 3, table: 8, client: 'Sandra Alves', status: 'confirmed', value: 360 },
-                { date: '2024-09-07', time: '20:00', guests: 4, table: 9, client: 'Marcos Pereira', status: 'confirmed', value: 480 }
-            ],
-            weeklyOccupancy: [
-                { day: 'Segunda', occupancy: 45 },
-                { day: 'Terça', occupancy: 52 },
-                { day: 'Quarta', occupancy: 68 },
-                { day: 'Quinta', occupancy: 75 },
-                { day: 'Sexta', occupancy: 89 },
-                { day: 'Sábado', occupancy: 95 },
-                { day: 'Domingo', occupancy: 78 }
-            ],
-            tableRevenue: [
-                { table: 1, revenue: 4800 },
-                { table: 2, revenue: 3600 },
-                { table: 3, revenue: 5200 },
-                { table: 4, revenue: 4100 },
-                { table: 5, revenue: 6300 },
-                { table: 6, revenue: 5800 },
-                { table: 7, revenue: 3900 },
-                { table: 8, revenue: 4500 },
-                { table: 9, revenue: 4200 },
-                { table: 10, revenue: 3800 }
-            ]
-        };
+        // Dados das mesas (simulado - em produção viria do backend)
+        let mesas = [
+            {
+                id: 1, numero: 1, capacidade: 4, localizacao: 'Sala Principal', tipo: 'Redonda',
+                status: 'ocupada', observacoes: 'Mesa próxima à janela', 
+                cliente: 'João Silva', horaOcupacao: '19:30', tempoPrevisto: '2h'
+            },
+            {
+                id: 2, numero: 2, capacidade: 2, localizacao: 'Varanda', tipo: 'Quadrada',
+                status: 'disponivel', observacoes: 'Vista para o jardim'
+            },
+            {
+                id: 3, numero: 3, capacidade: 6, localizacao: 'Área VIP', tipo: 'Retangular',
+                status: 'reservada', observacoes: 'Mesa reservada para grupos',
+                cliente: 'Maria Santos', horaReserva: '20:00'
+            },
+            {
+                id: 4, numero: 4, capacidade: 8, localizacao: 'Sala Principal', tipo: 'Retangular',
+                status: 'manutencao', observacoes: 'Cadeira quebrada - aguardando reparo'
+            },
+            {
+                id: 5, numero: 5, capacidade: 4, localizacao: 'Sala Principal', tipo: 'Redonda',
+                status: 'disponivel', observacoes: 'Mesa central'
+            },
+            {
+                id: 6, numero: 6, capacidade: 2, localizacao: 'Varanda', tipo: 'Quadrada',
+                status: 'ocupada', observacoes: 'Mesa romântica',
+                cliente: 'Carlos e Ana', horaOcupacao: '20:15', tempoPrevisto: '1h30min'
+            },
+            {
+                id: 7, numero: 7, capacidade: 6, localizacao: 'Área Externa', tipo: 'Retangular',
+                status: 'disponivel', observacoes: 'Área ao ar livre'
+            },
+            {
+                id: 8, numero: 8, capacidade: 4, localizacao: 'Mezanino', tipo: 'Redonda',
+                status: 'reservada', observacoes: 'Vista panorâmica',
+                cliente: 'Empresa ABC', horaReserva: '19:45'
+            }
+        ];
 
-        // Função para popular tabela de reservas
-        function populateReservationsTable() {
-            const tbody = document.getElementById('reservationsTableBody');
-            tbody.innerHTML = '';
-            
-            restaurantData.reservations.forEach(reservation => {
-                const row = document.createElement('tr');
-                const statusClass = reservation.status === 'confirmed' ? 'status-confirmed' : 
-                                   reservation.status === 'pending' ? 'status-pending' : 'status-cancelled';
-                
-                row.innerHTML = `
-                    <td>${new Date(reservation.date).toLocaleDateString('pt-BR')}</td>
-                    <td>${reservation.time}</td>
-                    <td>${reservation.guests}</td>
-                    <td>Mesa ${reservation.table}</td>
-                    <td>${reservation.client}</td>
-                    <td class="${statusClass}">${reservation.status === 'confirmed' ? 'Confirmada' : 
-                                                reservation.status === 'pending' ? 'Pendente' : 'Cancelada'}</td>
-                    <td>R$ ${reservation.value.toFixed(2)}</td>
-                `;
-                tbody.appendChild(row);
+        // Função para renderizar as mesas
+        function renderizarMesas(mesasFiltradas = mesas) {
+            const container = document.getElementById('mesasContainer');
+            container.innerHTML = '';
+
+            mesasFiltradas.forEach(mesa => {
+                const mesaCard = criarCardMesa(mesa);
+                container.appendChild(mesaCard);
             });
+
+            atualizarResumo();
         }
+
+        // Função para criar card de mesa
+        function criarCardMesa(mesa) {
+            const card = document.createElement('div');
+            card.className = `mesa-card ${mesa.status}`;
+            
+            const statusText = {
+                'disponivel': 'Disponível',
+                'ocupada': 'Ocupada',
+                'reservada': 'Reservada',
+                'manutencao': 'Manutenção'
+            };
+
+            const statusIcons = {
+                'disponivel': 'fa-check-circle',
+                'ocupada': 'fa-users',
+                'reservada': 'fa-calendar-check',
+                'manutencao': 'fa-tools'
+            };
+
+            let statusInfo = '';
+            if (mesa.status === 'ocupada') {
+                statusInfo = `
+                    <p><i class="fas fa-user-circle"></i> Cliente: ${mesa.cliente}</p>
+                    <p><i class="fas fa-clock"></i> Desde: ${mesa.horaOcupacao}</p>
+                    <p><i class="fas fa-hourglass-half"></i> Tempo previsto: ${mesa.tempoPrevisto}</p>
+                `;
+            } else if (mesa.status === 'reservada') {
+                statusInfo = `
+                    <p><i class="fas fa-user-circle"></i> Reserva: ${mesa.cliente}</p>
+                    <p><i class="fas fa-calendar-alt"></i> Horário: ${mesa.horaReserva}</p>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="mesa-header">
+                    <div class="mesa-numero">
+                        <i class="fas fa-chair"></i>
+                        Mesa ${mesa.numero}
+                    </div>
+                    <span class="mesa-status status-${mesa.status}">
+                        <i class="fas ${statusIcons[mesa.status]}"></i>
+                        ${statusText[mesa.status]}
+                    </span>
+                </div>
+                <div class="mesa-info">
+                    <p><i class="fas fa-users"></i> Capacidade: ${mesa.capacidade} pessoas</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Local: ${mesa.localizacao}</p>
+                    <p><i class="fas fa-shapes"></i> Tipo: ${mesa.tipo}</p>
+                    ${statusInfo}
+                    <p><i class="fas fa-comment-alt"></i> ${mesa.observacoes}</p>
+                </div>
+                <div class="mesa-actions">
+                    ${gerarBotoesAcao(mesa)}
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Função para gerar botões de ação baseados no status
+        function gerarBotoesAcao(mesa) {
+            let botoes = '';
+
+            switch (mesa.status) {
+                case 'disponivel':
+                    botoes = `
+                        <button class="action-btn btn-danger" onclick="ocuparMesa(${mesa.id})">
+                            <i class="fas fa-users"></i> Ocupar
+                        </button>
+                        <button class="action-btn btn-primary" onclick="reservarMesa(${mesa.id})">
+                            <i class="fas fa-calendar-plus"></i> Reservar
+                        </button>
+                        <button class="action-btn btn-warning" onclick="marcarManutencao(${mesa.id})">
+                            <i class="fas fa-tools"></i> Manutenção
+                        </button>
+                    `;
+                    break;
+                case 'ocupada':
+                    botoes = `
+                        <button class="action-btn btn-success" onclick="liberarMesa(${mesa.id})">
+                            <i class="fas fa-check"></i> Liberar
+                        </button>
+                        <button class="action-btn btn-primary" onclick="adicionarTempo(${mesa.id})">
+                            <i class="fas fa-clock"></i> +Tempo
+                        </button>
+                        <button class="action-btn btn-warning" onclick="solicitarConta(${mesa.id})">
+                            <i class="fas fa-receipt"></i> Conta
+                        </button>
+                    `;
+                    break;
+                case 'reservada':
+                    botoes = `
+                        <button class="action-btn btn-success" onclick="confirmarChegada(${mesa.id})">
+                            <i class="fas fa-user-check"></i> Chegaram
+                        </button>
+                        <button class="action-btn btn-warning" onclick="cancelarReserva(${mesa.id})">
+                            <i class="fas fa-times-circle"></i> Cancelar
+                        </button>
+                        <button class="action-btn btn-primary" onclick="editarReserva(${mesa.id})">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                    `;
+                    break;
+                case 'manutencao':
+                    botoes = `
+                        <button class="action-btn btn-success" onclick="finalizarManutencao(${mesa.id})">
+                            <i class="fas fa-check-circle"></i> Finalizar
+                        </button>
+                        <button class="action-btn btn-primary" onclick="editarObservacao(${mesa.id})">
+                            <i class="fas fa-edit"></i> Editar Info
+                        </button>
+                    `;
+                    break;
+            }
+
+            return botoes;
+        }
+
+        // Funções de ação das mesas
+        function ocuparMesa(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            const nomeCliente = prompt('Nome do cliente:');
+            if (!nomeCliente) return;
+
+            const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            const tempoPrevisto = prompt('Tempo previsto (ex: 2h, 1h30min):', '2h');
+
+            mesa.status = 'ocupada';
+            mesa.cliente = nomeCliente;
+            mesa.horaOcupacao = horaAtual;
+            mesa.tempoPrevisto = tempoPrevisto || '2h';
+
+            renderizarMesas();
+            mostrarNotificacao(`Mesa ${mesa.numero} ocupada por ${nomeCliente}`, 'success');
+        }
+
+        function liberarMesa(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            if (confirm(`Liberar Mesa ${mesa.numero}? Cliente: ${mesa.cliente}`)) {
+                mesa.status = 'disponivel';
+                delete mesa.cliente;
+                delete mesa.horaOcupacao;
+                delete mesa.tempoPrevisto;
+
+                renderizarMesas();
+                mostrarNotificacao(`Mesa ${mesa.numero} liberada com sucesso`, 'success');
+            }
+        }
+
+        function reservarMesa(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            const nomeCliente = prompt('Nome para reserva:');
+            if (!nomeCliente) return;
+
+            const horaReserva = prompt('Horário da reserva (ex: 20:00):');
+            if (!horaReserva) return;
+
+            mesa.status = 'reservada';
+            mesa.cliente = nomeCliente;
+            mesa.horaReserva = horaReserva;
+
+            renderizarMesas();
+            mostrarNotificacao(`Mesa ${mesa.numero} reservada para ${nomeCliente}`, 'success');
+        }
+
+        function confirmarChegada(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            if (confirm(`Confirmar chegada de ${mesa.cliente}?`)) {
+                const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                const tempoPrevisto = prompt('Tempo previsto (ex: 2h, 1h30min):', '2h');
+
+                mesa.status = 'ocupada';
+                mesa.horaOcupacao = horaAtual;
+                mesa.tempoPrevisto = tempoPrevisto || '2h';
+                delete mesa.horaReserva;
+
+                renderizarMesas();
+                mostrarNotificacao(`Mesa ${mesa.numero} - Cliente ${mesa.cliente} confirmado`, 'success');
+            }
+        }
+
+        function cancelarReserva(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            if (confirm(`Cancelar reserva de ${mesa.cliente}?`)) {
+                mesa.status = 'disponivel';
+                delete mesa.cliente;
+                delete mesa.horaReserva;
+
+                renderizarMesas();
+                mostrarNotificacao(`Reserva da Mesa ${mesa.numero} cancelada`, 'warning');
+            }
+        }
+
+        function marcarManutencao(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            const motivo = prompt('Motivo da manutenção:', mesa.observacoes);
+            if (motivo === null) return;
+
+            mesa.status = 'manutencao';
+            mesa.observacoes = motivo;
+
+            renderizarMesas();
+            mostrarNotificacao(`Mesa ${mesa.numero} marcada para manutenção`, 'warning');
+        }
+
+        function finalizarManutencao(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            if (confirm(`Finalizar manutenção da Mesa ${mesa.numero}?`)) {
+                mesa.status = 'disponivel';
+                const observacaoOriginal = prompt('Nova observação (opcional):', '');
+                if (observacaoOriginal !== null) {
+                    mesa.observacoes = observacaoOriginal || 'Mesa sem observações especiais';
+                }
+
+                renderizarMesas();
+                mostrarNotificacao(`Mesa ${mesa.numero} liberada da manutenção`, 'success');
+            }
+        }
+
+        function adicionarTempo(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            const novoTempo = prompt('Novo tempo previsto:', mesa.tempoPrevisto);
+            if (novoTempo && novoTempo !== mesa.tempoPrevisto) {
+                mesa.tempoPrevisto = novoTempo;
+                renderizarMesas();
+                mostrarNotificacao(`Tempo da Mesa ${mesa.numero} atualizado para ${novoTempo}`, 'success');
+            }
+        }
+
+        function solicitarConta(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            if (confirm(`Solicitar conta para Mesa ${mesa.numero}?\nCliente: ${mesa.cliente}`)) {
+                mostrarNotificacao(`Conta solicitada para Mesa ${mesa.numero}`, 'success');
+                // Aqui poderia integrar com sistema de pedidos/caixa
+            }
+        }
+
+        function editarReserva(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            const novoNome = prompt('Nome da reserva:', mesa.cliente);
+            if (novoNome === null) return;
+
+            const novoHorario = prompt('Novo horário:', mesa.horaReserva);
+            if (novoHorario === null) return;
+
+            mesa.cliente = novoNome;
+            mesa.horaReserva = novoHorario;
+
+            renderizarMesas();
+            mostrarNotificacao(`Reserva da Mesa ${mesa.numero} atualizada`, 'success');
+        }
+
+        function editarObservacao(id) {
+            const mesa = mesas.find(m => m.id === id);
+            if (!mesa) return;
+
+            const novaObs = prompt('Observações:', mesa.observacoes);
+            if (novaObs !== null) {
+                mesa.observacoes = novaObs;
+                renderizarMesas();
+                mostrarNotificacao(`Observação da Mesa ${mesa.numero} atualizada`, 'success');
+            }
+        }
+
+        // Função para atualizar resumo de status
+        function atualizarResumo() {
+            const contador = {
+                disponivel: 0,
+                ocupada: 0,
+                reservada: 0,
+                manutencao: 0
+            };
+
+            mesas.forEach(mesa => {
+                contador[mesa.status]++;
+            });
+
+            document.getElementById('totalDisponivel').textContent = contador.disponivel;
+            document.getElementById('totalOcupada').textContent = contador.ocupada;
+            document.getElementById('totalReservada').textContent = contador.reservada;
+            document.getElementById('totalManutencao').textContent = contador.manutencao;
+        }
+
+        // Função de busca
+        function buscarMesas() {
+            const termo = document.getElementById('searchMesas').value.toLowerCase();
+            const status = document.getElementById('filterStatus').value;
+            const capacidade = document.getElementById('filterCapacidade').value;
+
+            let mesasFiltradas = mesas.filter(mesa => {
+                const matchTermo = !termo || 
+                    mesa.numero.toString().includes(termo) ||
+                    mesa.localizacao.toLowerCase().includes(termo) ||
+                    (mesa.cliente && mesa.cliente.toLowerCase().includes(termo)) ||
+                    mesa.observacoes.toLowerCase().includes(termo);
+
+                const matchStatus = !status || mesa.status === status;
+
+                const matchCapacidade = !capacidade || 
+                    (capacidade === '8' ? mesa.capacidade >= 8 : mesa.capacidade.toString() === capacidade);
+
+                return matchTermo && matchStatus && matchCapacidade;
+            });
+
+            renderizarMesas(mesasFiltradas);
+        }
+
+        // Função para limpar filtros
+        function limparFiltros() {
+            document.getElementById('searchMesas').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterCapacidade').value = '';
+            renderizarMesas();
+        }
+
+        // Função para mostrar notificação
+        function mostrarNotificacao(mensagem, tipo = 'success') {
+            const alert = document.createElement('div');
+            alert.className = `alert ${tipo}`;
+            alert.innerHTML = `
+                <i class="fas fa-${tipo === 'success' ? 'check-circle' : tipo === 'warning' ? 'exclamation-triangle' : 'times-circle'}"></i>
+                ${mensagem}
+            `;
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 4000);
+        }
+
+        // Função para scroll do header
+        function handleScroll() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+
+        // Auto-refresh da página (simular updates em tempo real)
+        function autoRefresh() {
+            // Simular mudanças de status aleatórias para demonstração
+            if (Math.random() < 0.1) { // 10% de chance a cada 30 segundos
+                const mesasDisponiveis = mesas.filter(m => m.status === 'disponivel');
+                const mesasOcupadas = mesas.filter(m => m.status === 'ocupada');
+                
+                if (mesasDisponiveis.length > 0 && Math.random() < 0.5) {
+                    // Simular nova ocupação
+                    const mesa = mesasDisponiveis[Math.floor(Math.random() * mesasDisponiveis.length)];
+                    mesa.status = 'ocupada';
+                    mesa.cliente = 'Cliente Walk-in';
+                    mesa.horaOcupacao = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                    mesa.tempoPrevisto = '1h30min';
+                    
+                    renderizarMesas();
+                    mostrarNotificacao(`Mesa ${mesa.numero} ocupada por walk-in`, 'success');
+                }
+                
+                if (mesasOcupadas.length > 0 && Math.random() < 0.3) {
+                    // Simular liberação
+                    const mesa = mesasOcupadas[Math.floor(Math.random() * mesasOcupadas.length)];
+                    mesa.status = 'disponivel';
+                    delete mesa.cliente;
+                    delete mesa.horaOcupacao;
+                    delete mesa.tempoPrevisto;
+                    
+                    renderizarMesas();
+                    mostrarNotificacao(`Mesa ${mesa.numero} liberada`, 'success');
+                }
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Renderizar mesas iniciais
+            renderizarMesas();
+
+            // Configurar filtros
+            document.getElementById('searchMesas').addEventListener('input', buscarMesas);
+            document.getElementById('filterStatus').addEventListener('change', buscarMesas);
+            document.getElementById('filterCapacidade').addEventListener('change', buscarMesas);
+
+            // Scroll do header
+            window.addEventListener('scroll', handleScroll);
+
+            // Animação dos elementos
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.mesa-card, .controls-container, .status-summary').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Auto-refresh a cada 30 segundos (demonstração)
+            setInterval(autoRefresh, 30000);
+        });
+
+        // Atalhos de teclado
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey) {
+                switch(event.key) {
+                    case 'f':
+                        event.preventDefault();
+                        document.getElementById('searchMesas').focus();
+                        break;
+                    case 'r':
+                        event.preventDefault();
+                        limparFiltros();
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
