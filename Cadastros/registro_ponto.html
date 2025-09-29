@@ -80,11 +80,7 @@
         }
 
         .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: #d4af37;
-            font-weight: bold;
+            display: none;
         }
 
         /* Main Content */
@@ -327,7 +323,7 @@
             background: rgba(212, 175, 55, 0.2);
             padding: 1.5rem;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
             gap: 1rem;
             font-weight: bold;
             color: #d4af37;
@@ -336,7 +332,7 @@
         .table-row {
             padding: 1rem 1.5rem;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
             gap: 1rem;
             border-bottom: 1px solid rgba(212, 175, 55, 0.1);
             transition: all 0.3s ease;
@@ -451,11 +447,6 @@
             .summary-card {
                 padding: 1.5rem;
             }
-
-            .user-info {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
         }
     </style>
 </head>
@@ -553,6 +544,7 @@
                 </div>
                 <div class="history-table">
                     <div class="table-header">
+                        <div><i class="fas fa-user"></i> Usuário</div>
                         <div><i class="fas fa-calendar"></i> Data</div>
                         <div><i class="fas fa-clock"></i> Horário</div>
                         <div><i class="fas fa-tag"></i> Tipo</div>
@@ -579,6 +571,7 @@
                 // Dados de exemplo
                 {
                     id: 1,
+                    usuario: 'Eduardo Dall Rosa',
                     data: '22/09/2025',
                     horario: '08:00:00',
                     tipo: 'entrada',
@@ -586,6 +579,7 @@
                 },
                 {
                     id: 2,
+                    usuario: 'Eduardo Dall Rosa',
                     data: '22/09/2025',
                     horario: '17:00:00',
                     tipo: 'saida',
@@ -664,9 +658,13 @@
             const agora = new Date();
             const horario = agora.toLocaleTimeString('pt-BR');
             const data = agora.toLocaleDateString('pt-BR');
+            
+            // Obter nome do usuário logado
+            const username = sessionStorage.getItem('username') || 'Eduardo Dall Rosa';
 
             const registro = {
                 id: Date.now(),
+                usuario: username,
                 data: data,
                 horario: horario,
                 tipo: tipo,
@@ -772,6 +770,7 @@
             const statusIcon = registro.tipo === 'entrada' ? 'fa-sign-in-alt' : 'fa-sign-out-alt';
             
             novaLinha.innerHTML = `
+                <div><i class="fas fa-user-circle"></i> ${registro.usuario || 'Usuário'}</div>
                 <div>${registro.data}</div>
                 <div>${registro.horario}</div>
                 <div><span class="status-badge ${statusClass}"><i class="fas ${statusIcon}"></i> ${registro.tipo.charAt(0).toUpperCase() + registro.tipo.slice(1)}</span></div>
