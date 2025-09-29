@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Cadastro Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 5%;
+            text-align: center;
+            border-bottom: 2px solid #d4af37;
+            box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 5%;
+        }
+
+        .button {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            border: 2px solid;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .button.blue {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+            border-color: #d4af37;
+            margin-bottom: 2rem;
+        }
+
+        .button.blue:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .button.green {
+            background: transparent;
+            color: #4caf50;
+            border-color: #4caf50;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .button.green:hover {
+            background: #4caf50;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .button.red {
+            background: transparent;
+            color: #ff4444;
+            border-color: #ff4444;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .button.red:hover {
+            background: #ff4444;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .records {
+            width: 100%;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .records thead {
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .records th {
+            padding: 1.5rem 1rem;
+            text-align: left;
+            color: #d4af37;
+            font-weight: bold;
+            font-size: 1rem;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        .records td {
+            padding: 1.5rem 1rem;
+            color: #ddd;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .records tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .records tbody tr:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: scale(1.01);
+        }
+
+        .records td:last-child {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            border: 2px solid #d4af37;
+            animation: modalSlideIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .modal-header h2 {
+            color: #d4af37;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-close {
+            color: #d4af37;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #ffd700;
+            transform: rotate(90deg);
+        }
+
+        .modal-form {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .modal-field, #perfil {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .modal-field:focus, #perfil:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .modal-field::placeholder {
+            color: #999;
+        }
+
+        #perfil {
+            cursor: pointer;
+        }
+
+        #perfil option {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .modal-footer {
+            padding: 0 2rem 2rem 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .modal-footer .button {
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.8rem;
+            }
+
+            .records {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .records table {
+                min-width: 900px;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 0 1rem;
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .header-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 class="header-title">
+            <i class="fas fa-crown"></i>
+            Cadastro de Fornecedor
+        </h1>
+    </header>
+    
+    <main>
+        <button type="button" class="button blue mobile" id="cadastrarCliente">
+            <i class="fas fa-plus"></i>
+            Novo Cadastro
+        </button>
+        
+        <table class="records">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                    <th>Cidade</th>
+                    <th>Bairro</th>
+                    <th>Perfil de Acesso</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Maria</td>
+                    <td>176.589.472-36</td>
+                    <td>maria@gmail.com</td>
+                    <td>(49) 9 7165-1111</td>
+                    <td>Chapecó</td>
+                    <td>Efapi</td>
+                    <td>Gerente</td>
+                    <td>
+                        <button type="button" class="button green"><i class="fas fa-edit"></i> Editar</button>
+                        <button type="button" class="button red"><i class="fas fa-trash"></i> Excluir</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>João Pedro</td>
+                    <td>586.415.351-80</td>
+                    <td>joao@gmail.com</td>
+                    <td>(49) 97165-2222</td>
+                    <td>Chapecó</td>
+                    <td>Santa Maria</td>
+                    <td>Funcionario</td>
+                    <td>
+                        <button type="button" class="button green"><i class="fas fa-edit"></i> Editar</button>
+                        <button type="button" class="button red"><i class="fas fa-trash"></i> Excluir</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Jose da Silva</td>
+                    <td>165.348.482-20</td>
+                    <td>jose@gmail.com</td>
+                    <td>(55) 97165-3333</td>
+                    <td>Chapecó</td>
+                    <td>Centro</td>
+                    <td>Administrativo</td>
+                    <td>
+                        <button type="button" class="button green"><i class="fas fa-edit"></i> Editar</button>
+                        <button type="button" class="button red"><i class="fas fa-trash"></i> Excluir</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="modal" id="modal">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h2><i class="fas fa-user-plus"></i> Novo Cadastro</h2>
+                    <span class="modal-close" id="modalClose">✕</span>
+                </header>
+                <form class="modal-form">
+                    <input type="text" class="modal-field" placeholder="Nome" required>
+                    <input type="text" class="modal-field" placeholder="CPF" required>
+                    <input type="email" class="modal-field" placeholder="E-mail" required>
+                    <input type="text" class="modal-field" placeholder="Telefone" required>
+                    <input type="text" class="modal-field" placeholder="Cidade" required>
+                    <input type="text" class="modal-field" placeholder="Bairro" required>
+                    <select id="perfil" required>
+                        <option value="">Perfil de Acesso</option>
+                        <option value="gerente-geral">Gerente Geral</option>
+                        <option value="administrativo">Administrativo</option>
+                        <option value="funcionario">Funcionário</option>
+                    </select>
+                </form>
+                <footer class="modal-footer">
+                    <button class="button green"><i class="fas fa-save"></i> Salvar</button>
+                    <button class="button blue" id="cancelButton"><i class="fas fa-times"></i> Cancelar</button>
+                </footer>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const modal = document.getElementById('modal');
+        const btnCadastrar = document.getElementById('cadastrarCliente');
+        const btnClose = document.getElementById('modalClose');
+        const btnCancel = document.getElementById('cancelButton');
+
+        btnCadastrar.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        btnClose.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        btnCancel.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
