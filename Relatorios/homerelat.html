@@ -6,8 +6,8 @@
   <title>Painel de Relatórios - Restaurante Elegante</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    /* Reset e base */
     * {
       margin: 0;
       padding: 0;
@@ -28,7 +28,16 @@
       padding: 0 5%;
     }
 
-    /* Botão Voltar */
+    .back-buttons {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      z-index: 1000;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
     .btn-back {
       background: transparent;
       color: #d4af37;
@@ -40,10 +49,6 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      position: fixed;
-      top: 2rem;
-      left: 2rem;
-      z-index: 1000;
       font-weight: 500;
     }
 
@@ -53,7 +58,6 @@
       transform: translateY(-2px);
     }
 
-    /* Header */
     .header {
       background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
       padding: 2rem 0;
@@ -79,7 +83,6 @@
       margin-top: 0.5rem;
     }
 
-    /* Stats Cards */
     .stats-section {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -131,7 +134,6 @@
       color: #ccc;
     }
 
-    /* Grid de relatórios */
     .reports-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -149,8 +151,6 @@
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      text-decoration: none;
-      color: inherit;
     }
     
     .report-card:hover {
@@ -200,7 +200,6 @@
       color: #999;
     }
 
-    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -269,6 +268,36 @@
 
     .modal-body {
       padding: 2rem;
+      position: relative;
+    }
+
+    .export-buttons {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 10;
+    }
+
+    .btn-export {
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, #d4af37, #ffd700);
+      color: #000;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .btn-export:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
     }
 
     .chart-container {
@@ -324,7 +353,6 @@
       background: rgba(212, 175, 55, 0.05);
     }
 
-    /* Notificações */
     .notification {
       position: fixed;
       top: 20px;
@@ -353,11 +381,13 @@
       }
     }
 
-    /* Responsivo */
     @media (max-width: 768px) {
-      .btn-back {
+      .back-buttons {
         top: 1rem;
         left: 1rem;
+      }
+
+      .btn-back {
         padding: 0.4rem 1rem;
         font-size: 0.9rem;
       }
@@ -384,12 +414,13 @@
         max-height: 95vh;
       }
 
-      .report-filters {
+      .export-buttons {
+        position: static;
+        margin-bottom: 1rem;
         justify-content: center;
       }
     }
 
-    /* Animação */
     .fade-in {
       opacity: 0;
       transform: translateY(20px);
@@ -413,13 +444,17 @@
 </head>
 <body>
 
-  <!-- Botão Voltar -->
-  <a href="#" class="btn-back" onclick="goBackToSystem()">
-    <i class="fas fa-arrow-left"></i>
-    Voltar ao Sistema
-  </a>
+  <div class="back-buttons">
+    <a href="index.html" class="btn-back">
+      <i class="fas fa-arrow-left"></i>
+      Voltar ao Sistema
+    </a>
+    <a href="../restaurante-sistema/index.html" class="btn-back">
+      <i class="fas fa-home"></i>
+      Página Inicial
+    </a>
+  </div>
 
-  <!-- Header -->
   <header class="header">
     <div class="container">
       <h1><i class="fas fa-chart-bar"></i> Painel de Relatórios</h1>
@@ -427,7 +462,6 @@
     </div>
   </header>
 
-  <!-- Estatísticas Rápidas -->
   <section class="container">
     <div class="stats-section fade-in">
       <div class="stat-card">
@@ -463,7 +497,6 @@
     </div>
   </section>
 
-  <!-- Lista de Relatórios -->
   <main class="container">
     <div class="reports-grid">
       <div class="report-card fade-in" onclick="openReport('vendas')">
@@ -528,7 +561,6 @@
     </div>
   </main>
 
-  <!-- Modal para exibir relatórios -->
   <div id="reportModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -539,6 +571,18 @@
         <span class="close" onclick="closeModal()">&times;</span>
       </div>
       <div class="modal-body">
+        <div class="export-buttons">
+          <button class="btn-export" onclick="exportToPDF()">
+            <i class="fas fa-file-pdf"></i> PDF
+          </button>
+          <button class="btn-export" onclick="exportToCSV()">
+            <i class="fas fa-file-csv"></i> CSV
+          </button>
+          <button class="btn-export" onclick="exportToJSON()">
+            <i class="fas fa-file-code"></i> JSON
+          </button>
+        </div>
+
         <div class="report-filters">
           <button class="filter-btn active" onclick="setFilter('7days')">7 Dias</button>
           <button class="filter-btn" onclick="setFilter('30days')">30 Dias</button>
@@ -550,17 +594,15 @@
           <canvas id="reportChart"></canvas>
         </div>
         
-        <div id="reportContent">
-          <!-- Conteúdo dinâmico do relatório será inserido aqui -->
-        </div>
+        <div id="reportContent"></div>
       </div>
     </div>
   </div>
 
   <script>
     let currentChart = null;
+    let currentReportType = null;
 
-    // Dados simulados para os relatórios
     const reportData = {
       vendas: {
         title: 'Relatório de Vendas',
@@ -576,6 +618,255 @@
           }]
         },
         tableData: [
+          ['Segunda-feira', '18 min', '2.1x', '85 pedidos', '92%'],
+          ['Terça-feira', '16 min', '2.3x', '78 pedidos', '94%'],
+          ['Quarta-feira', '17 min', '2.2x', '82 pedidos', '93%'],
+          ['Quinta-feira', '19 min', '2.0x', '95 pedidos', '91%'],
+          ['Sexta-feira', '22 min', '1.8x', '125 pedidos', '88%'],
+          ['Sábado', '25 min', '1.5x', '150 pedidos', '85%'],
+          ['Domingo', '20 min', '1.9x', '110 pedidos', '90%']
+        ]
+      }
+    };
+
+    function openReport(type) {
+      currentReportType = type;
+      const report = reportData[type];
+      
+      document.getElementById('modalTitle').innerHTML = `
+        <i class="${report.icon}"></i>
+        ${report.title}
+      `;
+
+      const modal = document.getElementById('reportModal');
+      modal.classList.add('active');
+
+      if (currentChart) {
+        currentChart.destroy();
+      }
+
+      const ctx = document.getElementById('reportChart').getContext('2d');
+      
+      let chartType = 'line';
+      let chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#d4af37'
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { color: '#ccc' },
+            grid: { color: 'rgba(212, 175, 55, 0.1)' }
+          },
+          x: {
+            ticks: { color: '#ccc' },
+            grid: { color: 'rgba(212, 175, 55, 0.1)' }
+          }
+        }
+      };
+
+      if (type === 'cardapio' || type === 'clientes') {
+        chartType = 'doughnut';
+        chartOptions = {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: '#d4af37',
+                padding: 15
+              }
+            }
+          }
+        };
+      } else if (type === 'gastos') {
+        chartType = 'pie';
+        chartOptions = {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                color: '#d4af37',
+                padding: 10
+              }
+            }
+          }
+        };
+      } else if (type === 'operacional') {
+        chartOptions.scales.y1 = {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          ticks: { color: '#ccc' },
+          grid: { drawOnChartArea: false }
+        };
+      }
+
+      currentChart = new Chart(ctx, {
+        type: chartType,
+        data: report.data,
+        options: chartOptions
+      });
+
+      generateTable(report.tableData, type);
+    }
+
+    function generateTable(data, type) {
+      const headers = {
+        vendas: ['Mês', 'Receita', 'Pedidos', 'Ticket Médio'],
+        cardapio: ['Prato', 'Pedidos', 'Preço', 'Margem'],
+        gastos: ['Categoria', 'Valor', '% Total', 'Variação'],
+        clientes: ['Tipo', 'Quantidade', 'Ticket Médio', '% Total'],
+        financeiro: ['Mês', 'Receita', 'Gastos', 'Lucro', 'Margem'],
+        operacional: ['Dia', 'Tempo Preparo', 'Turnover', 'Pedidos', 'Eficiência']
+      };
+
+      let tableHTML = `
+        <table class="data-table">
+          <thead>
+            <tr>
+              ${headers[type].map(h => `<th>${h}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${data.map(row => `
+              <tr>
+                ${row.map(cell => `<td>${cell}</td>`).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      document.getElementById('reportContent').innerHTML = tableHTML;
+    }
+
+    function closeModal() {
+      document.getElementById('reportModal').classList.remove('active');
+    }
+
+    function setFilter(period) {
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      showNotification(`Filtro alterado para: ${period}`);
+    }
+
+    function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      doc.setFontSize(18);
+      doc.text(reportData[currentReportType].title, 20, 20);
+      
+      doc.setFontSize(12);
+      doc.text('Relatório gerado em: ' + new Date().toLocaleDateString('pt-BR'), 20, 30);
+      
+      const tableData = reportData[currentReportType].tableData;
+      let yPos = 50;
+      
+      tableData.forEach((row, index) => {
+        if (yPos > 270) {
+          doc.addPage();
+          yPos = 20;
+        }
+        doc.text(row.join(' | '), 20, yPos);
+        yPos += 10;
+      });
+      
+      doc.save(`relatorio-${currentReportType}-${Date.now()}.pdf`);
+      showNotification('Relatório exportado em PDF!');
+    }
+
+    function exportToCSV() {
+      const report = reportData[currentReportType];
+      let csv = report.title + '\n\n';
+      
+      report.tableData.forEach(row => {
+        csv += row.join(',') + '\n';
+      });
+      
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `relatorio-${currentReportType}-${Date.now()}.csv`;
+      a.click();
+      
+      showNotification('Relatório exportado em CSV!');
+    }
+
+    function exportToJSON() {
+      const report = reportData[currentReportType];
+      const jsonData = {
+        title: report.title,
+        generatedAt: new Date().toISOString(),
+        data: report.tableData
+      };
+      
+      const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `relatorio-${currentReportType}-${Date.now()}.json`;
+      a.click();
+      
+      showNotification('Relatório exportado em JSON!');
+    }
+
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        ${message}
+      `;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideInRight 0.3s ease reverse';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('reportModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    window.addEventListener('load', function() {
+      const stats = document.querySelectorAll('.stat-value');
+      stats.forEach(stat => {
+        const value = stat.textContent;
+        stat.style.opacity = '0';
+        setTimeout(() => {
+          stat.style.transition = 'opacity 0.5s ease';
+          stat.style.opacity = '1';
+        }, 100);
+      });
+    });
+  </script>
+
+</body>
+</html>
           ['Janeiro', 'R$ 12.000', '320 pedidos', 'R$ 37,50'],
           ['Fevereiro', 'R$ 15.000', '380 pedidos', 'R$ 39,47'],
           ['Março', 'R$ 18.000', '425 pedidos', 'R$ 42,35'],
@@ -710,347 +1001,3 @@
           }]
         },
         tableData: [
-          ['Segunda', '18 min', '2.1x', '85%', 'Bom'],
-          ['Terça', '16 min', '2.3x', '88%', 'Ótimo'],
-          ['Quarta', '17 min', '2.2x', '87%', 'Bom'],
-          ['Quinta', '19 min', '2.0x', '82%', 'Regular'],
-          ['Sexta', '22 min', '1.8x', '78%', 'Regular'],
-          ['Sábado', '25 min', '1.5x', '72%', 'Atenção'],
-          ['Domingo', '20 min', '1.9x', '80%', 'Bom']
-        ]
-      }
-    };
-
-    // Função para voltar ao sistema
-    function goBackToSystem() {
-      showNotification('Redirecionando para o sistema principal...');
-      setTimeout(() => {
-        console.log('Redirecionando para o sistema principal...');
-      }, 1500);
-    }
-
-    // Função para mostrar notificação
-    function showNotification(message) {
-      const notification = document.createElement('div');
-      notification.className = 'notification';
-      notification.innerHTML = `
-        <i class="fas fa-check-circle"></i>
-        ${message}
-      `;
-      
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        notification.remove();
-      }, 3000);
-    }
-
-    // Função para abrir relatório
-    function openReport(reportType) {
-      const report = reportData[reportType];
-      if (!report) return;
-
-      document.getElementById('modalTitle').innerHTML = `
-        <i class="${report.icon}"></i>
-        ${report.title}
-      `;
-
-      // Limpar filtros ativos
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelector('.filter-btn').classList.add('active');
-
-      // Mostrar modal
-      document.getElementById('reportModal').classList.add('active');
-
-      // Gerar gráfico
-      generateChart(reportType, report.data);
-
-      // Gerar tabela de dados
-      generateReportTable(report.tableData, reportType);
-
-      showNotification(`Relatório "${report.title}" carregado com sucesso!`);
-    }
-
-    // Função para gerar gráfico
-    function generateChart(reportType, data) {
-      const ctx = document.getElementById('reportChart').getContext('2d');
-      
-      // Destruir gráfico anterior se existir
-      if (currentChart) {
-        currentChart.destroy();
-      }
-
-      let chartConfig = {
-        data: data,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              labels: {
-                color: '#fff'
-              }
-            }
-          },
-          scales: {
-            y: {
-              grid: {
-                color: 'rgba(212, 175, 55, 0.2)'
-              },
-              ticks: {
-                color: '#ccc'
-              }
-            },
-            x: {
-              grid: {
-                color: 'rgba(212, 175, 55, 0.2)'
-              },
-              ticks: {
-                color: '#ccc'
-              }
-            }
-          }
-        }
-      };
-
-      // Definir tipo de gráfico baseado no relatório
-      switch (reportType) {
-        case 'vendas':
-        case 'financeiro':
-          chartConfig.type = 'line';
-          break;
-        case 'cardapio':
-        case 'gastos':
-        case 'clientes':
-          chartConfig.type = 'doughnut';
-          chartConfig.options.scales = {}; // Remove escalas para gráficos de pizza
-          break;
-        case 'operacional':
-          chartConfig.type = 'line';
-          chartConfig.options.scales.y1 = {
-            type: 'linear',
-            display: true,
-            position: 'right',
-            grid: {
-              drawOnChartArea: false,
-            },
-            ticks: {
-              color: '#ccc'
-            }
-          };
-          break;
-        default:
-          chartConfig.type = 'bar';
-      }
-
-      currentChart = new Chart(ctx, chartConfig);
-    }
-
-    // Função para gerar tabela de relatório
-    function generateReportTable(tableData, reportType) {
-      const headers = getTableHeaders(reportType);
-      
-      const tableHTML = `
-        <table class="data-table">
-          <thead>
-            <tr>
-              ${headers.map(header => `<th>${header}</th>`).join('')}
-            </tr>
-          </thead>
-          <tbody>
-            ${tableData.map(row => `
-              <tr>
-                ${row.map(cell => `<td>${cell}</td>`).join('')}
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `;
-
-      document.getElementById('reportContent').innerHTML = tableHTML;
-    }
-
-    // Função para obter cabeçalhos da tabela
-    function getTableHeaders(reportType) {
-      const headers = {
-        vendas: ['Período', 'Faturamento', 'Pedidos', 'Ticket Médio'],
-        cardapio: ['Prato', 'Pedidos', 'Preço', 'Margem'],
-        gastos: ['Categoria', 'Valor', 'Percentual', 'Variação'],
-        clientes: ['Tipo', 'Quantidade', 'Ticket Médio', 'Participação'],
-        financeiro: ['Período', 'Receita', 'Gastos', 'Lucro', 'Margem'],
-        operacional: ['Dia', 'Tempo Preparo', 'Turnover', 'Eficiência', 'Status']
-      };
-      return headers[reportType] || ['Dados'];
-    }
-
-    // Função para definir filtro
-    function setFilter(period) {
-      // Atualizar botões ativos
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-      
-      showNotification(`Filtro aplicado: ${getFilterLabel(period)}`);
-    }
-
-    // Função para obter label do filtro
-    function getFilterLabel(period) {
-      const labels = {
-        '7days': 'Últimos 7 dias',
-        '30days': 'Últimos 30 dias',
-        '90days': 'Últimos 90 dias',
-        'year': 'Último ano'
-      };
-      return labels[period] || period;
-    }
-
-    // Função para fechar modal
-    function closeModal() {
-      document.getElementById('reportModal').classList.remove('active');
-      if (currentChart) {
-        currentChart.destroy();
-        currentChart = null;
-      }
-    }
-
-    // Fechar modal ao clicar fora
-    document.getElementById('reportModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeModal();
-      }
-    });
-
-    // Atalhos do teclado
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeModal();
-      }
-    });
-
-    // Função para exportar relatório
-    function exportReport() {
-      showNotification('Função de exportação será implementada em breve!');
-    }
-
-    // Função para atualizar estatísticas
-    function updateStats() {
-      // Simular atualização de dados
-      const stats = {
-        totalRevenue: (Math.random() * 5000 + 20000).toFixed(0),
-        totalOrders: Math.floor(Math.random() * 200 + 1000),
-        totalCustomers: Math.floor(Math.random() * 100 + 400),
-        avgRating: (Math.random() * 0.5 + 4.5).toFixed(1),
-        totalExpenses: (Math.random() * 2000 + 7000).toFixed(0),
-        profitMargin: (Math.random() * 10 + 60).toFixed(1)
-      };
-
-      // Atualizar elementos
-      document.getElementById('totalRevenue').textContent = `R$ ${parseInt(stats.totalRevenue).toLocaleString()}`;
-      document.getElementById('totalOrders').textContent = stats.totalOrders.toLocaleString();
-      document.getElementById('totalCustomers').textContent = stats.totalCustomers;
-      document.getElementById('avgRating').textContent = stats.avgRating;
-      document.getElementById('totalExpenses').textContent = `R$ ${parseInt(stats.totalExpenses).toLocaleString()}`;
-      document.getElementById('profitMargin').textContent = `${stats.profitMargin}%`;
-    }
-
-    // Inicialização
-    document.addEventListener('DOMContentLoaded', function() {
-      // Animação fade-in
-      const elements = document.querySelectorAll('.fade-in');
-      elements.forEach((el, index) => {
-        setTimeout(() => {
-          el.style.animationDelay = `${index * 0.1}s`;
-        }, 100);
-      });
-
-      // Atualizar estatísticas a cada 30 segundos (simulação)
-      setInterval(updateStats, 30000);
-    });
-
-    // Adicionar botão de exportar no modal
-    function addExportButton() {
-      const modalBody = document.querySelector('.modal-body');
-      const exportBtn = document.createElement('button');
-      exportBtn.innerHTML = '<i class="fas fa-download"></i> Exportar Relatório';
-      exportBtn.className = 'filter-btn';
-      exportBtn.style.position = 'absolute';
-      exportBtn.style.top = '1rem';
-      exportBtn.style.right = '1rem';
-      exportBtn.onclick = exportReport;
-      modalBody.style.position = 'relative';
-      modalBody.appendChild(exportBtn);
-    }
-
-    // Adicionar funcionalidades extras
-    setTimeout(addExportButton, 1000);
-
-    // Função para gerar insights automáticos
-    function generateInsights(reportType) {
-      const insights = {
-        vendas: [
-          '📈 Vendas cresceram 15% comparado ao mês anterior',
-          '🎯 Meta mensal atingida em 98.3%',
-          '⭐ Melhor dia: Sábado com R$ 4.250'
-        ],
-        cardapio: [
-          '🍔 Hambúrguer Especial é o item mais popular',
-          '💰 Salada Caesar tem a melhor margem (75%)',
-          '📊 5 itens representam 80% das vendas'
-        ],
-        gastos: [
-          '📉 Gastos com insumos aumentaram 5% este mês',
-          '⚡ Contas de energia subiram 8%',
-          '🔧 Economia de 12% em manutenção'
-        ],
-        clientes: [
-          '👥 120 novos clientes este mês',
-          '💎 Clientes VIP gastam 52% mais',
-          '🔄 Taxa de retenção de 87%'
-        ],
-        financeiro: [
-          '💵 Margem de lucro estável em 63.7%',
-          '📈 Crescimento de 8% na receita',
-          '🎯 ROI de 245% este trimestre'
-        ],
-        operacional: [
-          '⏱️ Tempo médio de preparo: 19.6 min',
-          '🔄 Turnover de mesas otimizado',
-          '📅 Sábados necessitam mais staff'
-        ]
-      };
-
-      return insights[reportType] || [];
-    }
-
-    // Adicionar seção de insights ao modal
-    function addInsightsSection(reportType) {
-      const insights = generateInsights(reportType);
-      if (insights.length === 0) return;
-
-      const insightsHTML = `
-        <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(212, 175, 55, 0.1); border-radius: 10px; border-left: 4px solid #d4af37;">
-          <h3 style="color: #d4af37; margin-bottom: 1rem;">
-            <i class="fas fa-lightbulb"></i> Insights Automáticos
-          </h3>
-          <ul style="list-style: none; padding: 0;">
-            ${insights.map(insight => `
-              <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 5px;">
-                ${insight}
-              </li>
-            `).join('')}
-          </ul>
-        </div>
-      `;
-
-      document.getElementById('reportContent').innerHTML += insightsHTML;
-    }
-
-    // Atualizar função openReport para incluir insights
-    const originalOpenReport = openReport;
-    openReport = function(reportType) {
-      originalOpenReport(reportType);
-      setTimeout(() => addInsightsSection(reportType), 500);
-    };
-  </script>
-
-</body>
-</html>
