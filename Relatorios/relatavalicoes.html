@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Avaliações</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 5%;
+            text-align: center;
+            border-bottom: 2px solid #d4af37;
+            box-shadow: 0 2px 20px rgba(212, 175, 55, 0.2);
+            position: relative;
+        }
+
+        .btn-back {
+            position: absolute;
+            left: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            color: #000;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 5%;
+        }
+
+        /* Cards de Estatísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 15px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #d4af37;
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #ccc;
+            font-size: 1rem;
+        }
+
+        /* Filtros */
+        .filters-container {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .filters-header h2 {
+            color: #d4af37;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-clear-filters {
+            background: transparent;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-clear-filters:hover {
+            background: #d4af37;
+            color: #000;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.8rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .filter-group select option {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .star-filter {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .star-filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            color: #999;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .star-filter-btn:hover {
+            border-color: #d4af37;
+        }
+
+        .star-filter-btn.active {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+            color: #d4af37;
+        }
+
+        /* Lista de Avaliações */
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .reviews-header h2 {
+            color: #d4af37;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .reviews-count {
+            color: #999;
+            font-size: 1rem;
+        }
+
+        .sort-options {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .sort-options label {
+            color: #ccc;
+        }
+
+        .sort-options select {
+            padding: 0.6rem 1rem;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .reviews-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .review-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 15px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .review-card:hover {
+            border-color: #d4af37;
+            transform: translateX(5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .review-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .reviewer-info {
+            flex: 1;
+        }
+
+        .reviewer-name {
+            color: #d4af37;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .reviewer-email {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .review-date {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .review-stars {
+            color: #d4af37;
+            font-size: 1.3rem;
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .review-comment {
+            color: #ddd;
+            line-height: 1.8;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .no-reviews {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+            font-size: 1.2rem;
+        }
+
+        .no-reviews i {
+            font-size: 4rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Paginação */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .pagination button {
+            padding: 0.8rem 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+        }
+
+        .pagination button.active {
+            background: #d4af37;
+            color: #000;
+            border-color: #d4af37;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.8rem;
+            }
+
+            .btn-back {
+                position: static;
+                transform: none;
+                margin-bottom: 1rem;
+            }
+
+            .btn-back:hover {
+                transform: scale(1.05);
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reviews-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .sort-options {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 0 1rem;
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .header-title {
+                font-size: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .filters-container {
+                padding: 1.5rem;
+            }
+
+            .review-card {
+                padding: 1.5rem;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="btn-back">
+            <i class="fas fa-arrow-left"></i>
+            Voltar
+        </a>
+        <h1 class="header-title">
+            <i class="fas fa-chart-bar"></i>
+            Relatório de Avaliações
+        </h1>
+        <p class="header-subtitle">Análise completa das avaliações dos clientes</p>
+    </header>
+    
+    <main>
+        <!-- Estatísticas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-star stat-icon"></i>
+                <div class="stat-value" id="avgRating">4.6</div>
+                <div class="stat-label">Média Geral</div>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-comments stat-icon"></i>
+                <div class="stat-value" id="totalReviews">127</div>
+                <div class="stat-label">Total de Avaliações</div>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-thumbs-up stat-icon"></i>
+                <div class="stat-value" id="positiveReviews">92%</div>
+                <div class="stat-label">Avaliações Positivas</div>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-calendar-day stat-icon"></i>
+                <div class="stat-value" id="thisMonth">18</div>
+                <div class="stat-label">Este Mês</div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters-container">
+            <div class="filters-header">
+                <h2><i class="fas fa-filter"></i> Filtros</h2>
+                <button class="btn-clear-filters" onclick="clearFilters()">
+                    <i class="fas fa-times"></i>
+                    Limpar Filtros
+                </button>
+            </div>
+
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label>Avaliação por Estrelas</label>
+                    <div class="star-filter">
+                        <button type="button" class="star-filter-btn" data-stars="all" onclick="filterByStars('all')">Todas</button>
+                        <button type="button" class="star-filter-btn" data-stars="5" onclick="filterByStars(5)">5 <i class="fas fa-star"></i></button>
+                        <button type="button" class="star-filter-btn" data-stars="4" onclick="filterByStars(4)">4 <i class="fas fa-star"></i></button>
+                        <button type="button" class="star-filter-btn" data-stars="3" onclick="filterByStars(3)">3 <i class="fas fa-star"></i></button>
+                        <button type="button" class="star-filter-btn" data-stars="2" onclick="filterByStars(2)">2 <i class="fas fa-star"></i></button>
+                        <button type="button" class="star-filter-btn" data-stars="1" onclick="filterByStars(1)">1 <i class="fas fa-star"></i></button>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="periodFilter">Período</label>
+                    <select id="periodFilter" onchange="applyFilters()">
+                        <option value="all">Todos os períodos</option>
+                        <option value="today">Hoje</option>
+                        <option value="week">Última semana</option>
+                        <option value="month">Último mês</option>
+                        <option value="quarter">Último trimestre</option>
+                        <option value="year">Último ano</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="dateFrom">Data Inicial</label>
+                    <input type="date" id="dateFrom" onchange="applyFilters()">
+                </div>
+
+                <div class="filter-group">
+                    <label for="dateTo">Data Final</label>
+                    <input type="date" id="dateTo" onchange="applyFilters()">
+                </div>
+
+                <div class="filter-group">
+                    <label for="searchFilter">Buscar</label>
+                    <input type="text" id="searchFilter" placeholder="Nome ou comentário..." oninput="applyFilters()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Avaliações -->
+        <div class="reviews-header">
+            <div>
+                <h2><i class="fas fa-list"></i> Avaliações</h2>
+                <span class="reviews-count" id="reviewsCount">Mostrando 127 avaliações</span>
+            </div>
+            <div class="sort-options">
+                <label for="sortBy">Ordenar por:</label>
+                <select id="sortBy" onchange="applyFilters()">
+                    <option value="date-desc">Mais recentes</option>
+                    <option value="date-asc">Mais antigas</option>
+                    <option value="rating-desc">Maior avaliação</option>
+                    <option value="rating-asc">Menor avaliação</option>
+                    <option value="name-asc">Nome (A-Z)</option>
+                    <option value="name-desc">Nome (Z-A)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="reviews-list" id="reviewsList">
+            <!-- Avaliações serão inseridas aqui -->
+        </div>
+
+        <div class="pagination" id="pagination">
+            <!-- Paginação será inserida aqui -->
+        </div>
+    </main>
+
+    <script>
+        // Dados de exemplo
+        const allReviews = [
+            { id: 1, name: "Maria Silva", email: "maria.silva@email.com", rating: 5, comment: "Experiência excepcional! A comida estava deliciosa, o ambiente é sofisticado e o atendimento foi impecável. Recomendo muito!", date: "2025-09-28" },
+            { id: 2, name: "João Pedro", email: "joao.pedro@email.com", rating: 4, comment: "Ótimo restaurante! Os pratos são muito bem preparados e o sabor é incrível. Apenas achei o tempo de espera um pouco longo.", date: "2025-09-27" },
+            { id: 3, name: "Ana Costa", email: "ana.costa@email.com", rating: 5, comment: "Simplesmente perfeito! Desde a entrada até a sobremesa, tudo estava maravilhoso. Voltarei com certeza!", date: "2025-09-26" },
+            { id: 4, name: "Carlos Oliveira", email: "carlos.oliveira@email.com", rating: 5, comment: "Ambiente incrível e comida de primeira qualidade. O atendimento superou todas as expectativas!", date: "2025-09-25" },
+            { id: 5, name: "Beatriz Santos", email: "beatriz.santos@email.com", rating: 4, comment: "Muito bom! A apresentação dos pratos é impecável e o sabor é excelente. Preço um pouco elevado, mas vale a pena.", date: "2025-09-24" },
+            { id: 6, name: "Ricardo Mendes", email: "ricardo.mendes@email.com", rating: 5, comment: "Experiência gastronômica inesquecível. Cada detalhe foi pensado com cuidado. Parabéns à equipe!", date: "2025-09-23" },
+            { id: 7, name: "Juliana Lima", email: "juliana.lima@email.com", rating: 3, comment: "Bom, mas esperava mais. O prato principal estava bom, mas a sobremesa não me agradou muito.", date: "2025-09-22" },
+            { id: 8, name: "Fernando Rocha", email: "fernando.rocha@email.com", rating: 5, comment: "Perfeito em todos os aspectos! Voltarei sempre que possível. Melhor restaurante da região!", date: "2025-09-21" },
+            { id: 9, name: "Patrícia Alves", email: "patricia.alves@email.com", rating: 4, comment: "Adorei a experiência! O ambiente é acolhedor e a comida é deliciosa. Apenas sugiro mais opções vegetarianas.", date: "2025-09-20" },
+            { id: 10, name: "Lucas Ferreira", email: "lucas.ferreira@email.com", rating: 5, comment: "Excelente! Tudo estava perfeito, desde o atendimento até a qualidade dos ingredientes. Recomendo!", date: "2025-09-19" },
+            { id: 11, name: "Camila Martins", email: "camila.martins@email.com", rating: 4, comment: "Muito bom! A comida é saborosa e bem apresentada. O ambiente poderia ter música ambiente mais suave.", date: "2025-09-18" },
+            { id: 12, name: "Roberto Silva", email: "roberto.silva@email.com", rating: 5, comment: "Maravilhoso! Cada prato é uma obra de arte. Atendimento excepcional e ambiente elegante.", date: "2025-09-17" },
+            { id: 13, name: "Amanda Souza", email: "amanda.souza@email.com", rating: 5, comment: "Impressionante! Superou todas as minhas expectativas. Voltarei em breve com a família!", date: "2025-09-16" },
+            { id: 14, name: "Gustavo Pereira", email: "gustavo.pereira@email.com", rating: 3, comment: "Razoável. A comida estava boa, mas o serviço foi um pouco lento. Preço adequado.", date: "2025-09-15" },
+            { id: 15, name: "Mariana Costa", email: "mariana.costa@email.com", rating: 5, comment: "Incrível! A melhor experiência gastronômica que tive. Todos os detalhes são perfeitos!", date: "2025-09-14" },
+            { id: 16, name: "Paulo Henrique", email: "paulo.henrique@email.com", rating: 4, comment: "Ótima escolha! Pratos saborosos e bem elaborados. O vinho recomendado harmonizou perfeitamente.", date: "2025-09-13" },
+            { id: 17, name: "Isabela Rodrigues", email: "isabela.rodrigues@email.com", rating: 5, comment: "Perfeito! Desde a recepção até a despedida, tudo impecável. Parabéns!", date: "2025-09-12" },
+            { id: 18, name: "Diego Santos", email: "diego.santos@email.com", rating: 4, comment: "Muito bom! A carne estava no ponto perfeito. Apenas achei a porção um pouco pequena.", date: "2025-09-11" },
+            { id: 19, name: "Larissa Oliveira", email: "larissa.oliveira@email.com", rating: 5, comment: "Espetacular! O ambiente é sofisticado e acolhedor. A comida é divina!", date: "2025-09-10" },
+            { id: 20, name: "Thiago Almeida", email: "thiago.almeida@email.com", rating: 5, comment: "Excepcional! Tudo estava perfeito. Melhor restaurante que já visitei!", date: "2025-09-09" },
+            { id: 21, name: "Renata Lima", email: "renata.lima@email.com", rating: 2, comment: "Decepcionante. Esperava mais pela reputação. O prato veio frio e o atendimento foi descuidado.", date: "2025-09-08" },
+            { id: 22, name: "Marcos Vieira", email: "marcos.vieira@email.com", rating: 5, comment: "Fantástico! Cada prato é uma explosão de sabores. Atendimento de alto nível!", date: "2025-09-07" }
+        ];
+
+        let filteredReviews = [...allReviews];
+        let currentPage = 1;
+        const reviewsPerPage = 10;
+        let currentFilters = {
+            stars: 'all',
+            period: 'all',
+            dateFrom: null,
+            dateTo: null,
+            search: ''
+        };
+
+        // Inicializar filtros
+        document.querySelector('[data-stars="all"]').classList.add('active');
+
+        function renderReviews() {
+            const reviewsList = document.getElementById('reviewsList');
+            const start = (currentPage - 1) * reviewsPerPage;
+            const end = start + reviewsPerPage;
+            const reviewsToShow = filteredReviews.slice(start, end);
+
+            if (reviewsToShow.length === 0) {
+                reviewsList.innerHTML = `
+                    <div class="no-reviews">
+                        <i class="fas fa-inbox"></i>
+                        <p>Nenhuma avaliação encontrada com os filtros selecionados.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            reviewsList.innerHTML = reviewsToShow.map(review => {
+                const stars = Array(5).fill(0).map((_, i) => 
+                    i < review.rating ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>'
+                ).join('');
+
+                const date = new Date(review.date);
+                const formattedDate = date.toLocaleDateString('pt-BR', { 
+                    day: '2-digit', 
+                    month: 'long', 
+                    year: 'numeric' 
+                });
+
+                return `
+                    <div class="review-card">
+                        <div class="review-card-header">
+                            <div class="reviewer-info">
+                                <div class="reviewer-name">${review.name}</div>
+                                <div class="reviewer-email">${review.email}</div>
+                                <div class="review-date">${formattedDate}</div>
+                            </div>
+                            <div class="review-stars">${stars}</div>
+                        </div>
+                        <p class="review-comment">${review.comment}</p>
+                    </div>
+                `;
+            }).join('');
+
+            updateReviewsCount();
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(filteredReviews.length / reviewsPerPage);
+
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let buttons = '';
+
+            // Botão anterior
+            buttons += `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                <i class="fas fa-chevron-left"></i>
+            </button>`;
+
+            // Páginas
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    buttons += `<button onclick="changePage(${i})" ${i === currentPage ? 'class="active"' : ''}>${i}</button>`;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    buttons += `<button disabled>...</button>`;
+                }
+            }
+
+            // Botão próximo
+            buttons += `<button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                <i class="fas fa-chevron-right"></i>
+            </button>`;
+
+            pagination.innerHTML = buttons;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredReviews.length / reviewsPerPage);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderReviews();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterByStars(stars) {
+            document.querySelectorAll('.star-filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-stars="${stars}"]`).classList.add('active');
+            currentFilters.stars = stars;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            currentFilters.period = document.getElementById('periodFilter').value;
+            currentFilters.dateFrom = document.getElementById('dateFrom').value;
+            currentFilters.dateTo = document.getElementById('dateTo').value;
+            currentFilters.search = document.getElementById('searchFilter').value.toLowerCase();
+
+            filteredReviews = allReviews.filter(review => {
+                // Filtro por estrelas
+                if (currentFilters.stars !== 'all' && review.rating !== parseInt(currentFilters.stars)) {
+                    return false;
+                }
+
+                // Filtro por período
+                const reviewDate = new Date(review.date);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (currentFilters.period !== 'all') {
+                    let startDate;
+                    switch (currentFilters.period) {
+                        case 'today':
+                            startDate = new Date(today);
+                            break;
+                        case 'week':
+                            startDate = new Date(today);
+                            startDate.setDate(today.getDate() - 7);
+                            break;
+                        case 'month':
+                            startDate = new Date(today);
+                            startDate.setMonth(today.getMonth() - 1);
+                            break;
+                        case 'quarter':
+                            startDate = new Date(today);
+                            startDate.setMonth(today.getMonth() - 3);
+                            break;
+                        case 'year':
+                            startDate = new Date(today);
+                            startDate.setFullYear(today.getFullYear() - 1);
+                            break;
+                    }
+                    if (reviewDate < startDate) return false;
+                }
+
+                // Filtro por data inicial
+                if (currentFilters.dateFrom) {
+                    const fromDate = new Date(currentFilters.dateFrom);
+                    if (reviewDate < fromDate) return false;
+                }
+
+                // Filtro por data final
+                if (currentFilters.dateTo) {
+                    const toDate = new Date(currentFilters.dateTo);
+                    toDate.setHours(23, 59, 59, 999);
+                    if (reviewDate > toDate) return false;
+                }
+
+                // Filtro por busca
+                if (currentFilters.search) {
+                    const searchLower = currentFilters.search;
+                    return review.name.toLowerCase().includes(searchLower) ||
+                           review.comment.toLowerCase().includes(searchLower) ||
+                           review.email.toLowerCase().includes(searchLower);
+                }
+
+                return true;
+            });
+
+            // Ordenação
+            const sortBy = document.getElementById('sortBy').value;
+            filteredReviews.sort((a, b) => {
+                switch (sortBy) {
+                    case 'date-desc':
+                        return new Date(b.date) - new Date(a.date);
+                    case 'date-asc':
+                        return new Date(a.date) - new Date(b.date);
+                    case 'rating-desc':
+                        return b.rating - a.rating;
+                    case 'rating-asc':
+                        return a.rating - b.rating;
+                    case 'name-asc':
+                        return a.name.localeCompare(b.name);
+                    case 'name-desc':
+                        return b.name.localeCompare(a.name);
+                    default:
+                        return 0;
+                }
+            });
+
+            currentPage = 1;
+            updateStatistics();
+            renderReviews();
+        }
+
+        function clearFilters() {
+            // Limpar filtros
+            currentFilters = {
+                stars: 'all',
+                period: 'all',
+                dateFrom: null,
+                dateTo: null,
+                search: ''
+            };
+
+            // Resetar interface
+            document.getElementById('periodFilter').value = 'all';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            document.getElementById('searchFilter').value = '';
+            document.getElementById('sortBy').value = 'date-desc';
+            
+            document.querySelectorAll('.star-filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('[data-stars="all"]').classList.add('active');
+
+            applyFilters();
+        }
+
+        function updateReviewsCount() {
+            const count = filteredReviews.length;
+            const showing = Math.min(currentPage * reviewsPerPage, count);
+            const start = Math.min((currentPage - 1) * reviewsPerPage + 1, count);
+            
+            document.getElementById('reviewsCount').textContent = 
+                count === allReviews.length 
+                    ? `Mostrando ${showing} de ${count} avaliações`
+                    : `Mostrando ${start}-${showing} de ${count} avaliações filtradas (${allReviews.length} total)`;
+        }
+
+        function updateStatistics() {
+            // Calcular estatísticas baseadas nas avaliações filtradas
+            const reviews = filteredReviews.length > 0 ? filteredReviews : allReviews;
+            
+            // Média geral
+            const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+            document.getElementById('avgRating').textContent = avgRating.toFixed(1);
+
+            // Total de avaliações
+            document.getElementById('totalReviews').textContent = reviews.length;
+
+            // Avaliações positivas (4 e 5 estrelas)
+            const positive = reviews.filter(r => r.rating >= 4).length;
+            const positivePercent = ((positive / reviews.length) * 100).toFixed(0);
+            document.getElementById('positiveReviews').textContent = positivePercent + '%';
+
+            // Avaliações deste mês
+            const today = new Date();
+            const thisMonth = reviews.filter(r => {
+                const date = new Date(r.date);
+                return date.getMonth() === today.getMonth() && 
+                       date.getFullYear() === today.getFullYear();
+            }).length;
+            document.getElementById('thisMonth').textContent = thisMonth;
+        }
+
+        // Inicializar
+        updateStatistics();
+        renderReviews();
+    </script>
