@@ -107,6 +107,8 @@
 
         .back-button {
             margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
         }
 
         .btn-secondary {
@@ -427,6 +429,10 @@
             .features-grid {
                 grid-template-columns: 1fr;
             }
+
+            .back-button {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 480px) {
@@ -479,9 +485,13 @@
     <div class="main-content">
         <div class="container">
             <div class="back-button fade-in">
-                <a href="../restaurante-sistema/sistema.html" class="btn-secondary">
+                <a href="../restaurante-sistema/login.html" class="btn-secondary">
                     <i class="fas fa-arrow-left"></i>
-                    Voltar ao sistema
+                    Sistema Administrativo
+                </a>
+                <a href="../restaurante-sistema/index.html" class="btn-secondary">
+                    <i class="fas fa-home"></i>
+                    Página Inicial
                 </a>
             </div>
 
